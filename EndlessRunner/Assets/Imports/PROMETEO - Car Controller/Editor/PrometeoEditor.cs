@@ -2,14 +2,12 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 
-[CustomEditor(typeof(PrometeoCarController))]
 [System.Serializable]
 public class PrometeoEditor : Editor{
 
   enum displayFieldType {DisplayAsAutomaticFields, DisplayAsCustomizableGUIFields}
   displayFieldType DisplayFieldType;
 
-  private PrometeoCarController prometeo;
   private SerializedObject SO;
   //
   //
@@ -76,7 +74,6 @@ public class PrometeoEditor : Editor{
   private SerializedProperty handbrakeButton;
 
   private void OnEnable(){
-    prometeo = (PrometeoCarController)target;
     SO = new SerializedObject(target);
 
     maxSpeed = SO.FindProperty("maxSpeed");

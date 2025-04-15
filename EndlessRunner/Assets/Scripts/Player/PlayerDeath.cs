@@ -20,9 +20,9 @@ public class PlayerDeath : MonoBehaviour
         {
 
             playerController.StrafeSpeed = 0;           //Don't allow the player to move
-            if (gameObject != null)
+            if (this != null)
             {
-                Destroy(gameObject);                        //destroy the player game object
+                Destroy(this);                        //destroy the player game object
             }
             deathScreen.ShowDeathScreen();              //show the deathscreen
 
