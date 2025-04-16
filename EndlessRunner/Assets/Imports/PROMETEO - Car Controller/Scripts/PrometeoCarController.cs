@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PrometeoCarController : MonoBehaviour
 {
@@ -35,30 +36,20 @@ public class PrometeoCarController : MonoBehaviour
       public GameObject handbrakeButton;
       PrometeoTouchInput handbrakePTI;
     */
-
-    //CAR DATA
-
-    [HideInInspector]
-    public float carSpeed; // Used to store the speed of the car.
-    [HideInInspector]
-    public bool isDrifting; // Used to know whether the car is drifting or not.
-    [HideInInspector]
-    public bool isTractionLocked; // Used to know whether the traction of the car is locked or not.
-
+    
     //PRIVATE VARIABLES
 
     /*
     IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
     */
-    Rigidbody carRigidbody; // Stores the car's rigidbody.
     private PlayerController playerController;
-    private float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
+    [HideInInspector]
+    public float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
     private float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
     private float driftingAxis;
-    private float localVelocityZ;
-    private float localVelocityX;
     private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
-    private bool deceleratingCar;
+    [HideInInspector]
+    public bool deceleratingCar;
 
     /*
     The following variables are used to store information about sideways friction of the wheels (such as
@@ -80,9 +71,8 @@ public class PrometeoCarController : MonoBehaviour
         //In this part, we set the 'carRigidbody' value with the Rigidbody attached to this
         //gameObject. Also, we define the center of mass of the car with the Vector3 given
         //in the inspector.
-        carRigidbody = gameObject.GetComponent<Rigidbody>();
-        carRigidbody.centerOfMass = playerController.bodyMassCenter;
-
+        playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        playerController.carRigidbody.centerOfMass = playerController.bodyMassCenter;
         //Initial setup to calculate the drift value of the car. This part could look a bit
         //complicated, but do not be afraid, the only thing we're doing here is to save the default
         //friction values of the car wheels so we can set an appropiate drifting value later.
@@ -118,7 +108,7 @@ public class PrometeoCarController : MonoBehaviour
         // We save the initial pitch of the car engine sound.
         if (playerController.carEngineSound != null)
         {
-           initialCarEngineSoundPitch =  playerController.carEngineSound.pitch;
+            initialCarEngineSoundPitch = playerController.carEngineSound.pitch;
         }
 
         // We invoke 2 methods inside this script. CarSpeedUI() changes the text of the UI object that stores
@@ -180,16 +170,6 @@ public class PrometeoCarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        //CAR DATA
-
-        // We determine the speed of the car.
-        carSpeed = (2 * Mathf.PI * playerController.frontLeftCollider.radius * playerController.frontLeftCollider.rpm * 60) / 1000;
-        // Save the local velocity of the car in the x axis. Used to know if the car is drifting.
-        localVelocityX = transform.InverseTransformDirection(carRigidbody.linearVelocity).x;
-        // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
-        localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
-
         //CAR PHYSICS
 
         /*
@@ -202,59 +182,6 @@ public class PrometeoCarController : MonoBehaviour
         In this part of the code we specify what the car needs to do if the user presses W (throttle), S (reverse),
         A (turn left), D (turn right) or Space bar (handbrake).
         */
-
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-            GoForward();
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-            GoReverse();
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            TurnLeft();
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            TurnRight();
-        }
-        if (Input.GetKey(KeyCode.Space))
-        {
-            CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-            Handbrake();
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            RecoverTraction();
-        }
-        if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)))
-        {
-            ThrottleOff();
-        }
-        if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar)
-        {
-            InvokeRepeating("DecelerateCar", 0f, 0.1f);
-            deceleratingCar = true;
-        }
-        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f)
-        {
-            ResetSteeringAngle();
-        }
-
-
-
-
-        // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
-        AnimateWheelMeshes();
-
     }
 
     // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
@@ -265,7 +192,7 @@ public class PrometeoCarController : MonoBehaviour
         {
             try
             {
-                float absoluteCarSpeed = Mathf.Abs(carSpeed);
+                float absoluteCarSpeed = Mathf.Abs(playerController.carSpeed);
                 playerController.carSpeedText.text = Mathf.RoundToInt(absoluteCarSpeed).ToString();
             }
             catch (Exception ex)
@@ -289,17 +216,17 @@ public class PrometeoCarController : MonoBehaviour
             {
                 if (playerController.carEngineSound != null)
                 {
-                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(carRigidbody.linearVelocity.magnitude) / 25f);
+                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 25f);
                     playerController.carEngineSound.pitch = engineSoundPitch;
                 }
-                if ((isDrifting) || (isTractionLocked && Mathf.Abs(carSpeed) > 12f))
+                if ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f))
                 {
                     if (!playerController.tireScreechSound.isPlaying)
                     {
                         playerController.tireScreechSound.Play();
                     }
                 }
-                else if ((!isDrifting) && (!isTractionLocked || Mathf.Abs(carSpeed) < 12f))
+                else if ((!playerController.isDrifting) && (!playerController.isTractionLocked || Mathf.Abs(playerController.carSpeed) < 12f))
                 {
                     playerController.tireScreechSound.Stop();
                 }
@@ -375,7 +302,7 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.
-    void AnimateWheelMeshes()
+    public void AnimateWheelMeshes()
     {
         try
         {
@@ -418,18 +345,20 @@ public class PrometeoCarController : MonoBehaviour
     {
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
         //3f, it means that the car is losing traction, then the car will start emitting particle systems.
-        if (Mathf.Abs(localVelocityX) > 2.5f)
+        if (Mathf.Abs(playerController.localVelocityX) > 2.5f)
         {
-            isDrifting = true;
-            DriftCarPS();
+            Debug.Log("Drifting");
+            playerController.isDrifting = true;
         }
         else
         {
-            isDrifting = false;
-            DriftCarPS();
+            playerController.isDrifting = false;
         }
-        // The following part sets the throttle power to 1 smoothly.
-        throttleAxis = throttleAxis + (Time.deltaTime * 3f);
+        DriftCarPS();
+
+        throttleAxis += Time.deltaTime * 3f;
+        throttleAxis = Mathf.Clamp01(throttleAxis);
+
         if (throttleAxis > 1f)
         {
             throttleAxis = 1f;
@@ -437,35 +366,37 @@ public class PrometeoCarController : MonoBehaviour
         //If the car is going backwards, then apply brakes in order to avoid strange
         //behaviours. If the local velocity in the 'z' axis is less than -1f, then it
         //is safe to apply positive torque to go forward.
-        if (localVelocityZ < -1f)
+        if (playerController.localVelocityZ < -1f)
         {
             Brakes();
+            return;
+        }
+
+        if (Mathf.RoundToInt(playerController.carSpeed) < playerController.maxSpeed)
+        {
+            float torque = playerController.accelerationMultiplier * 200f * throttleAxis;
+            ApplyTorque(torque);
+
         }
         else
         {
-            if (Mathf.RoundToInt(carSpeed) < playerController.maxSpeed)
-            {
-                //Apply positive torque in all wheels to go forward if maxSpeed has not been reached.
-                playerController.frontLeftCollider.brakeTorque = 0;
-                playerController.frontLeftCollider.motorTorque = (playerController.accelerationMultiplier * 50f) * throttleAxis;
-                playerController.frontRightCollider.brakeTorque = 0;
-                playerController.frontRightCollider.motorTorque = (playerController.accelerationMultiplier * 50f) * throttleAxis;
-                playerController.rearLeftCollider.brakeTorque = 0;
-                playerController.rearLeftCollider.motorTorque = (playerController.accelerationMultiplier * 50f) * throttleAxis;
-                playerController.rearRightCollider.brakeTorque = 0;
-                playerController.rearRightCollider.motorTorque = (playerController.accelerationMultiplier * 50f) * throttleAxis;
-            }
-            else
-            {
-                // If the maxSpeed has been reached, then stop applying torque to the wheels.
-                // IMPORTANT: The maxSpeed variable should be considered as an approximation; the speed of the car
-                // could be a bit higher than expected.
-                playerController.frontLeftCollider.motorTorque = 0;
-                playerController.frontRightCollider.motorTorque = 0;
-                playerController.rearLeftCollider.motorTorque = 0;
-                playerController.rearRightCollider.motorTorque = 0;
-            }
+            ApplyTorque(0f);
         }
+
+    }
+
+    public void ApplyTorque(float torque)
+    {
+        playerController.frontLeftCollider.brakeTorque = 0;
+        playerController.frontRightCollider.brakeTorque = 0;
+        playerController.rearLeftCollider.brakeTorque = 0;
+        playerController.rearRightCollider.brakeTorque = 0;
+
+        playerController.frontLeftCollider.motorTorque = torque;
+        playerController.frontRightCollider.motorTorque = torque;
+        playerController.rearLeftCollider.motorTorque = torque;
+        playerController.rearRightCollider.motorTorque = torque;
+
     }
 
     // This method apply negative torque to the wheels in order to go backwards.
@@ -473,14 +404,14 @@ public class PrometeoCarController : MonoBehaviour
     {
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
         //3f, it means that the car is losing traction, then the car will start emitting particle systems.
-        if (Mathf.Abs(localVelocityX) > 2.5f)
+        if (Mathf.Abs(playerController.localVelocityX) > 2.5f)
         {
-            isDrifting = true;
+            playerController.isDrifting = true;
             DriftCarPS();
         }
         else
         {
-            isDrifting = false;
+            playerController.isDrifting = false;
             DriftCarPS();
         }
         // The following part sets the throttle power to -1 smoothly.
@@ -492,13 +423,13 @@ public class PrometeoCarController : MonoBehaviour
         //If the car is still going forward, then apply brakes in order to avoid strange
         //behaviours. If the local velocity in the 'z' axis is greater than 1f, then it
         //is safe to apply negative torque to go reverse.
-        if (localVelocityZ > 1f)
+        if (playerController.localVelocityZ > 1f)
         {
             Brakes();
         }
         else
         {
-            if (Mathf.Abs(Mathf.RoundToInt(carSpeed)) < playerController.maxReverseSpeed)
+            if (Mathf.Abs(Mathf.RoundToInt(playerController.carSpeed)) < playerController.maxReverseSpeed)
             {
                 //Apply negative torque in all wheels to go in reverse if maxReverseSpeed has not been reached.
                 playerController.frontLeftCollider.brakeTorque = 0;
@@ -537,14 +468,14 @@ public class PrometeoCarController : MonoBehaviour
     // usually every 0.1f when the user is not pressing W (throttle), S (reverse) or Space bar (handbrake).
     public void DecelerateCar()
     {
-        if (Mathf.Abs(localVelocityX) > 2.5f)
+        if (Mathf.Abs(playerController.localVelocityX) > 2.5f)
         {
-            isDrifting = true;
+            playerController.isDrifting = true;
             DriftCarPS();
         }
         else
         {
-            isDrifting = false;
+            playerController.isDrifting = false;
             DriftCarPS();
         }
         // The following part resets the throttle power to 0 smoothly.
@@ -563,7 +494,7 @@ public class PrometeoCarController : MonoBehaviour
                 throttleAxis = 0f;
             }
         }
-        carRigidbody.linearVelocity = carRigidbody.linearVelocity * (1f / (1f + (0.025f * playerController.decelerationMultiplier)));
+        playerController.carRigidbody.linearVelocity = playerController.carRigidbody.linearVelocity * (1f / (1f + (0.025f * playerController.decelerationMultiplier)));
         // Since we want to decelerate the car, we are going to remove the torque from the wheels of the car.
         playerController.frontLeftCollider.motorTorque = 0;
         playerController.frontRightCollider.motorTorque = 0;
@@ -571,9 +502,9 @@ public class PrometeoCarController : MonoBehaviour
         playerController.rearRightCollider.motorTorque = 0;
         // If the magnitude of the car's velocity is less than 0.25f (very slow velocity), then stop the car completely and
         // also cancel the invoke of this method.
-        if (carRigidbody.linearVelocity.magnitude < 0.25f)
+        if (playerController.carRigidbody.linearVelocity.magnitude < 0.25f)
         {
-            carRigidbody.linearVelocity = Vector3.zero;
+            playerController.carRigidbody.linearVelocity = Vector3.zero;
             CancelInvoke("DecelerateCar");
         }
     }
@@ -609,13 +540,13 @@ public class PrometeoCarController : MonoBehaviour
         }
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
         //3f, it means that the car lost its traction, then the car will start emitting particle systems.
-        if (Mathf.Abs(localVelocityX) > 2.5f)
+        if (Mathf.Abs(playerController.localVelocityX) > 2.5f)
         {
-            isDrifting = true;
+            playerController.isDrifting = true;
         }
         else
         {
-            isDrifting = false;
+            playerController.isDrifting = false;
         }
         //If the 'driftingAxis' value is not 1f, it means that the wheels have not reach their maximum drifting
         //value, so, we are going to continue increasing the sideways friction of the wheels until driftingAxis
@@ -637,7 +568,7 @@ public class PrometeoCarController : MonoBehaviour
 
         // Whenever the player uses the handbrake, it means that the wheels are locked, so we set 'isTractionLocked = true'
         // and, as a consequense, the car starts to emit trails to simulate the wheel skids.
-        isTractionLocked = true;
+        playerController.isTractionLocked = true;
         DriftCarPS();
 
     }
@@ -651,12 +582,12 @@ public class PrometeoCarController : MonoBehaviour
         {
             try
             {
-                if (isDrifting)
+                if (playerController.isDrifting)
                 {
                     playerController.RLWParticleSystem.Play();
                     playerController.RRWParticleSystem.Play();
                 }
-                else if (!isDrifting)
+                else if (!playerController.isDrifting)
                 {
                     playerController.RLWParticleSystem.Stop();
                     playerController.RRWParticleSystem.Stop();
@@ -669,7 +600,7 @@ public class PrometeoCarController : MonoBehaviour
 
             try
             {
-                if ((isTractionLocked || Mathf.Abs(localVelocityX) > 5f) && Mathf.Abs(carSpeed) > 12f)
+                if ((playerController.isTractionLocked || Mathf.Abs(playerController.localVelocityX) > 5f) && Mathf.Abs(playerController.carSpeed) > 12f)
                 {
                     playerController.RLWTireSkid.emitting = true;
                     playerController.RRWTireSkid.emitting = true;
@@ -710,7 +641,7 @@ public class PrometeoCarController : MonoBehaviour
     // This function is used to recover the traction of the car when the user has stopped using the car's handbrake.
     public void RecoverTraction()
     {
-        isTractionLocked = false;
+        playerController.isTractionLocked = false;
         driftingAxis = driftingAxis - (Time.deltaTime / 1.5f);
         if (driftingAxis < 0f)
         {
