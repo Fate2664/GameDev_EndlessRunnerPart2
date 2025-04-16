@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &6799306 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4698458608470738260, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &11522808 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4594045787627413973, guid: 2c6af73984882dc4ba8863db6f4fa9ef, type: 3}
@@ -258,6 +263,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
+--- !u!146 &104879910 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 1755134668877374178, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &164466322
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,6 +490,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathScreen: {fileID: 248306738}
   restartButton: {fileID: 1874726617}
+--- !u!1 &253459116 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8295138989796801413, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &255440719 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 963480757602541534, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
@@ -650,6 +665,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
+--- !u!198 &348830547 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5968195163798432404, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &365722658
 GameObject:
   m_ObjectHideFlags: 0
@@ -1442,6 +1462,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
+--- !u!96 &826270179 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 1012319175455564379, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &837211242 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4166192095149369476, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &862041179 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 187438752263354676, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &862795433
 GameObject:
   m_ObjectHideFlags: 0
@@ -1735,6 +1770,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7018926348681122586, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
   m_PrefabInstance: {fileID: 103291261}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1016141880 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1715052073235323027, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1091555119 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 963480757602541534, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
@@ -1754,6 +1794,21 @@ GameObject:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7018926348681122586, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
   m_PrefabInstance: {fileID: 1654538467}
+  m_PrefabAsset: {fileID: 0}
+--- !u!96 &1164298616 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 1012319175891325085, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &1192322223 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 1665837212771019669, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &1193199059 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 8132970347958226830, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1201727061
 PrefabInstance:
@@ -2125,6 +2180,11 @@ GameObject:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7018926348681122586, guid: 0e12e5318317dad4481c223d7118fb90, type: 3}
   m_PrefabInstance: {fileID: 79591823}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1646983125 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5968195163536381328, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+  m_PrefabInstance: {fileID: 8615382891828362878}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1654538467
 PrefabInstance:
@@ -3434,6 +3494,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: RLWTireSkid
+      value: 
+      objectReference: {fileID: 826270179}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: RRWTireSkid
+      value: 
+      objectReference: {fileID: 1164298616}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: rearLeftMesh
+      value: 
+      objectReference: {fileID: 837211242}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
       propertyPath: scoreManager
       value: 
       objectReference: {fileID: 729040029}
@@ -3441,6 +3513,42 @@ PrefabInstance:
       propertyPath: spawnManager
       value: 
       objectReference: {fileID: 1208644397}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: frontLeftMesh
+      value: 
+      objectReference: {fileID: 1016141880}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: rearRightMesh
+      value: 
+      objectReference: {fileID: 253459116}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: frontRightMesh
+      value: 
+      objectReference: {fileID: 6799306}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: rearLeftCollider
+      value: 
+      objectReference: {fileID: 104879910}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: RLWParticleSystem
+      value: 
+      objectReference: {fileID: 1646983125}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: RRWParticleSystem
+      value: 
+      objectReference: {fileID: 348830547}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: frontLeftCollider
+      value: 
+      objectReference: {fileID: 1193199059}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: rearRightCollider
+      value: 
+      objectReference: {fileID: 1192322223}
+    - target: {fileID: 1704397802222774316, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
+      propertyPath: frontRightCollider
+      value: 
+      objectReference: {fileID: 862041179}
     - target: {fileID: 5693929651100866461, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
       propertyPath: deathScreen
       value: 
@@ -3491,7 +3599,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8055517434625101428, guid: 8921a6f0aeeb7bf4e86741ab7a7d01be, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

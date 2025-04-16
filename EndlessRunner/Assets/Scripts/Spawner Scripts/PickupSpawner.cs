@@ -31,7 +31,7 @@ public class PickupSpawner : MonoBehaviour
     {
         counter += Time.deltaTime;
         int randomIndex = Random.Range(0, pickups.Count);       //pick a random pickup from the list
-        if (counter >= spawnRate)                               
+        if (counter >= spawnRate)
         {
             if (pickups.Count > 0)
             {
@@ -40,14 +40,17 @@ public class PickupSpawner : MonoBehaviour
                 {
                     spawnPosition = new Vector3(xPosLeft, yHeight, player.position.z - distanceAhead);      //create a vector with the spawn position for the pickup
                 }
-                else if (pickupSpawnPoint == 1) 
+                else if (pickupSpawnPoint == 1)
                 {
-                   spawnPosition = new Vector3(xPosRight,yHeight , player.position.z - distanceAhead);
+                    spawnPosition = new Vector3(xPosRight, yHeight, player.position.z - distanceAhead);
                 }
 
                 GameObject pickupSpawned = Instantiate(pickups[randomIndex], spawnPosition, Quaternion.identity);       //create a clone of the pickup that is chosen 
-               
-                Destroy(pickupSpawned,5f);      //destroy that clone after 5 increment points have past
+                pickupSpawned.transform.SetParent(transform, false);
+                if (pickupSpawned != null)
+                {
+                    Destroy(pickupSpawned, 5f);      //destroy that clone after 5 increment points have past
+                }
 
                 counter = 0f;           //reset the counter
             }
