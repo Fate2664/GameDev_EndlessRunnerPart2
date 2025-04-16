@@ -6,12 +6,12 @@ public class SpeedEffect : PowerUp_Effect
 
     public override void ApplyEffect(GameObject target)
     {
-        target.GetComponent<PlayerController>().MoveForwardSpeed = SpeedNerf;       //change the player's movement speed to the given value
+        //target.GetComponent<PlayerController>(). = SpeedNerf;       //change the player's movement speed to the given value
     }
 
     public override void DisableEffect(GameObject target)
     {
-        target.GetComponent<PlayerController>().MoveForwardSpeed = 300;         //change the player's movemennt speed back to the original
+        //target.GetComponent<PlayerController>().MoveForwardSpeed = 300;         //change the player's movemennt speed back to the original
     }
 
 }

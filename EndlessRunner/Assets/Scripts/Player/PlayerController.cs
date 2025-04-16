@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     [Space(20)]
     [Header("CAR SETUP")]
     [Space(10)]
-    [Range(20, 300)]
+    [Range(20, 1000)]
     [SerializeField] private int _maxSpeed = 200; //The maximum speed that the car can reach in km/h.
     public int maxSpeed { get { return _maxSpeed; } }
     [Range(0, 10)]
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private TrailRenderer _RLWTireSkid;
     public TrailRenderer RLWTireSkid { get {  return _RLWTireSkid; } }
     [SerializeField] private TrailRenderer _RRWTireSkid;
-    public TrailRenderer RRWTireSkid { get { return _RLWTireSkid; } }
+    public TrailRenderer RRWTireSkid { get { return _RRWTireSkid; } }
 
 
     [Space(20)]
@@ -117,8 +117,6 @@ public class PlayerController : MonoBehaviour
     public float localVelocityX {  get { return _localVelocityX; } }
 
 
-    public static float moveH;
-    public float MoveForwardSpeed = 300.0f;
     public SpawnManager spawnManager;
     public Score scoreManager;
     private int desiredLane = 1; //0 = left lane; 1 = right lane
@@ -155,30 +153,12 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         MoveCharacter();    //call the MoveCharacter method
-
     }
 
     private void MoveCharacter()
     {
-        /*
-        Vector3 targetPos = transform.position.z * Vector3.forward; //Make the target position infront of the player
-        if (desiredLane == 0)
-        {
-            targetPos -= Vector3.left * laneDistance;       //change the target position's x position to the corresponding lane
-        }
-        else if (desiredLane == 1)
-        {
-            targetPos -= Vector3.right * laneDistance;
-        }
-
-        Vector3 moveDirection = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * StrafeSpeed);      //make the switching lanes smoother
-        transform.position = new Vector3(moveDirection.x, transform.position.y, transform.position.z - (MoveForwardSpeed * Time.deltaTime));        //move the player to the new postiion
-        */
-
-
         // We determine the speed of the car.
-        carSpeed = (2 * Mathf.PI * frontLeftCollider.radius * frontLeftCollider.rpm * 200) / 1000;
-        Debug.Log(frontLeftCollider.rpm.ToString());
+        carSpeed = (2 * Mathf.PI * frontLeftCollider.radius * frontLeftCollider.rpm * 60) / 2000;
         // Save the local velocity of the car in the x axis. Used to know if the car is drifting.
         _localVelocityX = transform.InverseTransformDirection(carRigidbody.linearVelocity).x;
         // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
