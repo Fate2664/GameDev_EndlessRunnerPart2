@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Obstacle
+  - ObstacleTrigger
+  - StaticObstacleTrigger
+  - RoadSpawn
+  - MovingObstacleTrigger
+  - Left Lane
+  - Right Lane
+  - Player Nose
   layers:
   - Default
   - TransparentFX

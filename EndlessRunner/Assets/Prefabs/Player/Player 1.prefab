@@ -204,6 +204,7 @@ MonoBehaviour:
   _brakeForce: 350
   _decelerationMultiplier: 2
   _handbrakeDriftMultiplier: 2
+  laneDistance: 20
   _bodyMassCenter: {x: 0, y: 0, z: 0}
   _frontLeftMesh: {fileID: 4662635221632510073}
   _frontLeftCollider: {fileID: 6610536707258190747}
@@ -229,7 +230,6 @@ MonoBehaviour:
   prometeoCarController: {fileID: 0}
   spawnManager: {fileID: 0}
   scoreManager: {fileID: 0}
-  laneDistance: 20
 --- !u!114 &1963393831885958008
 MonoBehaviour:
   m_ObjectHideFlags: 0

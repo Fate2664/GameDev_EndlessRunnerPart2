@@ -1626,6 +1626,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864740495}
   m_CullTransparentMesh: 1
+--- !u!4 &915791197 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6133738016287460257, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+  m_PrefabInstance: {fileID: 1179510728689019088}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &935210960
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1928,7 +1933,7 @@ MonoBehaviour:
   - {fileID: 8929420893673383766, guid: c9824f239cce6fa49915d664a6309e25, type: 3}
   - {fileID: 5969921748105540072, guid: c0c8fd91a7aa1544a9f1b6efe31a83ee, type: 3}
   - {fileID: 5948713306678977575, guid: 5bcd9c81d082d514baf5cedb2c192f74, type: 3}
-  Player: {fileID: 0}
+  Player: {fileID: 915791197}
   AmbulanceIndicator: {fileID: 2081499581058635209, guid: 4d21ac3562874d244b66a985ac2f9d8d, type: 3}
   DistanceAhead:
   - 400
@@ -2135,7 +2140,7 @@ GameObject:
   - component: {fileID: 1648222889}
   - component: {fileID: 1648222888}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: PlayGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3354,6 +3359,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _maxSpeed
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: scoreManager
       value: 
       objectReference: {fileID: 729040029}
@@ -3364,6 +3373,10 @@ PrefabInstance:
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _steeringSpeed
       value: 0.518
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _maxSteeringAngle
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: prometeoCarController
@@ -3380,6 +3393,10 @@ PrefabInstance:
     - target: {fileID: 4338698314717192484, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_LocalPosition.z
       value: -1.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 5437251553266463322, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5437251553266463322, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_AngularDrag

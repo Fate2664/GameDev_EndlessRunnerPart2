@@ -2,8 +2,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using System.Runtime.CompilerServices;
+using UnityEditor;
+using DG.Tweening;
 public class PlayerController : MonoBehaviour
 {
+    #region Settings
     [Space(20)]
     [Header("CAR SETUP")]
     [Space(10)]
@@ -22,7 +26,7 @@ public class PlayerController : MonoBehaviour
     [Space(10)]
     [Range(10, 45)]
     [SerializeField] private int _maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
-    public int maxSteeringAngle {  get { return _maxSteeringAngle; } }
+    public int maxSteeringAngle { get { return _maxSteeringAngle; } }
     [Range(0.1f, 1f)]
     [SerializeField] private float _steeringSpeed = 0.5f; // How fast the steering wheel turns.
     public float steeringSpeed { get { return _steeringSpeed; } }
@@ -36,13 +40,16 @@ public class PlayerController : MonoBehaviour
     [Range(1, 10)]
     [SerializeField] private int _handbrakeDriftMultiplier = 5; // How much grip the car loses when the user hit the handbrake.
     public int handbrakeDriftMultiplier { get { return _handbrakeDriftMultiplier; } }
+    [Range(10, 100)]
+    [SerializeField] private float _laneDistance = 20f;
+    public float laneDistance { get { return _laneDistance; } }
     [Space(10)]
     [SerializeField] private Vector3 _bodyMassCenter;
-    public Vector3 bodyMassCenter { get { return _bodyMassCenter; } } 
+    public Vector3 bodyMassCenter { get { return _bodyMassCenter; } }
 
     [Header("WHEELS")]
     [SerializeField] private GameObject _frontLeftMesh;
-    public GameObject frontLeftMesh {  get { return _frontLeftMesh; } }
+    public GameObject frontLeftMesh { get { return _frontLeftMesh; } }
     [SerializeField] private WheelCollider _frontLeftCollider;
     public WheelCollider frontLeftCollider { get { return _frontLeftCollider; } }
     [Space(10)]
@@ -57,7 +64,7 @@ public class PlayerController : MonoBehaviour
     public WheelCollider rearLeftCollider { get { return _rearLeftCollider; } }
     [Space(10)]
     [SerializeField] private GameObject _rearRightMesh;
-    public GameObject rearRightMesh {  get { return _rearRightMesh; } }
+    public GameObject rearRightMesh { get { return _rearRightMesh; } }
     [SerializeField] private WheelCollider _rearRightCollider;
     public WheelCollider rearRightCollider { get { return _rearRightCollider; } }
 
@@ -76,7 +83,7 @@ public class PlayerController : MonoBehaviour
     [Space(10)]
     // The following trail renderers are used as tire skids when the car loses traction.
     [SerializeField] private TrailRenderer _RLWTireSkid;
-    public TrailRenderer RLWTireSkid { get {  return _RLWTireSkid; } }
+    public TrailRenderer RLWTireSkid { get { return _RLWTireSkid; } }
     [SerializeField] private TrailRenderer _RRWTireSkid;
     public TrailRenderer RRWTireSkid { get { return _RRWTireSkid; } }
 
@@ -88,7 +95,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _useUI = false;
     public bool useUI { get { return _useUI; } }
     [SerializeField] private TextMeshPro _carSpeedText; // Used to store the UI object that is going to show the speed of the car.
-    public TextMeshPro carSpeedText { get {  return _carSpeedText; } }
+    public TextMeshPro carSpeedText { get { return _carSpeedText; } }
 
     [Space(20)]
     [Header("Sounds")]
@@ -97,7 +104,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _useSounds = false;
     public bool useSounds { get { return _useSounds; } }
     [SerializeField] private AudioSource _carEngineSound; // This variable stores the sound of the car engine.
-    public AudioSource carEngineSound {  get { return _carEngineSound; } }
+    public AudioSource carEngineSound { get { return _carEngineSound; } }
     [SerializeField] private AudioSource _tireScreechSound; // This variable stores the sound of the tire screech (when the car is drifting).
     public AudioSource tireScreechSound { get { return _tireScreechSound; } }
 
@@ -107,49 +114,55 @@ public class PlayerController : MonoBehaviour
     public bool isDrifting; // Used to know whether the car is drifting or not.
     [HideInInspector]
     public bool isTractionLocked; // Used to know whether the traction of the car is locked or not.
+    [Space(20)]
 
+    [Header("Connections")]
+    [Space(10)]
     [SerializeField] private PrometeoCarController prometeoCarController;
+    [SerializeField] private SpawnManager spawnManager;
+    [SerializeField] private Score scoreManager;
+
+    #endregion
+
+
     private Rigidbody _carRigidbody;
-    public Rigidbody carRigidbody {  get { return _carRigidbody; } }
+    public Rigidbody carRigidbody { get { return _carRigidbody; } }
+
     private float _localVelocityZ;
-    public float localVelocityZ {  get { return _localVelocityZ; } }
+    public float localVelocityZ { get { return _localVelocityZ; } }
     private float _localVelocityX;
-    public float localVelocityX {  get { return _localVelocityX; } }
+    public float localVelocityX { get { return _localVelocityX; } }
 
-
-    public SpawnManager spawnManager;
-    public Score scoreManager;
     private int desiredLane = 1; //0 = left lane; 1 = right lane
-    public float laneDistance = 20.0f;
-
 
     private void Start()
     {
         _carRigidbody = GetComponent<Rigidbody>();
-    }
-    void Update()
-    {
-        
 
-        if (Input.GetKeyDown(KeyCode.A))
+    }
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane)
         {
             desiredLane--;      //change the desired lane
             if (desiredLane < 0)
             {
                 desiredLane = 0;
             }
+            //prometeoCarController.TurnLeft();
+            prometeoCarController.LaneChange(desiredLane, laneDistance);
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane)
         {
             desiredLane++;      //change the desired lane
             if (desiredLane > 1)
             {
                 desiredLane = 1;
             }
+            //prometeoCarController.TurnRight();
+            prometeoCarController.LaneChange(desiredLane, laneDistance);
         }
-
     }
-
     void FixedUpdate()
     {
         MoveCharacter();    //call the MoveCharacter method
@@ -163,7 +176,7 @@ public class PlayerController : MonoBehaviour
         _localVelocityX = transform.InverseTransformDirection(carRigidbody.linearVelocity).x;
         // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
         _localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
-    
+
 
 
         if (Input.GetKey(KeyCode.W))
@@ -178,21 +191,7 @@ public class PlayerController : MonoBehaviour
             prometeoCarController.deceleratingCar = false;
             prometeoCarController.GoReverse();
         }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            prometeoCarController.TurnLeft();
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            prometeoCarController.TurnRight();
-        }
-        if (Input.GetKey(KeyCode.Space))
-        {
-            prometeoCarController.CancelInvoke("DecelerateCar");
-            prometeoCarController.deceleratingCar = false;
-            prometeoCarController.Handbrake();
-        }
+       
         if (Input.GetKeyUp(KeyCode.Space))
         {
             prometeoCarController.RecoverTraction();
@@ -222,20 +221,29 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-
         //if the player collides with an object, call the corresponding method for that event
         if (collision.CompareTag("RoadSpawn"))
         {
             spawnManager.SpawnTriggerEntered();
 
         }
-        if (collision.CompareTag("StaticObstacleTrigger"))
+        if (collision.CompareTag("StaticObstacleTrigger") || (collision.CompareTag("MovingObstacleTrigger")))
         {
             scoreManager.IncrementScore();
         }
-        if (collision.CompareTag("MovingObstacleTrigger"))
-        {
-            scoreManager.IncrementScore();
-        }
+
+
+    }
+
+    void OnDrawGizmos()
+    {
+
+        float targetX = (desiredLane - 1) * laneDistance;
+        Vector3 start = transform.position;
+        Vector3 end = new Vector3(targetX, transform.position.y, transform.position.z);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(start, end);
+        Gizmos.DrawSphere(end, 1f);
     }
 }

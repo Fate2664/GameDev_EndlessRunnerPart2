@@ -8,6 +8,7 @@ P.S: If you need more cars, you can check my other vehicle assets on the Unity A
 something useful for your game. Best regards, Mena.
 */
 
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,36 +19,17 @@ using UnityEngine.UIElements;
 public class PrometeoCarController : MonoBehaviour
 {
 
-    //CONTROLS
-    /*
-      [Space(20)]
-      //[Header("CONTROLS")]
-      [Space(10)]
-      //The following variables lets you to set up touch controls for mobile devices.
-      public bool useTouchControls = false;
-      public GameObject throttleButton;
-      PrometeoTouchInput throttlePTI;
-      public GameObject reverseButton;
-      PrometeoTouchInput reversePTI;
-      public GameObject turnRightButton;
-      PrometeoTouchInput turnRightPTI;
-      public GameObject turnLeftButton;
-      PrometeoTouchInput turnLeftPTI;
-      public GameObject handbrakeButton;
-      PrometeoTouchInput handbrakePTI;
-    */
-    
+
     //PRIVATE VARIABLES
 
-    /*
-    IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
-    */
     private PlayerController playerController;
     [HideInInspector]
     public float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
     private float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
     private float driftingAxis;
     private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
+    [HideInInspector]
+    public bool isSwitchingLane = false;
     [HideInInspector]
     public bool deceleratingCar;
 
@@ -255,11 +237,13 @@ public class PrometeoCarController : MonoBehaviour
         var steeringAngle = steeringAxis * playerController.maxSteeringAngle;
         playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
         playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
+        
     }
 
     //The following method turns the front car wheels to the right. The speed of this movement will depend on the steeringSpeed variable.
     public void TurnRight()
     {
+        
         steeringAxis = steeringAxis + (Time.deltaTime * 10f * playerController.steeringSpeed);
         if (steeringAxis > 1f)
         {
@@ -268,6 +252,28 @@ public class PrometeoCarController : MonoBehaviour
         var steeringAngle = steeringAxis * playerController.maxSteeringAngle;
         playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
         playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
+        
+    }
+
+    public void LaneChange(int desiredLane, float laneDistance)
+    {
+        float targetX = (desiredLane - 1) * laneDistance;
+        int direction = (targetX - transform.position.x > 0) ? 1 : -1;
+
+        float rotationAngle = -15f * direction;
+
+        transform.DOKill();
+
+        isSwitchingLane = true;
+
+        Sequence laneChange = DOTween.Sequence();
+
+        laneChange.Append(playerController.carRigidbody.DORotate(new Vector3(0f, rotationAngle, 0f), 0.15f))
+            .Join(playerController.carRigidbody.DOMoveX(targetX, 0.1f)
+            .SetEase(Ease.InOutQuad))
+            .Append(playerController.carRigidbody.DORotate(Vector3.zero, 0.15f))
+            .OnComplete(() => isSwitchingLane = false);
+        Debug.Log("Switching Lane to " + desiredLane);
     }
 
     //The following method takes the front car wheels to their default position (rotation = 0). The speed of this movement will depend
@@ -403,7 +409,7 @@ public class PrometeoCarController : MonoBehaviour
         sidewaysFriction.extremumValue = 1.7f;
         sidewaysFriction.asymptoteSlip = 1.0f;
         sidewaysFriction.asymptoteValue = 1.0f;
-        sidewaysFriction.stiffness = 20f;
+        sidewaysFriction.stiffness = 35f;
         collider.sidewaysFriction = sidewaysFriction;
     }
 
@@ -585,7 +591,6 @@ public class PrometeoCarController : MonoBehaviour
     // depending on the value of the bool variables 'isDrifting' and 'isTractionLocked'.
     public void DriftCarPS()
     {
-        Debug.Log("Drifting");
         if (playerController.useEffects)
         {
             try
@@ -693,5 +698,7 @@ public class PrometeoCarController : MonoBehaviour
             driftingAxis = 0f;
         }
     }
+
+   
 
 }
