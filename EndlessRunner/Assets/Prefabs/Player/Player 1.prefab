@@ -140,6 +140,7 @@ Transform:
   - {fileID: 4091215802723261907}
   - {fileID: 2064831872828882088}
   - {fileID: 5843320638216379437}
+  - {fileID: 3507245017267010969}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!54 &5437251553266463322
@@ -182,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   steeringAxis: 0
+  isSwitchingLane: 0
   deceleratingCar: 0
 --- !u!114 &3605388428595178517
 MonoBehaviour:
@@ -204,8 +206,9 @@ MonoBehaviour:
   _brakeForce: 350
   _decelerationMultiplier: 2
   _handbrakeDriftMultiplier: 2
-  laneDistance: 20
   _bodyMassCenter: {x: 0, y: 0, z: 0}
+  _laneDistance: 20
+  _centeringForce: 5
   _frontLeftMesh: {fileID: 4662635221632510073}
   _frontLeftCollider: {fileID: 6610536707258190747}
   _frontRightMesh: {fileID: 6696555834307767856}
@@ -385,6 +388,37 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!1 &2396139846800384033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3507245017267010969}
+  m_Layer: 0
+  m_Name: PlayerNose
+  m_TagString: Player Nose
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3507245017267010969
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2396139846800384033}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: -0.015, y: 0.7, z: 2.609}
+  m_LocalScale: {x: 0.11111112, y: 0.11111112, z: 0.11111112}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6133738016287460257}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3022923061848495651
 GameObject:
   m_ObjectHideFlags: 0

@@ -3371,12 +3371,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1208644397}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _laneDistance
+      value: 15.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _steeringSpeed
       value: 0.518
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _centeringForce
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _maxSteeringAngle
-      value: 10
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: prometeoCarController
@@ -3402,9 +3410,21 @@ PrefabInstance:
       propertyPath: m_AngularDrag
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 5437251553266463322, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5617697965111401690, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5617697965111401690, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6133738016287460257, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6133738016287460257, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3441,6 +3461,10 @@ PrefabInstance:
     - target: {fileID: 6133738016287460257, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219406952614151153, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8790070151089670519, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: moveWithTransform

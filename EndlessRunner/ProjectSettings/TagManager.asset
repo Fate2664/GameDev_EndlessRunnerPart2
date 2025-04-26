@@ -9,8 +9,6 @@ TagManager:
   - StaticObstacleTrigger
   - RoadSpawn
   - MovingObstacleTrigger
-  - Left Lane
-  - Right Lane
   - Player Nose
   layers:
   - Default

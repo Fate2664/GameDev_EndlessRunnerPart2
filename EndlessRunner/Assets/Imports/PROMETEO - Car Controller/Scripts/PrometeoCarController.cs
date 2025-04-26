@@ -28,6 +28,8 @@ public class PrometeoCarController : MonoBehaviour
     private float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
     private float driftingAxis;
     private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
+    private int currentLane = 0;
+    private static GameObject playerNose;
     [HideInInspector]
     public bool isSwitchingLane = false;
     [HideInInspector]
@@ -55,6 +57,7 @@ public class PrometeoCarController : MonoBehaviour
         //in the inspector.
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         playerController.carRigidbody.centerOfMass = playerController.bodyMassCenter;
+        playerNose = GameObject.FindWithTag("Player Nose");
         //Initial setup to calculate the drift value of the car. This part could look a bit
         //complicated, but do not be afraid, the only thing we're doing here is to save the default
         //friction values of the car wheels so we can set an appropiate drifting value later.
@@ -155,7 +158,7 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
-
+   
     // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
     public void CarSpeedUI()
     {
@@ -223,61 +226,97 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     //
-    //STEERING METHODS
+    //STEERING METHOD
     //
 
-    //The following method turns the front car wheels to the left. The speed of this movement will depend on the steeringSpeed variable.
-    public void TurnLeft()
+    public void LaneChange(int desiredLane)
     {
-        steeringAxis = steeringAxis - (Time.deltaTime * 10f * playerController.steeringSpeed);
-        if (steeringAxis < -1f)
+        float targetX = 0f;
+        float targetSteeringAxis = 0f;
+
+        switch (desiredLane)
         {
-            steeringAxis = -1f;
+            case 0: // Left
+                targetX = playerController.laneDistance;
+                targetSteeringAxis = -1f;
+                currentLane = desiredLane;
+                break;
+            case 1: // Right
+                targetX = -playerController.laneDistance;
+                targetSteeringAxis = 1f;
+                currentLane = desiredLane;
+                break;
         }
-        var steeringAngle = steeringAxis * playerController.maxSteeringAngle;
-        playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
-        playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
-        
-    }
 
-    //The following method turns the front car wheels to the right. The speed of this movement will depend on the steeringSpeed variable.
-    public void TurnRight()
-    {
-        
-        steeringAxis = steeringAxis + (Time.deltaTime * 10f * playerController.steeringSpeed);
-        if (steeringAxis > 1f)
-        {
-            steeringAxis = 1f;
-        }
-        var steeringAngle = steeringAxis * playerController.maxSteeringAngle;
-        playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
-        playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
-        
-    }
+        int direction = (targetX - playerController.transform.position.x > 0) ? -1 : 1;
+        float rotationAmount = 22f * direction;
 
-    public void LaneChange(int desiredLane, float laneDistance)
-    {
-        float targetX = (desiredLane - 1) * laneDistance;
-        int direction = (targetX - transform.position.x > 0) ? 1 : -1;
-
-        float rotationAngle = -15f * direction;
-
-        transform.DOKill();
+        playerController.transform.DOKill();
+        DOTween.Kill(steeringAxisTween); // Kill any previous steering tween
 
         isSwitchingLane = true;
 
+        Quaternion startRotation = playerController.transform.rotation;
+        Quaternion targetRotation = startRotation * Quaternion.Euler(0f, rotationAmount, 0f);
+
         Sequence laneChange = DOTween.Sequence();
 
-        laneChange.Append(playerController.carRigidbody.DORotate(new Vector3(0f, rotationAngle, 0f), 0.15f))
-            .Join(playerController.carRigidbody.DOMoveX(targetX, 0.1f)
-            .SetEase(Ease.InOutQuad))
-            .Append(playerController.carRigidbody.DORotate(Vector3.zero, 0.15f))
-            .OnComplete(() => isSwitchingLane = false);
-        Debug.Log("Switching Lane to " + desiredLane);
+        laneChange.Append(playerController.transform.DORotateQuaternion(targetRotation, 0.1f).SetEase(Ease.InOutSine))
+            .Join(playerController.carRigidbody.DOMoveX(targetX, 0.2f).SetEase(Ease.InOutSine))
+            .Append(playerController.transform.DORotateQuaternion(startRotation, 0.1f).SetEase(Ease.InOutSine))
+            .OnUpdate(() => ApplySteering())
+            .OnComplete(() =>
+            {
+                isSwitchingLane = false;
+                steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, 0f, 0.3f).SetEase(Ease.OutSine);
+                
+            });
+
+        steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.2f)
+            .SetEase(Ease.OutSine);
+    }
+
+    private Tween steeringAxisTween; 
+
+    private void ApplySteering()
+    {
+        float steeringAngle = steeringAxis * playerController.maxSteeringAngle;
+        playerController.frontLeftCollider.steerAngle = steeringAngle;
+        playerController.frontRightCollider.steerAngle = steeringAngle;
+    }
+
+
+    public void KeepCarInLane()
+    {
+        float targetX = 0f;
+        switch (currentLane)
+        {
+            case 0:
+                targetX = 20;
+                break;
+            case 1:
+                targetX = -20;
+                break;
+        }
+
+        float distanceFromCenter = targetX - playerNose.transform.position.x;
+
+        float correctionSteeringAxis = Mathf.Clamp(distanceFromCenter * playerController.centeringForce, -1f, 1f);
+
+        ApplySteeringCorrection(correctionSteeringAxis);
+    }
+
+    private void ApplySteeringCorrection(float correctionSteeringAxis)
+    {
+        float steeringAngle = correctionSteeringAxis * playerController.maxSteeringAngle;
+
+        playerController.frontLeftCollider.steerAngle = -steeringAngle;
+        playerController.frontRightCollider.steerAngle = -steeringAngle;
     }
 
     //The following method takes the front car wheels to their default position (rotation = 0). The speed of this movement will depend
     // on the steeringSpeed variable.
+    /*
     public void ResetSteeringAngle()
     {
         if (steeringAxis < 0f)
@@ -296,7 +335,7 @@ public class PrometeoCarController : MonoBehaviour
         playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
         playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
     }
-
+    */
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.
     public void AnimateWheelMeshes()
     {
@@ -699,6 +738,6 @@ public class PrometeoCarController : MonoBehaviour
         }
     }
 
-   
+
 
 }

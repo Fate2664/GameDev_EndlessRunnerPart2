@@ -5,6 +5,7 @@ using TMPro;
 using System.Runtime.CompilerServices;
 using UnityEditor;
 using DG.Tweening;
+using Unity.VisualScripting;
 public class PlayerController : MonoBehaviour
 {
     #region Settings
@@ -40,14 +41,22 @@ public class PlayerController : MonoBehaviour
     [Range(1, 10)]
     [SerializeField] private int _handbrakeDriftMultiplier = 5; // How much grip the car loses when the user hit the handbrake.
     public int handbrakeDriftMultiplier { get { return _handbrakeDriftMultiplier; } }
-    [Range(10, 100)]
-    [SerializeField] private float _laneDistance = 20f;
-    public float laneDistance { get { return _laneDistance; } }
     [Space(10)]
     [SerializeField] private Vector3 _bodyMassCenter;
     public Vector3 bodyMassCenter { get { return _bodyMassCenter; } }
 
+    [Space(10)]
+    [Header("LANE SETUP")]
+    [Space(10)]
+    [Range(10, 100)]
+    [SerializeField] private float _laneDistance = 20f;
+    public float laneDistance { get { return _laneDistance; } }
+    [Range(0, 5)]
+    [SerializeField] private float _centeringForce = 5f;
+    public float centeringForce { get { return _centeringForce; } }
+
     [Header("WHEELS")]
+    [Space(10)]
     [SerializeField] private GameObject _frontLeftMesh;
     public GameObject frontLeftMesh { get { return _frontLeftMesh; } }
     [SerializeField] private WheelCollider _frontLeftCollider;
@@ -133,7 +142,7 @@ public class PlayerController : MonoBehaviour
     private float _localVelocityX;
     public float localVelocityX { get { return _localVelocityX; } }
 
-    private int desiredLane = 1; //0 = left lane; 1 = right lane
+    private int desiredLane = 0; //0 = left lane; 1 = right lane
 
     private void Start()
     {
@@ -142,30 +151,15 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane)
+        MoveCharacter();    //call the MoveCharacter method
+        if (!prometeoCarController.isSwitchingLane)
         {
-            desiredLane--;      //change the desired lane
-            if (desiredLane < 0)
-            {
-                desiredLane = 0;
-            }
-            //prometeoCarController.TurnLeft();
-            prometeoCarController.LaneChange(desiredLane, laneDistance);
-        }
-        if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane)
-        {
-            desiredLane++;      //change the desired lane
-            if (desiredLane > 1)
-            {
-                desiredLane = 1;
-            }
-            //prometeoCarController.TurnRight();
-            prometeoCarController.LaneChange(desiredLane, laneDistance);
+            prometeoCarController.KeepCarInLane();
         }
     }
     void FixedUpdate()
     {
-        MoveCharacter();    //call the MoveCharacter method
+        
     }
 
     private void MoveCharacter()
@@ -191,7 +185,26 @@ public class PlayerController : MonoBehaviour
             prometeoCarController.deceleratingCar = false;
             prometeoCarController.GoReverse();
         }
-       
+        if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane)
+        {
+            desiredLane--;      //change the desired lane
+            if (desiredLane < 0)
+            {
+                desiredLane = 0;
+            }
+            //prometeoCarController.TurnLeft();
+            prometeoCarController.LaneChange(desiredLane);
+        }
+        if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane)
+        {
+            desiredLane++;      //change the desired lane
+            if (desiredLane > 1)
+            {
+                desiredLane = 1;
+            }
+            //prometeoCarController.TurnRight();
+            prometeoCarController.LaneChange(desiredLane);
+        }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             prometeoCarController.RecoverTraction();
@@ -207,7 +220,7 @@ public class PlayerController : MonoBehaviour
         }
         if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && prometeoCarController.steeringAxis != 0f)
         {
-            prometeoCarController.ResetSteeringAngle();
+            //prometeoCarController.ResetSteeringAngle();
         }
 
 
@@ -227,7 +240,7 @@ public class PlayerController : MonoBehaviour
             spawnManager.SpawnTriggerEntered();
 
         }
-        if (collision.CompareTag("StaticObstacleTrigger") || (collision.CompareTag("MovingObstacleTrigger")))
+        else if (collision.CompareTag("StaticObstacleTrigger") || (collision.CompareTag("MovingObstacleTrigger")))
         {
             scoreManager.IncrementScore();
         }
@@ -235,15 +248,5 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void OnDrawGizmos()
-    {
-
-        float targetX = (desiredLane - 1) * laneDistance;
-        Vector3 start = transform.position;
-        Vector3 end = new Vector3(targetX, transform.position.y, transform.position.z);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(start, end);
-        Gizmos.DrawSphere(end, 1f);
-    }
+    
 }
