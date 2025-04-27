@@ -52,8 +52,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _laneDistance = 20f;
     public float laneDistance { get { return _laneDistance; } }
     [Range(0, 5)]
-    [SerializeField] private float _centeringForce = 5f;
+    [SerializeField] private float _centeringForce = 0.5f;
     public float centeringForce { get { return _centeringForce; } }
+    [Range(0, 5)]
+    [SerializeField] private float _dampingForce = 0.5f;
+    public float dampingForce { get { return _dampingForce; } }
+    [Range(0, 2)]
+    [SerializeField] private float _yawCorrectionForce = 0.02f;
+    public float yawCorrectionForce { get { return _yawCorrectionForce; } }
+    [Range(0, 2)]
+    [SerializeField] private float _pidKp = 1.0f;
+    public float pidKp { get { return _pidKp; } }
+    [Range(0, 2)]
+    [SerializeField] private float _pidKi = 0.2f;
+    public float pidKi { get { return _pidKi; } }
+    [Range(0, 2)]
+    [SerializeField] private float _pidKd = 0.5f;
+    public float pidKd { get { return _pidKd; } }
+
 
     [Header("WHEELS")]
     [Space(10)]

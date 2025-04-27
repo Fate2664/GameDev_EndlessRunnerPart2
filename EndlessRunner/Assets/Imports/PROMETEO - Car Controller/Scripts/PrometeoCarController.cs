@@ -158,7 +158,7 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
-   
+
     // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
     public void CarSpeedUI()
     {
@@ -249,7 +249,7 @@ public class PrometeoCarController : MonoBehaviour
         }
 
         int direction = (targetX - playerController.transform.position.x > 0) ? -1 : 1;
-        float rotationAmount = 22f * direction;
+        float rotationAmount = 10f * direction;
 
         playerController.transform.DOKill();
         DOTween.Kill(steeringAxisTween); // Kill any previous steering tween
@@ -263,20 +263,22 @@ public class PrometeoCarController : MonoBehaviour
 
         laneChange.Append(playerController.transform.DORotateQuaternion(targetRotation, 0.1f).SetEase(Ease.InOutSine))
             .Join(playerController.carRigidbody.DOMoveX(targetX, 0.2f).SetEase(Ease.InOutSine))
-            .Append(playerController.transform.DORotateQuaternion(startRotation, 0.1f).SetEase(Ease.InOutSine))
             .OnUpdate(() => ApplySteering())
             .OnComplete(() =>
             {
                 isSwitchingLane = false;
-                steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, 0f, 0.3f).SetEase(Ease.OutSine);
-                
             });
 
         steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.2f)
-            .SetEase(Ease.OutSine);
+            .SetEase(Ease.OutSine)
+            .OnComplete(() =>
+            {
+                steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, 0f, 0.15f)
+                .SetEase(Ease.OutSine);
+            });
     }
 
-    private Tween steeringAxisTween; 
+    private Tween steeringAxisTween;
 
     private void ApplySteering()
     {
@@ -299,11 +301,34 @@ public class PrometeoCarController : MonoBehaviour
                 break;
         }
 
+
         float distanceFromCenter = targetX - playerNose.transform.position.x;
 
-        float correctionSteeringAxis = Mathf.Clamp(distanceFromCenter * playerController.centeringForce, -1f, 1f);
+        Vector3 localVelocity = playerController.transform.InverseTransformDirection(playerController.carRigidbody.linearVelocity);
+        float lateralVelocity = localVelocity.x;
+        float forwardSpeed = Mathf.Abs(localVelocity.z);
 
-        ApplySteeringCorrection(correctionSteeringAxis);
+        float basepositionDeadzone = 0.2f;
+        float baselateralVelocityDeadzone = 0.2f;
+
+        float positionDeadzone = basepositionDeadzone + (forwardSpeed * 0.01f);
+        float lateralVelocityDeadzone = baselateralVelocityDeadzone + (forwardSpeed * 0.01f);
+
+        bool isAlmostStraight = MathF.Abs(lateralVelocity) < 5f && Mathf.Abs(distanceFromCenter) < 5f;
+
+        if (Mathf.Abs(distanceFromCenter) < positionDeadzone)
+            distanceFromCenter = 0f;
+
+        if (Mathf.Abs(lateralVelocity) < lateralVelocityDeadzone)
+            lateralVelocity = 0f;
+
+        float correctionSteeringAxis = (distanceFromCenter * playerController.centeringForce) - (lateralVelocity * playerController.dampingForce);
+        correctionSteeringAxis = Mathf.Clamp(correctionSteeringAxis, -1f, 1f);
+
+       
+       
+            ApplySteeringCorrection(correctionSteeringAxis);
+       
     }
 
     private void ApplySteeringCorrection(float correctionSteeringAxis)
