@@ -27,10 +27,10 @@ public class PlayerController : MonoBehaviour
     [Space(10)]
     [Range(10, 45)]
     [SerializeField] private int _maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
-    public int maxSteeringAngle { get { return _maxSteeringAngle; } }
+    public int maxSteeringAngle { get { return _maxSteeringAngle; } set { _maxSteeringAngle = value; } }
     [Range(0.1f, 1f)]
     [SerializeField] private float _steeringSpeed = 0.5f; // How fast the steering wheel turns.
-    public float steeringSpeed { get { return _steeringSpeed; } }
+    public float steeringSpeed { get { return _steeringSpeed; } set { _steeringSpeed = value; } }
     [Space(10)]
     [Range(100, 600)]
     [SerializeField] private int _brakeForce = 350; // The strength of the wheel brakes.
@@ -54,21 +54,9 @@ public class PlayerController : MonoBehaviour
     [Range(0, 5)]
     [SerializeField] private float _centeringForce = 0.5f;
     public float centeringForce { get { return _centeringForce; } }
-    [Range(0, 5)]
+    [Range(0, 1)]
     [SerializeField] private float _dampingForce = 0.5f;
     public float dampingForce { get { return _dampingForce; } }
-    [Range(0, 2)]
-    [SerializeField] private float _yawCorrectionForce = 0.02f;
-    public float yawCorrectionForce { get { return _yawCorrectionForce; } }
-    [Range(0, 2)]
-    [SerializeField] private float _pidKp = 1.0f;
-    public float pidKp { get { return _pidKp; } }
-    [Range(0, 2)]
-    [SerializeField] private float _pidKi = 0.2f;
-    public float pidKi { get { return _pidKi; } }
-    [Range(0, 2)]
-    [SerializeField] private float _pidKd = 0.5f;
-    public float pidKd { get { return _pidKd; } }
 
 
     [Header("WHEELS")]
@@ -158,12 +146,15 @@ public class PlayerController : MonoBehaviour
     private float _localVelocityX;
     public float localVelocityX { get { return _localVelocityX; } }
 
+    private bool canTurnLeft;
+    private bool canTurnRight;
+    private int currentLane = 0;
+
     private int desiredLane = 0; //0 = left lane; 1 = right lane
 
     private void Start()
     {
         _carRigidbody = GetComponent<Rigidbody>();
-
     }
     private void Update()
     {
@@ -172,10 +163,6 @@ public class PlayerController : MonoBehaviour
         {
             prometeoCarController.KeepCarInLane();
         }
-    }
-    void FixedUpdate()
-    {
-        
     }
 
     private void MoveCharacter()
@@ -187,66 +174,69 @@ public class PlayerController : MonoBehaviour
         // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
         _localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
 
+        prometeoCarController.CancelInvoke("DecelerateCar");
+        prometeoCarController.deceleratingCar = false;
+        prometeoCarController.GoForward();
 
-
-        if (Input.GetKey(KeyCode.W))
+        //ill fix this later....
+        if (currentLane == 0)
         {
-            prometeoCarController.CancelInvoke("DecelerateCar");
-            prometeoCarController.deceleratingCar = false;
-            prometeoCarController.GoForward();
+            canTurnLeft = false;
+            canTurnRight = true;
         }
+        else if (currentLane == 1)
+        {
+            canTurnRight = false;
+            canTurnLeft = true;
+        }
+
         if (Input.GetKey(KeyCode.S))
         {
             prometeoCarController.CancelInvoke("DecelerateCar");
             prometeoCarController.deceleratingCar = false;
             prometeoCarController.GoReverse();
         }
+
         if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane)
         {
-            desiredLane--;      //change the desired lane
-            if (desiredLane < 0)
+            if (canTurnLeft)
             {
-                desiredLane = 0;
+                desiredLane--;      //change the desired lane
+                currentLane--;
+                if (desiredLane < 0)
+                {
+                    desiredLane = 0;
+                }
+                if (currentLane < 0)
+                {
+                    currentLane = 0;
+                }
+                prometeoCarController.LaneChange(desiredLane);
             }
-            //prometeoCarController.TurnLeft();
-            prometeoCarController.LaneChange(desiredLane);
+            else return;
         }
         if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane)
         {
-            desiredLane++;      //change the desired lane
-            if (desiredLane > 1)
+            if (canTurnRight)
             {
-                desiredLane = 1;
+                desiredLane++;      //change the desired lane
+                currentLane++;
+                if (desiredLane > 1)
+                {
+                    desiredLane = 1;
+                }
+                if (currentLane > 1)
+                {
+                    currentLane = 1;
+                }
+                prometeoCarController.LaneChange(desiredLane);
             }
-            //prometeoCarController.TurnRight();
-            prometeoCarController.LaneChange(desiredLane);
         }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            prometeoCarController.RecoverTraction();
-        }
-        if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)))
-        {
-            prometeoCarController.ThrottleOff();
-        }
-        if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !prometeoCarController.deceleratingCar)
-        {
-            prometeoCarController.InvokeRepeating("DecelerateCar", 0f, 0.1f);
-            prometeoCarController.deceleratingCar = true;
-        }
-        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && prometeoCarController.steeringAxis != 0f)
-        {
-            //prometeoCarController.ResetSteeringAngle();
-        }
-
-
-
 
         // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
         prometeoCarController.AnimateWheelMeshes();
-
-
     }
+
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -264,5 +254,5 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    
+
 }
