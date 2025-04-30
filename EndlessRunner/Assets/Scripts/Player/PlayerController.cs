@@ -146,9 +146,6 @@ public class PlayerController : MonoBehaviour
     private float _localVelocityX;
     public float localVelocityX { get { return _localVelocityX; } }
 
-    private bool canTurnLeft;
-    private bool canTurnRight;
-    private int currentLane = 0;
 
     private int desiredLane = 0; //0 = left lane; 1 = right lane
 
@@ -178,17 +175,8 @@ public class PlayerController : MonoBehaviour
         prometeoCarController.deceleratingCar = false;
         prometeoCarController.GoForward();
 
-        //ill fix this later....
-        if (currentLane == 0)
-        {
-            canTurnLeft = false;
-            canTurnRight = true;
-        }
-        else if (currentLane == 1)
-        {
-            canTurnRight = false;
-            canTurnLeft = true;
-        }
+
+
 
         if (Input.GetKey(KeyCode.S))
         {
@@ -199,38 +187,27 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane)
         {
-            if (canTurnLeft)
+
+            desiredLane--;      //change the desired lane
+            if (desiredLane < 0)
             {
-                desiredLane--;      //change the desired lane
-                currentLane--;
-                if (desiredLane < 0)
-                {
-                    desiredLane = 0;
-                }
-                if (currentLane < 0)
-                {
-                    currentLane = 0;
-                }
-                prometeoCarController.LaneChange(desiredLane);
+                desiredLane = 0;
             }
-            else return;
+           
+            prometeoCarController.LaneChange(desiredLane);
+
         }
         if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane)
         {
-            if (canTurnRight)
+
+            desiredLane++;      //change the desired lane
+            if (desiredLane > 1)
             {
-                desiredLane++;      //change the desired lane
-                currentLane++;
-                if (desiredLane > 1)
-                {
-                    desiredLane = 1;
-                }
-                if (currentLane > 1)
-                {
-                    currentLane = 1;
-                }
-                prometeoCarController.LaneChange(desiredLane);
+                desiredLane = 1;
             }
+            
+            prometeoCarController.LaneChange(desiredLane);
+
         }
 
         // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
