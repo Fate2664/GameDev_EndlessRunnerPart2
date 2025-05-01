@@ -4,7 +4,6 @@ public class SpawnManager : MonoBehaviour
 {
     RoadSpawner RoadSpawner;
     LandSpawner LandSpawner;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //get the scripts for each spawner
@@ -16,7 +15,7 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnTriggerEntered()
     {
-        //slow down the destoruction of the roads if the speed pickup is applied
+        //slow down the destruction of the roads if the speed pickup is applied
         if (PickupManager.PowerUpCheck && PickupManager.pickup == "SpeedPickup")
         {
             Invoke(nameof(SpawnRoad), 1f);

@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5195518764090084044}
   - component: {fileID: 4020929922035434626}
   - component: {fileID: -7905535034928674401}
+  - component: {fileID: 3207659627513508717}
   m_Layer: 0
   m_Name: Traffic
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,7 +104,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -121,3 +122,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9dfacabe68707c4ea24c403c93308b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3207659627513508717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4928642715715310126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85fc4d6237eaf447a84ecde0130b8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obsConfig: {fileID: 11400000, guid: 3b9f497c7667d174aba6b5babc6ac484, type: 2}

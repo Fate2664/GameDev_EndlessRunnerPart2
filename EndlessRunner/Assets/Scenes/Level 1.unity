@@ -1924,11 +1924,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d621d11f8f8cb19479d2ac003d669047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnRate: 3
+  obsSpawneRate: 3
+  trafficSpawnRate: 1
   distanceAhead:
   - 1400
   - 600
-  - 600
+  - 800
   obsMovingTowardPlr:
   - {fileID: 5969921748105540072, guid: c0c8fd91a7aa1544a9f1b6efe31a83ee, type: 3}
   obsMovingPastPlr:

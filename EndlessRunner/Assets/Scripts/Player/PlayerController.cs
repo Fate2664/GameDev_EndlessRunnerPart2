@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
     [Range(0, 5)]
     [SerializeField] private float _centeringForce = 0.5f;
     public float centeringForce { get { return _centeringForce; } }
-    [Range(0, 1)]
+    [Range(0, 0.2f)]
     [SerializeField] private float _dampingForce = 0.5f;
     public float dampingForce { get { return _dampingForce; } }
 

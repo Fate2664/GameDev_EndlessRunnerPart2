@@ -441,6 +441,7 @@ GameObject:
   - component: {fileID: 8829712949192099694}
   - component: {fileID: 2621741500896744340}
   - component: {fileID: 1506680932067034071}
+  - component: {fileID: 1996043431836681994}
   m_Layer: 0
   m_Name: Moving Vehicle
   m_TagString: Obstacle
@@ -482,7 +483,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9dfacabe68707c4ea24c403c93308b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementSpeed: 300
 --- !u!65 &1506680932067034071
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -504,6 +504,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.2164187, y: 3.8875575, z: 9.001601}
   m_Center: {x: -0.013557389, y: 1.4437885, z: 0.16459492}
+--- !u!114 &1996043431836681994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5969921748105540072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85fc4d6237eaf447a84ecde0130b8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obsConfig: {fileID: 11400000, guid: 2c18b76c57881ca4bbb74cea385d4ffa, type: 2}
 --- !u!1 &6059310380674230300
 GameObject:
   m_ObjectHideFlags: 0
