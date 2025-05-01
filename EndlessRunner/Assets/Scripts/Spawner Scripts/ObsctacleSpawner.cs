@@ -32,12 +32,15 @@ public class ObstacleSpawner : MonoBehaviour
     private float counter = 0f;
     private float counterTraffic = 0f;
     private Transform playerTransform;
+    private LaneManager laneManager;
+    private readonly float[] lanePositions = { -20f, 20f };
 
 
 
     private void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        laneManager = new LaneManager(lanePositions);
     }
 
 
@@ -45,7 +48,7 @@ public class ObstacleSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SpawnObstacle();
+        //SpawnObstacle();
         SpawnTraffic();
         //DifficultyScaling();
     }
@@ -171,32 +174,50 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (obsTraffic.Count == 0 || playerTransform == null) return;
 
-        GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
-        int trafficLane = Random.RandomRange(0, 2);
-        ObstacleLink link = prefab.GetComponent<ObstacleLink>();
-        if (link == null || link.obsConfig == null) return;
+        laneManager.ResetLanes();
 
-        ObstacleConfig config = link.obsConfig;
+        int laneToLeaveFree = Random.Range(0, laneManager.laneCount);
+        laneManager.OccupyLane(laneToLeaveFree);
 
-        float laneX = (trafficLane == 0) ? 20f : -20f;
-        float spawnZ = playerTransform.position.z - config.spawnOffset.z;
-        Vector3 spawnPos = new Vector3(laneX, config.spawnOffset.y, spawnZ);
-        Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+        int trafficToSpawn = laneManager.laneCount - 1;
 
-        GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
-        spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
-        spawnedTraffic.transform.SetParent(transform, this);
-
-        if (config.triggerPrefab != null)
+        for (int i = 0; i < trafficToSpawn; i++)
         {
-            Vector3 triggerPos = new Vector3(-laneX, config.triggerOffset.y, spawnZ);
-            GameObject spawnedTrigger = Instantiate(config.triggerPrefab, triggerPos, Quaternion.identity);
-            spawnedTrigger.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
-            spawnedTrigger.transform.SetParent(transform, this);
-            Destroy(spawnedTrigger, config.lifespan);
-        }
+            int laneIndex;
+            do
+            {
+                laneIndex = Random.Range(0, laneManager.laneCount);
+            } while (laneIndex == laneToLeaveFree); //loop only exist when we find a lane that is free
 
-        Destroy(spawnedTraffic, config.lifespan);
+            laneManager.OccupyLane(laneIndex);
+
+
+            GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
+            int trafficLane = Random.RandomRange(0, 2);
+            ObstacleLink link = prefab.GetComponent<ObstacleLink>();
+            if (link == null || link.obsConfig == null) continue;
+
+            ObstacleConfig config = link.obsConfig;
+
+            float spawnZ = playerTransform.position.z - config.spawnOffset.z;
+            Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
+            Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+
+            GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
+            spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+            spawnedTraffic.transform.SetParent(transform, this);
+
+            if (config.triggerPrefab != null)
+            {
+                Vector3 triggerPos = new Vector3(-laneManager.GetLaneX(laneIndex), config.triggerOffset.y, spawnZ);
+                GameObject spawnedTrigger = Instantiate(config.triggerPrefab, triggerPos, Quaternion.identity);
+                spawnedTrigger.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                spawnedTrigger.transform.SetParent(transform, this);
+                Destroy(spawnedTrigger, config.lifespan);
+            }
+
+            Destroy(spawnedTraffic, config.lifespan);
+        }
     }
 
 }
