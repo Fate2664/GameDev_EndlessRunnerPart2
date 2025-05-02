@@ -7,7 +7,7 @@ using UnityEngine;
 public class RoadSpawner : MonoBehaviour
 {
     public List<GameObject> roads;
-    private float Zoffset = 160f;
+    private float Zoffset = 142f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,11 +23,9 @@ public class RoadSpawner : MonoBehaviour
 
         GameObject movedRoad = roads[0];        //assign the first road which is behind the player by now to variable
         float newZoffest = roads[roads.Count - 1].transform.position.z - Zoffset;   //get the position for the new road infront of the others
-        float newYoffset = 8 + 3.256991f;       
-        float newXoffset = -3.64609f;
 
         roads.RemoveAt(0);          //remove the first road from the list
-        movedRoad.transform.position = new Vector3(newXoffset, newYoffset, newZoffest);     //Create a new vector for the new road position
+        movedRoad.transform.position = new Vector3(0f, 0f, newZoffest);     //Create a new vector for the new road position
         roads.Add(movedRoad);   //add the new road to the list
     }
 

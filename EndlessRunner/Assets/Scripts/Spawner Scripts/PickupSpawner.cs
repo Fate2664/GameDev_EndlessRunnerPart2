@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PickupSpawner : MonoBehaviour
 {
-    private float xPosLeft = 20f;       //left lane x position
-    private float xPosRight = -20f;     //right lane x position
+    private float xPosLeft = 40f;       //left lane x position
+    private float xPosRight = -40f;     //right lane x position
     private float distanceAhead = 700f;
     private float yHeight = 10f;
     private float counter = 0f;

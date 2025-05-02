@@ -29,9 +29,11 @@ public class PrometeoCarController : MonoBehaviour
     private float driftingAxis;
     private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
     private int currentLane = 0;
-    private bool canTurnLeft = false;
+    [HideInInspector]
+    private bool _canChangeLanes = true;
+    public bool canChangeLanes { get { return _canChangeLanes; } }
+    private bool canTurnLeft = true;
     private bool canTurnRight = true;
-    private bool canChangeLane = true;
     private static GameObject playerNose;
     [HideInInspector]
     public bool isSwitchingLane = false;
@@ -161,7 +163,10 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
-
+    private void FixedUpdate()
+    {
+        Debug.Log(currentLane);
+    }
     // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
     public void CarSpeedUI()
     {
@@ -234,35 +239,55 @@ public class PrometeoCarController : MonoBehaviour
 
     public void LaneChange(int desiredLane)
     {
-        if (!canChangeLane)
+        if (!canChangeLanes || isSwitchingLane)
             return;
 
-        canChangeLane = false;
+        if (desiredLane < 0 || desiredLane > 2)
+            return;
 
+        _canChangeLanes = false;
 
-        float targetX = 0f;
+        float[] laneXPositions = new float[]
+        {
+            playerController.laneDistance,
+            0f,
+            -playerController.laneDistance
+        };
+        float targetX = laneXPositions[desiredLane];
         float targetSteeringAxis = 0f;
 
         switch (desiredLane)
         {
-            case 0: // Left
+            case 0: // Left Lane
                 if (!canTurnLeft)
                     return;
                 else
                 {
-                    targetX = playerController.laneDistance;
                     targetSteeringAxis = -1f;
                     currentLane = desiredLane;
                     canTurnLeft = false;
                     canTurnRight = true;
                     break;
                 }
-            case 1: // Right
+            case 1: // Center Lane
+
+                if (currentLane == 0)
+                {
+                    targetSteeringAxis = 1f;
+                }
+                else if (currentLane == 2)
+                {
+                    targetSteeringAxis = -1f;
+                }
+                currentLane = desiredLane;
+                canTurnRight = true;
+                canTurnLeft = true;
+                break;
+            case 2: //Right Lane
                 if (!canTurnRight)
                     return;
                 else
                 {
-                    targetX = -playerController.laneDistance;
                     targetSteeringAxis = 1f;
                     currentLane = desiredLane;
                     canTurnRight = false;
@@ -317,10 +342,13 @@ public class PrometeoCarController : MonoBehaviour
         switch (currentLane)
         {
             case 0:
-                targetX = 20;
+                targetX = 40f;
                 break;
             case 1:
-                targetX = -20;
+                targetX = 0;
+                break;
+            case 2:
+                targetX = -40f;
                 break;
         }
 
@@ -348,7 +376,7 @@ public class PrometeoCarController : MonoBehaviour
         correctionSteeringAxis = Mathf.Clamp(correctionSteeringAxis, -1f, 1f);
 
         if (Mathf.Abs(lateralVelocity) < 0.8f && Mathf.Abs(playerController.frontLeftCollider.steerAngle) < 17 && Mathf.Abs(playerController.frontRightCollider.steerAngle) < 17)
-            canChangeLane = true;
+            _canChangeLanes = true;
 
         ApplySteeringCorrection(correctionSteeringAxis);
 
@@ -491,7 +519,7 @@ public class PrometeoCarController : MonoBehaviour
         forwardFriction.extremumValue = 2f;
         forwardFriction.asymptoteSlip = 1.2f;
         forwardFriction.asymptoteValue = 1.7f;
-        forwardFriction.stiffness = 25f;
+        forwardFriction.stiffness = 20f;
         collider.forwardFriction = forwardFriction;
 
         WheelFrictionCurve sidewaysFriction = collider.sidewaysFriction;

@@ -7,10 +7,10 @@ public class LandSpawner : MonoBehaviour
 {
 
     private int intialAmount = 15;
-    private float landSize = 160f;
-    private float xPosLeft = 139f;
-    private float xPosRight = -139f;
-    private float previousZ = 190f;
+    private float landSize = 142f;
+    private float xPosLeft = 158.5f;
+    private float xPosRight = -158.5f;
+    private float previousZ = 160f;
 
     public List<GameObject> plotsofLand;
     private List<GameObject> activePlots = new List<GameObject>();

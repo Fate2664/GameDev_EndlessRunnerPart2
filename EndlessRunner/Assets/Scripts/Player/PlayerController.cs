@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     [Range(10, 45)]
     [SerializeField] private int _maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
     public int maxSteeringAngle { get { return _maxSteeringAngle; } set { _maxSteeringAngle = value; } }
-    [Range(0.1f, 1f)]
+    [Range(0.1f, 5f)]
     [SerializeField] private float _steeringSpeed = 0.5f; // How fast the steering wheel turns.
     public float steeringSpeed { get { return _steeringSpeed; } set { _steeringSpeed = value; } }
     [Space(10)]
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     [Range(10, 100)]
     [SerializeField] private float _laneDistance = 20f;
     public float laneDistance { get { return _laneDistance; } }
-    [Range(0, 5)]
+    [Range(0, 10)]
     [SerializeField] private float _centeringForce = 0.5f;
     public float centeringForce { get { return _centeringForce; } }
     [Range(0, 0.2f)]
@@ -162,6 +162,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+  
+
     private void MoveCharacter()
     {
         // We determine the speed of the car.
@@ -185,7 +187,7 @@ public class PlayerController : MonoBehaviour
             prometeoCarController.GoReverse();
         }
 
-        if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane)
+        if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane && prometeoCarController.canChangeLanes)
         {
 
             desiredLane--;      //change the desired lane
@@ -197,13 +199,13 @@ public class PlayerController : MonoBehaviour
             prometeoCarController.LaneChange(desiredLane);
 
         }
-        if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane)
+        if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane && prometeoCarController.canChangeLanes)
         {
 
             desiredLane++;      //change the desired lane
-            if (desiredLane > 1)
+            if (desiredLane > 2)
             {
-                desiredLane = 1;
+                desiredLane = 2;
             }
             
             prometeoCarController.LaneChange(desiredLane);

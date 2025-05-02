@@ -26,12 +26,15 @@ public class SpawnManager : MonoBehaviour
         }
         //call for the land to be spawned and destroyed
         LandSpawner.SpawnLand();
-        LandSpawner.DestroyLand();
+        Invoke(nameof(DestroyLands), 0.4f);
 
     }
 
 
-
+    private void DestroyLands()
+    {
+        LandSpawner.DestroyLand();
+    }
     private void SpawnRoad()
     {
         RoadSpawner.MoveRoad();
