@@ -26,11 +26,11 @@ public class SpawnManager : MonoBehaviour
         }
         //call for the land to be spawned and destroyed
         LandSpawner.SpawnLand();
-        Invoke(nameof(DestroyLands), 0.4f);
+        Invoke(nameof(DestroyLands),5f);
 
     }
 
-
+    
     private void DestroyLands()
     {
         LandSpawner.DestroyLand();
