@@ -6,7 +6,7 @@ public class PickupManager : MonoBehaviour
     public static bool PowerUpCheck = false;
     public float duration = 2f;
     private Coroutine activeRoutine;
-    public PowerUp_Effect[] powerUps;
+    public PowerUp_Effect[] pickups;
     public static string pickup;
 
     private void Update()
@@ -28,7 +28,7 @@ public class PickupManager : MonoBehaviour
             switch (pickup)                 //check which pickup is being applyed
             {
                 case "SpeedPickup":
-                    powerUps[0].ApplyEffect(player); break;         //apply the effect onto the player
+                    pickups[0].ApplyEffect(player); break;         //apply the effect onto the player
 
             }
             yield return null;
@@ -42,7 +42,7 @@ public class PickupManager : MonoBehaviour
         switch (pickup)
         {
             case "SpeedPickup":
-                powerUps[0].DisableEffect(player); break;       //Call the diable method onto the player
+                pickups[0].DisableEffect(player); break;       //Call the diable method onto the player
         }
         PowerUpCheck = false;           //reset the power check to false
     }

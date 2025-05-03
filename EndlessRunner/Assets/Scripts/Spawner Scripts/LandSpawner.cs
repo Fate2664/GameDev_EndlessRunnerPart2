@@ -7,7 +7,7 @@ public class LandSpawner : MonoBehaviour
 {
 
     private int intialAmount = 15;
-    private float landSize = 160f;
+    private float landLength = 142f;
     private float xPosLeft = 158.5f;
     private float xPosRight = -158.5f;
     private float previousZ = 160f;
@@ -34,8 +34,8 @@ public class LandSpawner : MonoBehaviour
     public void SpawnLand()
     {
         //create a clone from a random plot of land from the list and place it after the previous plot
-        GameObject landLeft = Instantiate(plotsofLand[Random.Range(0, plotsofLand.Count)], new Vector3(xPosLeft, 0, previousZ - landSize), Quaternion.identity);
-        GameObject landRight = Instantiate(plotsofLand[Random.Range(0, plotsofLand.Count)], new Vector3(xPosRight, 0, previousZ - landSize), new Quaternion(0, 180, 0, 0));
+        GameObject landLeft = Instantiate(plotsofLand[Random.Range(0, plotsofLand.Count)], new Vector3(xPosLeft, 0, previousZ - landLength), Quaternion.identity);
+        GameObject landRight = Instantiate(plotsofLand[Random.Range(0, plotsofLand.Count)], new Vector3(xPosRight, 0, previousZ - landLength), new Quaternion(0, 180, 0, 0));
         landLeft.transform.SetParent(transform, false);
         landRight.transform.SetParent(transform, false);
         //add them to the active plots list
@@ -43,7 +43,7 @@ public class LandSpawner : MonoBehaviour
         activePlots.Add(landRight);
         
         //change the previous z amount to for the new plot to spawn after it
-        previousZ -= landSize;
+        previousZ -= landLength;
     }
 
     public void DestroyLand()

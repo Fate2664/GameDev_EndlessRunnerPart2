@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class PickupSpawner : MonoBehaviour
 {
-    private float xPosLeft = 40f;       //left lane x position
-    private float xPosRight = -40f;     //right lane x position
+    private float[] laneXPositions = { -40f, 0, 40f };
     private float distanceAhead = 700f;
     private float yHeight = 10f;
     private float counter = 0f;
@@ -36,15 +35,7 @@ public class PickupSpawner : MonoBehaviour
             if (pickups.Count > 0)
             {
                 int pickupSpawnPoint = Random.Range(0, 3);      //randomly choose the lane in which to spawn the pickup
-                if (pickupSpawnPoint == 0)
-                {
-                    spawnPosition = new Vector3(xPosLeft, yHeight, player.position.z - distanceAhead);      //create a vector with the spawn position for the pickup
-                }
-                else if (pickupSpawnPoint == 1)
-                {
-                    spawnPosition = new Vector3(xPosRight, yHeight, player.position.z - distanceAhead);
-                }
-
+                spawnPosition = new Vector3(laneXPositions[pickupSpawnPoint], yHeight, player.position.z - distanceAhead);      //create a vector with the spawn position for the pickup
                 GameObject pickupSpawned = Instantiate(pickups[randomIndex], spawnPosition, Quaternion.identity);       //create a clone of the pickup that is chosen 
                 pickupSpawned.transform.SetParent(transform, false);
                 if (pickupSpawned != null)

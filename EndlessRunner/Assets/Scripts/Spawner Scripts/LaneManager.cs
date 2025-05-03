@@ -34,15 +34,15 @@ public class LaneManager
     }
 
     //returns a random free lane index
-    public int GetRandomFreeLane()
+    public List<int> GetAllFreeLane()
     {
-        List<int> freeLane = new List<int>();
-        for (int i = 0; i < laneOccupied.Length; i++)
+        List<int> freeLanes = new List<int>();
+        for (int i = 0; i < laneCount; i++)
         {
-            if (!laneOccupied[i]) freeLane.Add(i);
+            if (!laneOccupied[i]) freeLanes.Add(i);
         }
 
-        return freeLane[Random.Range(0, freeLane.Count)];
+        return freeLanes;
     }
 
     public int laneCount => lanePositions.Length;

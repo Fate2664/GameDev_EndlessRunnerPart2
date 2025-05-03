@@ -1765,8 +1765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 10
-  powerUps:
-  - {fileID: 11400000, guid: d60a743d52225374da3b55bebd4d9c15, type: 2}
+  pickups: []
 --- !u!4 &862795435
 Transform:
   m_ObjectHideFlags: 0
@@ -2398,12 +2397,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d621d11f8f8cb19479d2ac003d669047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obsSpawneRate: 3
+  initialTrafficAmount: 5
+  obsSpawneRate: 1
   trafficSpawnRate: 1
-  distanceAhead:
-  - 1400
-  - 600
-  - 800
   obsMovingTowardPlr:
   - {fileID: 5969921748105540072, guid: c0c8fd91a7aa1544a9f1b6efe31a83ee, type: 3}
   obsMovingPastPlr:
@@ -4075,7 +4071,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6133738016287460257, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.39
       objectReference: {fileID: 0}
     - target: {fileID: 6133738016287460257, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_LocalPosition.z

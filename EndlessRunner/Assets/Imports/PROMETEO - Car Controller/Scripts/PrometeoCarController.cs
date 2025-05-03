@@ -163,10 +163,7 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
-    {
-        Debug.Log(currentLane);
-    }
+   
     // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
     public void CarSpeedUI()
     {

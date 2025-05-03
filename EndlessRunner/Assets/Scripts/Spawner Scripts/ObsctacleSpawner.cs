@@ -11,10 +11,11 @@ public class ObstacleSpawner : MonoBehaviour
 {
 
     [Header("Spawn Details")]
-    [UnityEngine.Range(1f, 10f)]
-    [SerializeField] private float obsSpawneRate = 5f;
-    [SerializeField] private float trafficSpawnRate = 2f;
-    [SerializeField] private List<float> distanceAhead;
+    [SerializeField] private int initialTrafficAmount = 5;
+    [UnityEngine.Range(0.5f, 10f)]
+    [SerializeField] private float obsSpawneRate = 1f;
+    [UnityEngine.Range(0.5f, 10f)]
+    [SerializeField] private float trafficSpawnRate = 1f;
     [Space(10)]
 
     [Header("Obstacles")]
@@ -30,6 +31,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     private float counter = 0f;
     private float counterTraffic = 0f;
+    private float[] initialTrafficOffsets = { 400, 600, 800, 1000, 1200};
     private Transform playerTransform;
     private LaneManager laneManager;
     private readonly float[] lanePositions = { -40f, 0f, 40f };
@@ -40,15 +42,19 @@ public class ObstacleSpawner : MonoBehaviour
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         laneManager = new LaneManager(lanePositions);
+
+        counterTraffic = Time.deltaTime;
+        if (counterTraffic < trafficSpawnRate)
+        {
+            ObsInitialTrafficSpawn();
+            counterTraffic = 0f;
+        }
     }
 
-
-
-    // Update is called once per frame
     void Update()
     {
         //SpawnObstacle();
-        //SpawnTraffic();
+        SpawnTraffic();
         //DifficultyScaling();
     }
 
@@ -65,13 +71,14 @@ public class ObstacleSpawner : MonoBehaviour
 
     }
 
+
     private void SpawnObstacle()
     {
         counter += Time.deltaTime;
 
         if (counter >= obsSpawneRate)
         {
-            int randomSpawn = Random.Range(0, 3);
+            int randomSpawn = Random.Range(0, 2);
 
             switch (randomSpawn)
             {
@@ -81,9 +88,7 @@ public class ObstacleSpawner : MonoBehaviour
                 case 1:
                     ObsMovingTowardsPlayer();
                     break;
-                case 2:
-                    ObsTrafficSpawn();
-                    break;
+
             }
             counter = 0f;
         }
@@ -106,47 +111,43 @@ public class ObstacleSpawner : MonoBehaviour
 
         laneManager.ResetLanes();
 
-        int laneToLeaveFree = Random.Range(0, laneManager.laneCount);
-        laneManager.OccupyLane(laneToLeaveFree);
+        int numObsToSpawn = 1;
+        List<int> occupiedLanes = new List<int>();
 
-        int obsToSpawn = laneManager.laneCount - 1;
+        GameObject prefab = obsMovingTowardPlr[Random.Range(0, obsMovingTowardPlr.Count)];
+        ObstacleLink link = prefab.GetComponent<ObstacleLink>();
+        ObstacleConfig config = link.obsConfig;
 
-        for (int i = 0; i < obsToSpawn; i++)
+        while (occupiedLanes.Count < numObsToSpawn)
         {
-            int laneIndex;
-            do
+            int laneIndexObs = Random.Range(0, laneManager.laneCount);
+            if (!occupiedLanes.Contains(laneIndexObs))
             {
-                laneIndex = Random.Range(0, laneManager.laneCount);
-            } while (laneIndex == laneToLeaveFree); //loop only exist when we find a lane that is free
+                laneManager.OccupyLane(laneIndexObs);
+                occupiedLanes.Add(laneIndexObs);
 
-            laneManager.OccupyLane(laneIndex);
+                float spawnZ = playerTransform.position.z - config.spawnOffset.z;
+                Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndexObs), config.spawnOffset.y, spawnZ);
+                Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
 
-            GameObject prefab = obsMovingTowardPlr[Random.Range(0, obsMovingTowardPlr.Count)];
-            int trafficLane = Random.RandomRange(0, 2);
-            ObstacleLink link = prefab.GetComponent<ObstacleLink>();
-            if (link == null || link.obsConfig == null) continue;
+                GameObject spawnedObstacle = Instantiate(prefab, spawnPos, rotation);
+                spawnedObstacle.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                spawnedObstacle.transform.SetParent(transform, this);
+                Destroy(spawnedObstacle, config.lifespan);
+            }
+        }
 
-            ObstacleConfig config = link.obsConfig;
-
-            float laneX = (trafficLane == 0) ? 20f : -20f;
-            float spawnZ = playerTransform.position.z - config.spawnOffset.z;
-            Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-            Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
-
-            GameObject spawnedObstacle = Instantiate(prefab, spawnPos, rotation);
-            spawnedObstacle.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
-            spawnedObstacle.transform.SetParent(transform, this);
-
+        foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+        {
             if (config.triggerPrefab != null)
             {
-                Vector3 triggerPos = new Vector3(-laneManager.GetLaneX(laneIndex), config.triggerOffset.y, spawnZ);
+                float spawnZ = playerTransform.position.z - config.spawnOffset.z;
+                Vector3 triggerPos = new Vector3(laneManager.GetLaneX(laneIndexTrig), config.triggerOffset.y, spawnZ);
                 GameObject spawnedTrigger = Instantiate(config.triggerPrefab, triggerPos, Quaternion.identity);
                 spawnedTrigger.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
                 spawnedTrigger.transform.SetParent(transform, this);
                 Destroy(spawnedTrigger, config.lifespan);
             }
-
-            Destroy(spawnedObstacle, config.lifespan);
         }
     }
 
@@ -156,53 +157,52 @@ public class ObstacleSpawner : MonoBehaviour
 
         laneManager.ResetLanes();
 
-        int laneToLeaveFree = Random.Range(0, laneManager.laneCount);
-        laneManager.OccupyLane(laneToLeaveFree);
+        int numObsToSpawn = 1;
+        List<int> occupiedLanes = new List<int>();
 
-        int obsToSpawn = laneManager.laneCount - 1;
+        GameObject prefab = obsMovingPastPlr[Random.Range(0, obsMovingPastPlr.Count)];
+        ObstacleLink link = prefab.GetComponent<ObstacleLink>();
+        ObstacleConfig config = link.obsConfig;
 
-        for (int i = 0; i < obsToSpawn; i++)
+        while (occupiedLanes.Count < numObsToSpawn)
         {
-            int laneIndex;
-            do
+            int laneIndexObs = Random.Range(0, laneManager.laneCount);
+
+            if (!occupiedLanes.Contains(laneIndexObs))
             {
-                laneIndex = Random.Range(0, laneManager.laneCount);
-            } while (laneIndex == laneToLeaveFree); //loop only exist when we find a lane that is free
+                laneManager.OccupyLane(laneIndexObs);
+                occupiedLanes.Add(laneIndexObs);
 
-            laneManager.OccupyLane(laneIndex);
+                float spawnZ = playerTransform.position.z + config.spawnOffset.z;
+                Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndexObs), config.spawnOffset.y, spawnZ);
+                Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
 
-            GameObject prefab = obsMovingPastPlr[Random.Range(0, obsMovingPastPlr.Count)];
-            ObstacleLink link = prefab.GetComponent<ObstacleLink>();
-            if (link == null || link.obsConfig == null) continue;
+                GameObject spawnedObstacle = Instantiate(prefab, spawnPos, rotation);
+                spawnedObstacle.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                spawnedObstacle.transform.SetParent(transform, this);
+                Destroy(spawnedObstacle, config.lifespan);
 
-            ObstacleConfig config = link.obsConfig;
+                if (config.indicatorPrefab != null)
+                {
+                    Vector3 indicatorPos = new Vector3(laneManager.GetLaneX(laneIndexObs), 45f, playerTransform.position.z - 600f);
+                    GameObject spawnedIndicator = Instantiate(config.indicatorPrefab, indicatorPos, Quaternion.identity);
+                    spawnedIndicator.transform.SetParent(transform, this);
+                    Destroy(spawnedIndicator, config.lifespan);
+                }
+            }
+        }
 
-            float spawnZ = playerTransform.position.z + config.spawnOffset.z;
-            Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-            Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
-
-            GameObject spawnedObstacle = Instantiate(prefab, spawnPos, rotation);
-            spawnedObstacle.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
-            spawnedObstacle.transform.SetParent(transform, this);
-
+        foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+        {
             if (config.triggerPrefab != null)
             {
-                Vector3 triggerPos = new Vector3(-laneManager.GetLaneX(laneIndex), config.triggerOffset.y, spawnZ);
+                float spawnZ = playerTransform.position.z + config.spawnOffset.z;
+                Vector3 triggerPos = new Vector3(laneManager.GetLaneX(laneIndexTrig), config.triggerOffset.y, spawnZ);
                 GameObject spawnedTrigger = Instantiate(config.triggerPrefab, triggerPos, Quaternion.identity);
                 spawnedTrigger.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
                 spawnedTrigger.transform.SetParent(transform, this);
                 Destroy(spawnedTrigger, config.lifespan);
             }
-
-            if (config.indicatorPrefab != null)
-            {
-                Vector3 indicatorPos = new Vector3(laneManager.GetLaneX(laneIndex), 45f, playerTransform.position.z - 600f);
-                GameObject spawnedIndicator = Instantiate(config.indicatorPrefab, indicatorPos, Quaternion.identity);
-                spawnedIndicator.transform.SetParent(transform, this);
-                Destroy(spawnedIndicator, config.lifespan);
-            }
-
-            Destroy(spawnedObstacle, config.lifespan);
         }
     }
 
@@ -212,50 +212,104 @@ public class ObstacleSpawner : MonoBehaviour
 
         laneManager.ResetLanes();
 
-        int laneToLeaveFree = Random.Range(0, laneManager.laneCount);
-        laneManager.OccupyLane(laneToLeaveFree);
+        int numTraffToSpawn = 1;
+        List<int> occupiedLanes = new List<int>();
 
-        int trafficToSpawn = laneManager.laneCount - 1;
+        GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
+        ObstacleLink link = prefab.GetComponent<ObstacleLink>();
+        ObstacleConfig config = link.obsConfig;
 
-        for (int i = 0; i < trafficToSpawn; i++)
+        while (occupiedLanes.Count < numTraffToSpawn)
         {
-            int laneIndex;
-            do
+            int laneIndex = Random.Range(0, laneManager.laneCount);
+
+            if (!occupiedLanes.Contains(laneIndex))
             {
-                laneIndex = Random.Range(0, laneManager.laneCount);
-            } while (laneIndex == laneToLeaveFree); //loop only exist when we find a lane that is free
+                occupiedLanes.Add(laneIndex);
+                laneManager.OccupyLane(laneIndex);
 
-            laneManager.OccupyLane(laneIndex);
+                float spawnZ = playerTransform.position.z - config.spawnOffset.z;
+                Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
+                Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
 
-
-            GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
-            ObstacleLink link = prefab.GetComponent<ObstacleLink>();
-            if (link == null || link.obsConfig == null) continue;
-
-            ObstacleConfig config = link.obsConfig;
-
-            float spawnZ = playerTransform.position.z - config.spawnOffset.z;
-            Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-            Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
-
-            GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
-            spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
-            spawnedTraffic.transform.SetParent(transform, this);
-
+                GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
+                spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                spawnedTraffic.transform.SetParent(transform, this);
+                Destroy(spawnedTraffic, config.lifespan);
+            }
+        }
+        foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+        {
             if (config.triggerPrefab != null)
             {
-                Vector3 triggerPos = new Vector3(-laneManager.GetLaneX(laneIndex), config.triggerOffset.y, spawnZ);
+                float spawnZ = playerTransform.position.z - config.spawnOffset.z;
+                Vector3 triggerPos = new Vector3(laneManager.GetLaneX(laneIndexTrig), config.triggerOffset.y, spawnZ);
                 GameObject spawnedTrigger = Instantiate(config.triggerPrefab, triggerPos, Quaternion.identity);
                 spawnedTrigger.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
                 spawnedTrigger.transform.SetParent(transform, this);
                 Destroy(spawnedTrigger, config.lifespan);
             }
-
-            Destroy(spawnedTraffic, config.lifespan);
         }
+
     }
 
+    private void ObsInitialTrafficSpawn()
+    {
+        for (int i = 0; i < initialTrafficOffsets.Length; i++)
+        {
+            if (obsTraffic.Count == 0 || playerTransform == null) return;
+
+            laneManager.ResetLanes();
+
+            int numTraffToSpawn = 1;
+            List<int> occupiedLanes = new List<int>();
+
+            GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
+            ObstacleLink link = prefab.GetComponent<ObstacleLink>();
+            ObstacleConfig config = link.obsConfig;
+
+
+            float initialTrafficOffset = initialTrafficOffsets[i];
+
+            while (occupiedLanes.Count < numTraffToSpawn)
+            {
+                int laneIndex = Random.Range(0, laneManager.laneCount);
+
+                if (!occupiedLanes.Contains(laneIndex))
+                {
+                    occupiedLanes.Add(laneIndex);
+                    laneManager.OccupyLane(laneIndex);
+
+
+                    float spawnZ = playerTransform.position.z - initialTrafficOffset;
+                    Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
+                    Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+
+                    GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
+                    spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                    spawnedTraffic.transform.SetParent(transform, this);
+                    Destroy(spawnedTraffic, config.lifespan);
+
+                }
+            }
+            foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+            {
+                if (config.triggerPrefab != null)
+                {
+                    float spawnZ = playerTransform.position.z - initialTrafficOffset;
+                    Vector3 triggerPos = new Vector3(laneManager.GetLaneX(laneIndexTrig), config.triggerOffset.y, spawnZ);
+                    GameObject spawnedTrigger = Instantiate(config.triggerPrefab, triggerPos, Quaternion.identity);
+                    spawnedTrigger.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                    spawnedTrigger.transform.SetParent(transform, this);
+                    Destroy(spawnedTrigger, config.lifespan);
+                }
+            }
+
+        }
+    }
 }
+
+
 
 
 
