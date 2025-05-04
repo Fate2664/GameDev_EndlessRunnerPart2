@@ -7,7 +7,7 @@ public class PickupSpawner : MonoBehaviour
 {
     private float[] laneXPositions = { -40f, 0, 40f };
     private float distanceAhead = 700f;
-    private float yHeight = 10f;
+    private float yHeight = 2f;
     private float counter = 0f;
     private float spawnRate = 5f;
     public List<GameObject> pickups;
