@@ -1,50 +1,52 @@
 using System.Collections;
+using Unity.Collections;
 using UnityEngine;
 
 public class PickupManager : MonoBehaviour
 {
-    public static bool PowerUpCheck = false;
-    public float duration = 2f;
+
+    [SerializeField] private GameObject[] pickups;
+
+
+    [HideInInspector]
+    public bool powerUpCheck = false;
+  
+
     private Coroutine activeRoutine;
-    public PowerUp_Effect[] pickups;
-    public static string pickup;
+    private PickupLink activePickupLink;
 
     private void Update()
     {
-        if (PowerUpCheck && activeRoutine == null)
+        if (powerUpCheck && activeRoutine == null)
         {
-            activeRoutine = StartCoroutine(PickupRoutine());        //start the coroutine if the powerup is active and it is not already running
+            activeRoutine = StartCoroutine(PickupRoutine(activePickupLink));        //start the coroutine if the powerup is active and it is not already running
         }
     }
 
-    public IEnumerator PickupRoutine()
+    public void ActivatePickup(PickupLink link)
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");     //get the player object
+        if (!powerUpCheck)
+        {
+            powerUpCheck = true;
+            activePickupLink = link;
+        }
+    }
+    public IEnumerator PickupRoutine(PickupLink link)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        PowerUp_Effect pickupEffect = link.powerUp_Effect;
         float setTime = 0f;
 
-        while (setTime < duration)          //make sure that the duration is within the given time
+        while (setTime < pickupEffect.duration)
         {
             setTime += Time.deltaTime;
-            switch (pickup)                 //check which pickup is being applyed
-            {
-                case "SpeedPickup":
-                    pickups[0].ApplyEffect(player); break;         //apply the effect onto the player
-
-            }
+            pickupEffect.ApplyEffect(player);
             yield return null;
         }
-        DeactivateEffect(player);          //after the duration disable the effect
-        activeRoutine = null;
-    }
 
-    public void DeactivateEffect(GameObject player)
-    {
-        switch (pickup)
-        {
-            case "SpeedPickup":
-                pickups[0].DisableEffect(player); break;       //Call the diable method onto the player
-        }
-        PowerUpCheck = false;           //reset the power check to false
+        pickupEffect.DisableEffect(player);
+        powerUpCheck = false;
+        activeRoutine = null;
     }
 
     

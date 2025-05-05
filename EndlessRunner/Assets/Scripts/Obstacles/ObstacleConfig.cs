@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ObstacleConfig", menuName = "Obstacles/ObstacleConfig")]
+[CreateAssetMenu( menuName = "Obstacles/ObstacleConfig")]
 public class ObstacleConfig : ScriptableObject
 {
     public enum ObstacleType { TowardPlayer, PastPlayer, Traffic }

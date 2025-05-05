@@ -18,14 +18,11 @@ public class PlayerDeath : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Obstacle"))        //if the collision that the player had is with an obstacle
         {
-
-            playerController.StrafeSpeed = 0;           //Don't allow the player to move
             if (this != null)
             {
                 Destroy(this);                        //destroy the player game object
             }
             deathScreen.ShowDeathScreen();              //show the deathscreen
-
         }
     }
 

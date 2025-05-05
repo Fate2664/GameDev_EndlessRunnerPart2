@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class DeathScreen : MonoBehaviour
 {
-
+    PickupManager pickupManager;
     public GameObject deathScreen;
     public Button restartButton;
    
@@ -26,7 +26,7 @@ public class DeathScreen : MonoBehaviour
     private void RestartGame()
     {
         Time.timeScale = 1f;            //reset the game timer
-        PickupManager.PowerUpCheck = false;     //reset the pickup power up
+        pickupManager.powerUpCheck = false;     //reset the pickup power up
         SceneManager.LoadScene("Level 1");      //reload the level
 
     }

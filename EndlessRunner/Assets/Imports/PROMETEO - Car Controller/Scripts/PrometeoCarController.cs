@@ -377,7 +377,6 @@ public class PrometeoCarController : MonoBehaviour
 
         ApplySteeringCorrection(correctionSteeringAxis);
 
-
     }
 
     private void ApplySteeringCorrection(float correctionSteeringAxis)
@@ -476,11 +475,6 @@ public class PrometeoCarController : MonoBehaviour
         //If the car is going backwards, then apply brakes in order to avoid strange
         //behaviours. If the local velocity in the 'z' axis is less than -1f, then it
         //is safe to apply positive torque to go forward.
-        if (playerController.localVelocityZ < -1f)
-        {
-            Brakes();
-            return;
-        }
 
         if (Mathf.RoundToInt(playerController.carSpeed) < playerController.maxSpeed)
         {
@@ -529,6 +523,7 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     // This method apply negative torque to the wheels in order to go backwards.
+    /*
     public void GoReverse()
     {
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
@@ -582,6 +577,7 @@ public class PrometeoCarController : MonoBehaviour
             }
         }
     }
+    */
 
     //The following function set the motor torque to 0 (in case the user is not pressing either W or S).
     public void ThrottleOff()
@@ -639,6 +635,7 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     // This function applies brake torque to the wheels according to the brake force given by the user.
+    /*
     public void Brakes()
     {
         playerController.frontLeftCollider.brakeTorque = playerController.brakeForce;
@@ -646,10 +643,11 @@ public class PrometeoCarController : MonoBehaviour
         playerController.rearLeftCollider.brakeTorque = playerController.brakeForce;
         playerController.rearRightCollider.brakeTorque = playerController.brakeForce;
     }
-
+    */
     // This function is used to make the car lose traction. By using this, the car will start drifting. The amount of traction lost
     // will depend on the handbrakeDriftMultiplier variable. If this value is small, then the car will not drift too much, but if
     // it is high, then you could make the car to feel like going on ice.
+    /*
     public void Handbrake()
     {
         CancelInvoke("RecoverTraction");
@@ -701,7 +699,7 @@ public class PrometeoCarController : MonoBehaviour
         DriftCarPS();
 
     }
-
+    */
     // This function is used to emit both the particle systems of the tires' smoke and the trail renderers of the tire skids
     // depending on the value of the bool variables 'isDrifting' and 'isTractionLocked'.
     public void DriftCarPS()
@@ -781,16 +779,16 @@ public class PrometeoCarController : MonoBehaviour
         // car's grip.
         if (FLwheelFriction.extremumSlip > FLWextremumSlip)
         {
-            FLwheelFriction.extremumSlip = FLWextremumSlip * playerController.handbrakeDriftMultiplier * driftingAxis;
+            FLwheelFriction.extremumSlip = FLWextremumSlip * driftingAxis;
             playerController.frontLeftCollider.sidewaysFriction = FLwheelFriction;
 
-            FRwheelFriction.extremumSlip = FRWextremumSlip * playerController.handbrakeDriftMultiplier * driftingAxis;
+            FRwheelFriction.extremumSlip = FRWextremumSlip * driftingAxis;
             playerController.frontRightCollider.sidewaysFriction = FRwheelFriction;
 
-            RLwheelFriction.extremumSlip = RLWextremumSlip * playerController.handbrakeDriftMultiplier * driftingAxis;
+            RLwheelFriction.extremumSlip = RLWextremumSlip * driftingAxis;
             playerController.rearLeftCollider.sidewaysFriction = RLwheelFriction;
 
-            RRwheelFriction.extremumSlip = RRWextremumSlip * playerController.handbrakeDriftMultiplier * driftingAxis;
+            RRwheelFriction.extremumSlip = RRWextremumSlip * driftingAxis;
             playerController.rearRightCollider.sidewaysFriction = RRwheelFriction;
 
             Invoke("RecoverTraction", Time.deltaTime);

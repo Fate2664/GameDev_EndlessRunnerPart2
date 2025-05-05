@@ -14,15 +14,9 @@ public class PlayerController : MonoBehaviour
     [Space(10)]
     [Range(20, 1000)]
     [SerializeField] private int _maxSpeed = 200; //The maximum speed that the car can reach in km/h.
-    public int maxSpeed { get { return _maxSpeed; } }
-    [Range(0, 10)]
-    [SerializeField] private float _strafeSpeed = 10.0f;
-    public float StrafeSpeed { get { return _strafeSpeed; } set { _strafeSpeed = value; } }
-    [Range(10, 120)]
-    [SerializeField] private int _maxReverseSpeed = 45;
-    public int maxReverseSpeed { get { return _maxReverseSpeed; } } //The maximum speed that the car can reach while going on reverse in km/h.
+    public int maxSpeed { get { return _maxSpeed; } set { _maxSpeed = value; } }
     [Range(1, 10000)]
-    [SerializeField] private int _accelerationMultiplier = 2; // How fast the car can accelerate. 1 is a slow acceleration and 10 is the fastest.
+    [SerializeField] private int _accelerationMultiplier = 2; // How fast the car can accelerate. 
     public int accelerationMultiplier { get { return _accelerationMultiplier; } }
     [Space(10)]
     [Range(10, 45)]
@@ -32,15 +26,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _steeringSpeed = 0.5f; // How fast the steering wheel turns.
     public float steeringSpeed { get { return _steeringSpeed; } set { _steeringSpeed = value; } }
     [Space(10)]
-    [Range(100, 600)]
-    [SerializeField] private int _brakeForce = 350; // The strength of the wheel brakes.
-    public int brakeForce { get { return _brakeForce; } }
     [Range(1, 10)]
     [SerializeField] private int _decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
     public int decelerationMultiplier { get { return _decelerationMultiplier; } }
-    [Range(1, 10)]
-    [SerializeField] private int _handbrakeDriftMultiplier = 5; // How much grip the car loses when the user hit the handbrake.
-    public int handbrakeDriftMultiplier { get { return _handbrakeDriftMultiplier; } }
     [Space(10)]
     [SerializeField] private Vector3 _bodyMassCenter;
     public Vector3 bodyMassCenter { get { return _bodyMassCenter; } }
@@ -177,15 +165,6 @@ public class PlayerController : MonoBehaviour
         prometeoCarController.deceleratingCar = false;
         prometeoCarController.GoForward();
 
-
-
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            prometeoCarController.CancelInvoke("DecelerateCar");
-            prometeoCarController.deceleratingCar = false;
-            prometeoCarController.GoReverse();
-        }
 
         if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane && prometeoCarController.canChangeLanes)
         {

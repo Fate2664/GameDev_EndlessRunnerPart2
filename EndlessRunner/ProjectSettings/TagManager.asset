@@ -10,6 +10,7 @@ TagManager:
   - RoadSpawn
   - MovingObstacleTrigger
   - Player Nose
+  - Player Hitbox
   layers:
   - Default
   - TransparentFX
