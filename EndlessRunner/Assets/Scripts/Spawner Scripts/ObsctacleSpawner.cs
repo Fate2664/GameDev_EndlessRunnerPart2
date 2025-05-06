@@ -184,7 +184,7 @@ public class ObstacleSpawner : MonoBehaviour
 
                 if (config.indicatorPrefab != null)
                 {
-                    Vector3 indicatorPos = new Vector3(laneManager.GetLaneX(laneIndexObs), 45f, playerTransform.position.z - 600f);
+                    Vector3 indicatorPos = new Vector3(laneManager.GetLaneX(laneIndexObs), 35f, playerTransform.position.z - 600f);
                     GameObject spawnedIndicator = Instantiate(config.indicatorPrefab, indicatorPos, Quaternion.identity);
                     spawnedIndicator.transform.SetParent(transform, this);
                     Destroy(spawnedIndicator, config.lifespan);

@@ -27,7 +27,7 @@ public class PlayerDeath : MonoBehaviour
             }
             deathScreen.ShowDeathScreen();              //show the deathscreen
         }
-
+        else
         if (collision.gameObject.CompareTag("Obstacle") && PlayerImmune)
         {
            
