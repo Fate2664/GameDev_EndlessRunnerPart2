@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: DoublePoints
   m_EditorClassIdentifier: 
   duration: 5
+  yHeight: 4

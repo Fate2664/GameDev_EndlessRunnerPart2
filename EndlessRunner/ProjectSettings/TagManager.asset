@@ -11,6 +11,7 @@ TagManager:
   - MovingObstacleTrigger
   - Player Nose
   - Player Hitbox
+  - PickupManager
   layers:
   - Default
   - TransparentFX

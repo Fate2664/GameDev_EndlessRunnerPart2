@@ -5,21 +5,20 @@ using UnityEngine;
 public class PickupManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject[] pickups;
-
-
     [HideInInspector]
     public bool powerUpCheck = false;
   
 
     private Coroutine activeRoutine;
-    private PickupLink activePickupLink;
+    private PickupLink _activePickupLink;
+    [HideInInspector] 
+    public PickupLink activePickupLink { get { return _activePickupLink; } }
 
     private void Update()
     {
         if (powerUpCheck && activeRoutine == null)
         {
-            activeRoutine = StartCoroutine(PickupRoutine(activePickupLink));        //start the coroutine if the powerup is active and it is not already running
+            activeRoutine = StartCoroutine(PickupRoutine(_activePickupLink));        //start the coroutine if the powerup is active and it is not already running
         }
     }
 
@@ -28,7 +27,7 @@ public class PickupManager : MonoBehaviour
         if (!powerUpCheck)
         {
             powerUpCheck = true;
-            activePickupLink = link;
+            _activePickupLink = link;
         }
     }
     public IEnumerator PickupRoutine(PickupLink link)

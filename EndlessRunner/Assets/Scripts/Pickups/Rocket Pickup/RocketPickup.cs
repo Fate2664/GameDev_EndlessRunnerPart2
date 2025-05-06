@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class RocketPickup : MonoBehaviour
 {
-    PickupManager manager;
     private void OnTriggerEnter(Collider collision)
     {
         GameObject rocketObj = this.gameObject;

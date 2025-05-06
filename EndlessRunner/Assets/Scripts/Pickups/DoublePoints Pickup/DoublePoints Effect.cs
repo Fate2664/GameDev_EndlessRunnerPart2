@@ -14,11 +14,6 @@ public class DoublePointsEffect : PowerUp_Effect
 
             Score.DoublePointsActive = true;
         }
-        
-  
-
-
-
 
     }
 
@@ -31,8 +26,5 @@ public class DoublePointsEffect : PowerUp_Effect
 
             Score.DoublePointsActive = false;
         }
-
-
-
     }
 }
