@@ -10,15 +10,26 @@ public class Score : MonoBehaviour
 
     private float score;
 
-  
+    public bool DoublePointsActive;
+
+
     public void IncrementScore()
     {
-        score++;    //increment the score value
+        if (!DoublePointsActive)
+        {
+            score++;    //increment the score value
+        }
+
+        if (DoublePointsActive)
+        {
+            score += 2;    //increment the score value 
+        }
+
         if (score > 0)
         {
             ValueText.text = score.ToString("0");       //Change the text to show the new score
         }
     }
 
-   
+
 }

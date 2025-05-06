@@ -212,5 +212,10 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void SetMaxSpeed(int Newspeed)
+    {
+        _maxSpeed = Newspeed;
+    }
+
 
 }
