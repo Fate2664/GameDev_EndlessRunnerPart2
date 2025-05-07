@@ -4,6 +4,7 @@ public class RocketPickup : MonoBehaviour
 {
     private void OnTriggerEnter(Collider collision)
     {
+   
         GameObject rocketObj = this.gameObject;
         if (collision.gameObject.CompareTag("Player Hitbox"))
         {

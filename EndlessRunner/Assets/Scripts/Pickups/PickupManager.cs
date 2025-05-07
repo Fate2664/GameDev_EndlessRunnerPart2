@@ -14,6 +14,16 @@ public class PickupManager : MonoBehaviour
     [HideInInspector] 
     public PickupLink activePickupLink { get { return _activePickupLink; } }
 
+    public ParticleSystem RocketParticles;
+
+    private void Awake()
+    {
+     
+
+        RocketParticles.Stop();
+    }
+
+
     private void Update()
     {
         if (powerUpCheck && activeRoutine == null)
@@ -39,11 +49,11 @@ public class PickupManager : MonoBehaviour
         while (setTime < pickupEffect.duration)
         {
             setTime += Time.deltaTime;
-            pickupEffect.ApplyEffect(player);
+            pickupEffect.ApplyEffect(player, RocketParticles);
             yield return null;
         }
 
-        pickupEffect.DisableEffect(player);
+        pickupEffect.DisableEffect(player, RocketParticles);
         powerUpCheck = false;
         activeRoutine = null;
     }

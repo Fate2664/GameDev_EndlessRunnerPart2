@@ -198,18 +198,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSpeed: 77
-  _strafeSpeed: 10
-  _maxReverseSpeed: 45
   _accelerationMultiplier: 7030
   _maxSteeringAngle: 10
   _steeringSpeed: 0.5
-  _brakeForce: 350
   _decelerationMultiplier: 2
-  _handbrakeDriftMultiplier: 2
   _bodyMassCenter: {x: 0, y: 0, z: 0}
   _laneDistance: 20
   _centeringForce: 5
-  _dampingForce: 0.5
+  _dampingForce: 0.2
   _frontLeftMesh: {fileID: 4662635221632510073}
   _frontLeftCollider: {fileID: 6610536707258190747}
   _frontRightMesh: {fileID: 6696555834307767856}
@@ -247,6 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathScreen: {fileID: 0}
+  PlayerImmune: 0
 --- !u!1 &1529314327722300146
 GameObject:
   m_ObjectHideFlags: 0

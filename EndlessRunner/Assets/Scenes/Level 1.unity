@@ -1766,6 +1766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerUpCheck: 0
+  RocketParticles: {fileID: 1420650379}
 --- !u!4 &862795435
 Transform:
   m_ObjectHideFlags: 0
@@ -2886,8 +2887,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 40
-      minScalar: 10
+      scalar: 595.5
+      minScalar: 264.63
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3382,7 +3383,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 4
-    angle: 12.75
+    angle: 0
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -3468,7 +3469,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 1.66
+      value: 75
       mode: 0
       spread: 0
       speed:
@@ -7481,12 +7482,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1420650377}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.14, y: 20.26, z: 259.01}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.00000003828029, y: -0.9975954, z: 0.06930628, w: 0.0000005510069}
+  m_LocalPosition: {x: 0, y: 0.71, z: 5.22}
+  m_LocalScale: {x: 0.12754196, y: 0.12754196, z: 0.12754196}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1671258075}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1535118310
 GameObject:
@@ -7693,7 +7694,7 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 20.78461
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -7708,7 +7709,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 5000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -7738,7 +7739,8 @@ Transform:
   m_LocalPosition: {x: 18.2, y: 21, z: 290.1}
   m_LocalScale: {x: 7.8405576, y: 7.8405576, z: 7.8405576}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1420650380}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 7.948, y: 180, z: 0}
 --- !u!114 &1671258076
@@ -9303,4 +9305,3 @@ SceneRoots:
   - {fileID: 705152456}
   - {fileID: 1179510728689019088}
   - {fileID: 1648222891}
-  - {fileID: 1420650380}
