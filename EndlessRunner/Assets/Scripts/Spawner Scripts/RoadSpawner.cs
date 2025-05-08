@@ -1,34 +1,80 @@
 using NUnit.Framework;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RoadSpawner : MonoBehaviour
 {
-    public List<GameObject> roads;
-    private float Zoffset = 142f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("Normal Roads")]
+    [Space(10)]
+    [SerializeField] private List<GameObject> normalRoads;
+
+    [Header("Construction Roads")]
+    [Header("Left:")]
+    [SerializeField] private List<GameObject> leftConstrRoads;
+    [Header("Right:")]
+    [SerializeField] private List<GameObject> rightConstrRoads;
+
+    [Header("Settings")]
+    [SerializeField] private float Zoffset = 142f;
+    
+    private List<GameObject> currentRoads;
+    private ObstacleSpawner obstacleSpawner;
+
     void Start()
     {
-        if (roads != null && roads.Count > 0)
+        currentRoads = new List<GameObject>();
+
+        if (normalRoads != null && normalRoads.Count > 0)
         {
-            roads = roads.OrderByDescending(r => r.transform.position.z).ToList();      //order the road list
+            normalRoads = normalRoads.OrderByDescending(r => r.transform.position.z).ToList();      //order the road list
+        }
+        if (leftConstrRoads != null && leftConstrRoads.Count > 0)
+        {
+            leftConstrRoads = leftConstrRoads.OrderByDescending(r => r.name).ToList();
+        }
+        if (rightConstrRoads != null &&  rightConstrRoads.Count > 0)
+        {
+            rightConstrRoads = rightConstrRoads.OrderByDescending (r => r.name).ToList();
+        }
+
+        for (int i = 0; i < normalRoads.Count; i++)
+        {
+            currentRoads.Add(normalRoads[i]);
         }
     }
 
-    public void MoveRoad()
+    public void Initialize(ObstacleSpawner obsSpawner)
     {
-
-        GameObject movedRoad = roads[0];        //assign the first road which is behind the player by now to variable
-        float newZoffest = roads[roads.Count - 1].transform.position.z - Zoffset;   //get the position for the new road infront of the others
-
-        roads.RemoveAt(0);          //remove the first road from the list
-        movedRoad.transform.position = new Vector3(0f, 0f, newZoffest);     //Create a new vector for the new road position
-        roads.Add(movedRoad);   //add the new road to the list
+        obstacleSpawner = obsSpawner;
     }
 
-   
+    public void MoveNormalRoad()
+    {
+        GameObject movedRoad = currentRoads[0];        //assign the first road which is behind the player by now to a variable
+        float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;   //get the position for the new road infront of the others
 
+        currentRoads.RemoveAt(0);          //remove the first road from the list
+        movedRoad.transform.position = new Vector3(0f, 0f, newZoffset);     //Create a new vector for the new road position
+        currentRoads.Add(movedRoad);   //add the new road to the list
+
+    }
+
+    public void SpawnConstructionRoad()
+    {
+        GameObject movedRoad = currentRoads[0];
+        float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
+
+        normalRoads.RemoveAt(0);
+
+        GameObject constrVarient = leftConstrRoads[Random.Range(0, leftConstrRoads.Count)];
+        movedRoad = Instantiate(constrVarient, new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f,90f,0f));
+        movedRoad.transform.SetParent(transform, this);
+
+        currentRoads.Add(movedRoad);
+
+        obstacleSpawner.spawningConstrRoad = true;
+    }
 }

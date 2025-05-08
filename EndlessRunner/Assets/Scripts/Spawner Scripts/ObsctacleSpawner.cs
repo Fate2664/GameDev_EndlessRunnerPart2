@@ -1,21 +1,18 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.VFX;
-
+using UnityEngine.Events;
 
 public class ObstacleSpawner : MonoBehaviour
 {
 
     [Header("Spawn Details")]
     [SerializeField] private int initialTrafficAmount = 5;
-    [UnityEngine.Range(0.5f, 10f)]
-    [SerializeField] private float obsSpawneRate = 1f;
-    [UnityEngine.Range(0.5f, 10f)]
+    [Range(0.5f, 10f)]
+    [SerializeField] private float obsSpawnRate = 1f;
+    [Range(0.5f, 10f)]
     [SerializeField] private float trafficSpawnRate = 1f;
+    [Range(0.5f, 10f)]
+    [SerializeField] private float constructionRoadSpawnRate = 1f;
     [Space(10)]
 
     [Header("Obstacles")]
@@ -28,13 +25,19 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> indicators;
     [Space(10)]
 
+    [Header("Events")]
+    public UnityEvent OnConstructionRoadSpawn;
 
+    [HideInInspector]
+    public bool spawningConstrRoad = false;
     private float counter = 0f;
     private float counterTraffic = 0f;
+    private float counterConstrRoad = 0f;
     private float[] initialTrafficOffsets = { 400, 600, 800, 1000, 1200};
     private Transform playerTransform;
     private LaneManager laneManager;
     private readonly float[] lanePositions = { -40f, 0f, 40f };
+
 
 
 
@@ -49,12 +52,15 @@ public class ObstacleSpawner : MonoBehaviour
             ObsInitialTrafficSpawn();
             counterTraffic = 0f;
         }
+
+        
     }
 
     void Update()
     {
         //SpawnObstacle();
         SpawnTraffic();
+        ObsConstrRoadSpawn();
         //DifficultyScaling();
     }
 
@@ -62,9 +68,9 @@ public class ObstacleSpawner : MonoBehaviour
     {
         float difficulyTimer = Time.deltaTime;
         float diffIncInterval = 5.0f;
-        if (difficulyTimer >= diffIncInterval && obsSpawneRate > 2f)
+        if (difficulyTimer >= diffIncInterval && obsSpawnRate > 2f)
         {
-            obsSpawneRate -= -0.5f;
+            obsSpawnRate -= -0.5f;
             difficulyTimer = 0f;
         }
 
@@ -76,7 +82,7 @@ public class ObstacleSpawner : MonoBehaviour
     {
         counter += Time.deltaTime;
 
-        if (counter >= obsSpawneRate)
+        if (counter >= obsSpawnRate)
         {
             int randomSpawn = Random.Range(0, 2);
 
@@ -305,6 +311,21 @@ public class ObstacleSpawner : MonoBehaviour
                 }
             }
 
+        }
+    }
+
+    private void ObsConstrRoadSpawn()
+    {
+        counterConstrRoad += Time.deltaTime;
+
+        if (counterConstrRoad >= constructionRoadSpawnRate)
+        {
+            if (Random.value < 0.3f)
+            {
+                OnConstructionRoadSpawn?.Invoke();
+                spawningConstrRoad = false;
+            }
+            counterConstrRoad = 0f;
         }
     }
 }

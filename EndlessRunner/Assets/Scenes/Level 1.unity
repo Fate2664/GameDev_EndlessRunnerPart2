@@ -2333,7 +2333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7489ab7d7517b44b842797b5e1c62c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roads:
+  normalRoads:
   - {fileID: 1017874914}
   - {fileID: 1687876671}
   - {fileID: 406813255}
@@ -2353,6 +2353,15 @@ MonoBehaviour:
   - {fileID: 1710516929}
   - {fileID: 134421961}
   - {fileID: 2118243182}
+  leftConstrRoads:
+  - {fileID: 2784273052758334028, guid: 1c1422d37dd20c74c85b4b988d73931b, type: 3}
+  - {fileID: 2784273052758334028, guid: c9931795b4d9bd6469a5dc7fd79c1568, type: 3}
+  - {fileID: 2784273052758334028, guid: a692705b8f2b3de40b7c24c91305ee8a, type: 3}
+  rightConstrRoads:
+  - {fileID: 2784273052758334028, guid: 91a4f5cc17744134da9f216cd329dc8d, type: 3}
+  - {fileID: 2784273052758334028, guid: 660e18a6decacc34185ab63766ec705e, type: 3}
+  - {fileID: 2784273052758334028, guid: 1dfd7e09988f2e44687f1c7f8790aa29, type: 3}
+  Zoffset: 142
 --- !u!4 &1208644399
 Transform:
   m_ObjectHideFlags: 0
@@ -2399,8 +2408,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialTrafficAmount: 5
-  obsSpawneRate: 1
+  obsSpawnRate: 1
   trafficSpawnRate: 1
+  constructionRoadSpawnRate: 1
   obsMovingTowardPlr:
   - {fileID: 5969921748105540072, guid: c0c8fd91a7aa1544a9f1b6efe31a83ee, type: 3}
   obsMovingPastPlr:
@@ -2409,6 +2419,22 @@ MonoBehaviour:
   - {fileID: 4928642715715310126, guid: 7ade677d5b21e454c999135c98369bc2, type: 3}
   indicators:
   - {fileID: 2081499581058635209, guid: 4d21ac3562874d244b66a985ac2f9d8d, type: 3}
+  OnConstructionRoadSpawn:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1208644398}
+        m_TargetAssemblyTypeName: RoadSpawner, Assembly-CSharp
+        m_MethodName: SpawnConstructionRoad
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  spawningConstrRoad: 0
 --- !u!114 &1208644402
 MonoBehaviour:
   m_ObjectHideFlags: 0

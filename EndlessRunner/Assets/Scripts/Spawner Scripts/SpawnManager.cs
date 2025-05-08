@@ -5,11 +5,14 @@ public class SpawnManager : MonoBehaviour
     RoadSpawner roadSpawner;
     LandSpawner landSpawner;
     PickupManager pickupManager;
+    ObstacleSpawner obstacleSpawner;
     void Start()
     {
         //get the scripts for each spawner
         roadSpawner = GetComponent<RoadSpawner>();
         landSpawner = GetComponent<LandSpawner>();
+        obstacleSpawner = GetComponent<ObstacleSpawner>();
+        roadSpawner.Initialize(obstacleSpawner);
     }
 
 
@@ -28,9 +31,13 @@ public class SpawnManager : MonoBehaviour
     {
         landSpawner.DestroyLand();
     }
+
     private void SpawnRoad()
     {
-        roadSpawner.MoveRoad();
+        if (!obstacleSpawner.spawningConstrRoad)
+        {
+            roadSpawner.MoveNormalRoad();
+        }
     }
 }
 
