@@ -56,11 +56,19 @@ public class RoadSpawner : MonoBehaviour
     public void MoveNormalRoad()
     {
         GameObject movedRoad = currentRoads[0];        //assign the first road which is behind the player by now to a variable
+        while (movedRoad.GetComponent<ConstructionRoadMarker>())
+        {
+            currentRoads.RemoveAt(0);
+            Destroy(movedRoad);
+            movedRoad = currentRoads[0];
+        }
+
         float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;   //get the position for the new road infront of the others
 
         currentRoads.RemoveAt(0);          //remove the first road from the list
         movedRoad.transform.position = new Vector3(0f, 0f, newZoffset);     //Create a new vector for the new road position
         currentRoads.Add(movedRoad);   //add the new road to the list
+
 
     }
 
@@ -69,17 +77,18 @@ public class RoadSpawner : MonoBehaviour
         GameObject movedRoad = currentRoads[0];
         float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
 
+        List<GameObject> constrSide = DetermineSide(obstacleSpawner.constrSide);
         GameObject constrRoad = null;
 
         switch (obstacleSpawner.constrRoadState)
         {
             case ObstacleSpawner.ConstrRoadState.Start:
-                constrRoad = leftConstrRoads[0];
+                constrRoad = constrSide[0];
                 obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.Middle;
                 obstacleSpawner.middleConstrRemaining = 4;
                 break;
             case ObstacleSpawner.ConstrRoadState.Middle:
-                constrRoad = leftConstrRoads[1];
+                constrRoad = constrSide[1];
                 obstacleSpawner.middleConstrRemaining--;
 
                 if (obstacleSpawner.middleConstrRemaining <= 0)
@@ -88,23 +97,43 @@ public class RoadSpawner : MonoBehaviour
                 }
                 break;
             case ObstacleSpawner.ConstrRoadState.End:
-                constrRoad = leftConstrRoads[2];
+                constrRoad = constrSide[2];
                 obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.None;
                 obstacleSpawner.spawningConstrRoad = false;
                 break;
         }
-        
+
         if (constrRoad != null)
         {
-            movedRoad = Instantiate(constrRoad, new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f, 90f, 0f));
+            switch (obstacleSpawner.constrSide)
+            {
+                case 0:
+                    movedRoad = Instantiate(constrRoad, new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f, 90f, 0f));
+                    break;
+                case 1:
+                    movedRoad = Instantiate(constrRoad, new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f, -90f, 0f));
+                    break;
+            }
             movedRoad.transform.SetParent(transform, this);
+            movedRoad.AddComponent<ConstructionRoadMarker>();
             currentRoads.Add(movedRoad);
         }
 
-        
-        currentRoads.RemoveAt(0);
     }
 
-   
+    private List<GameObject> DetermineSide(int randomSide)
+    {
+        switch (randomSide)
+        {
+            case 0:
+                return leftConstrRoads;
+            case 1:
+                return rightConstrRoads;
+            default: return leftConstrRoads;
+
+        }
+    }
+
+
 
 }
