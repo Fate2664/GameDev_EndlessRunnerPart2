@@ -2334,10 +2334,9 @@ MonoBehaviour:
   - {fileID: 4928642715715310126, guid: 7ade677d5b21e454c999135c98369bc2, type: 3}
   indicators:
   - {fileID: 2081499581058635209, guid: 4d21ac3562874d244b66a985ac2f9d8d, type: 3}
-  OnConstructionRoadSpawn:
-    m_PersistentCalls:
-      m_Calls: []
   spawningConstrRoad: 0
+  middleConstrRemaining: 0
+  constrRoadState: 0
 --- !u!114 &1208644402
 MonoBehaviour:
   m_ObjectHideFlags: 0
