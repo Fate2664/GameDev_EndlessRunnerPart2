@@ -20,7 +20,7 @@ public class RocketEffect : PowerUp_Effect
     public override void DisableEffect(GameObject target, ParticleSystem RocketParticles)
     {
 
-        target.GetComponent<PlayerController>().maxSpeed = 75;
+        target.GetComponent<PlayerController>().maxSpeed = 100;
         target.GetComponent<PlayerDeath>().PlayerImmune = false;
         RocketParticles.Stop();
 
