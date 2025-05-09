@@ -4,6 +4,13 @@ using UnityEngine.Events;
 
 public class ObstacleSpawner : MonoBehaviour
 {
+    public enum ConstrRoadState
+    {
+        None,
+        Start,
+        Middle,
+        End
+    }
 
     [Header("Spawn Details")]
     [SerializeField] private int initialTrafficAmount = 5;
@@ -25,18 +32,20 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> indicators;
     [Space(10)]
 
-    [Header("Events")]
-    public UnityEvent OnConstructionRoadSpawn;
 
-    [HideInInspector]
-    public bool spawningConstrRoad = false;
     private float counter = 0f;
     private float counterTraffic = 0f;
     private float counterConstrRoad = 0f;
-    private float[] initialTrafficOffsets = { 400, 600, 800, 1000, 1200};
+    private float[] initialTrafficOffsets = { 400, 600, 800, 1000, 1200 };
     private Transform playerTransform;
     private LaneManager laneManager;
     private readonly float[] lanePositions = { -40f, 0f, 40f };
+    [HideInInspector]
+    public bool spawningConstrRoad = false;
+    [HideInInspector]
+    public int middleConstrRemaining = 0;
+    [HideInInspector]
+    public ConstrRoadState constrRoadState = ConstrRoadState.None;
 
 
 
@@ -53,7 +62,7 @@ public class ObstacleSpawner : MonoBehaviour
             counterTraffic = 0f;
         }
 
-        
+
     }
 
     void Update()
@@ -318,13 +327,11 @@ public class ObstacleSpawner : MonoBehaviour
     {
         counterConstrRoad += Time.deltaTime;
 
-        if (counterConstrRoad >= constructionRoadSpawnRate)
+        if (counterConstrRoad >= constructionRoadSpawnRate && constrRoadState == ConstrRoadState.None)
         {
-            if (Random.value < 0.3f)
-            {
-                OnConstructionRoadSpawn?.Invoke();
-                spawningConstrRoad = false;
-            }
+            spawningConstrRoad = true;
+            constrRoadState = ConstrRoadState.Start;
+
             counterConstrRoad = 0f;
         }
     }

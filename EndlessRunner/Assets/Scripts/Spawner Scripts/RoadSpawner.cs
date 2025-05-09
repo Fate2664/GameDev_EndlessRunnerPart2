@@ -19,9 +19,10 @@ public class RoadSpawner : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float Zoffset = 142f;
-    
+
     private List<GameObject> currentRoads;
     private ObstacleSpawner obstacleSpawner;
+
 
     void Start()
     {
@@ -35,15 +36,16 @@ public class RoadSpawner : MonoBehaviour
         {
             leftConstrRoads = leftConstrRoads.OrderByDescending(r => r.name).ToList();
         }
-        if (rightConstrRoads != null &&  rightConstrRoads.Count > 0)
+        if (rightConstrRoads != null && rightConstrRoads.Count > 0)
         {
-            rightConstrRoads = rightConstrRoads.OrderByDescending (r => r.name).ToList();
+            rightConstrRoads = rightConstrRoads.OrderByDescending(r => r.name).ToList();
         }
 
         for (int i = 0; i < normalRoads.Count; i++)
         {
             currentRoads.Add(normalRoads[i]);
         }
+
     }
 
     public void Initialize(ObstacleSpawner obsSpawner)
@@ -62,19 +64,47 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
-    public void SpawnConstructionRoad()
+    public void SpawnNextConstructionRoad()
     {
         GameObject movedRoad = currentRoads[0];
         float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
 
-        normalRoads.RemoveAt(0);
+        GameObject constrRoad = null;
 
-        GameObject constrVarient = leftConstrRoads[Random.Range(0, leftConstrRoads.Count)];
-        movedRoad = Instantiate(constrVarient, new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f,90f,0f));
-        movedRoad.transform.SetParent(transform, this);
+        switch (obstacleSpawner.constrRoadState)
+        {
+            case ObstacleSpawner.ConstrRoadState.Start:
+                constrRoad = leftConstrRoads[0];
+                obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.Middle;
+                obstacleSpawner.middleConstrRemaining = 4;
+                break;
+            case ObstacleSpawner.ConstrRoadState.Middle:
+                constrRoad = leftConstrRoads[1];
+                obstacleSpawner.middleConstrRemaining--;
 
-        currentRoads.Add(movedRoad);
+                if (obstacleSpawner.middleConstrRemaining <= 0)
+                {
+                    obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.End;
+                }
+                break;
+            case ObstacleSpawner.ConstrRoadState.End:
+                constrRoad = leftConstrRoads[2];
+                obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.None;
+                obstacleSpawner.spawningConstrRoad = false;
+                break;
+        }
+        
+        if (constrRoad != null)
+        {
+            movedRoad = Instantiate(constrRoad, new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f, 90f, 0f));
+            movedRoad.transform.SetParent(transform, this);
+            currentRoads.Add(movedRoad);
+        }
 
-        obstacleSpawner.spawningConstrRoad = true;
+        
+        currentRoads.RemoveAt(0);
     }
+
+   
+
 }

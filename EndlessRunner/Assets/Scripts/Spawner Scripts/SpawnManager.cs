@@ -34,7 +34,11 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnRoad()
     {
-        if (!obstacleSpawner.spawningConstrRoad)
+        if (obstacleSpawner.spawningConstrRoad)
+        {
+            roadSpawner.SpawnNextConstructionRoad();
+        }
+        else
         {
             roadSpawner.MoveNormalRoad();
         }
