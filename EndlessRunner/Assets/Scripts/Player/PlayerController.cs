@@ -26,6 +26,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _steeringSpeed = 0.5f; // How fast the steering wheel turns.
     public float steeringSpeed { get { return _steeringSpeed; } set { _steeringSpeed = value; } }
     [Space(10)]
+    [Range(1, 10)]
+    [SerializeField] private int _decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
+    public int decelerationMultiplier { get { return _decelerationMultiplier; } }
+    [Space(10)]
     [SerializeField] private Vector3 _bodyMassCenter;
     public Vector3 bodyMassCenter { get { return _bodyMassCenter; } }
 
