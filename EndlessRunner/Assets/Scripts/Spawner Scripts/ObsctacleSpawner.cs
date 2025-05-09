@@ -18,8 +18,8 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private float obsSpawnRate = 1f;
     [Range(0.5f, 10f)]
     [SerializeField] private float trafficSpawnRate = 1f;
-    [Range(5f, 30f)]
-    [SerializeField] private float constructionRoadSpawnRate = 10f;
+    [Range(0.5f, 10f)]
+    [SerializeField] private float constructionRoadSpawnRate = 1f;
     [Space(10)]
 
     [Header("Obstacles")]
@@ -46,8 +46,6 @@ public class ObstacleSpawner : MonoBehaviour
     public int middleConstrRemaining = 0;
     [HideInInspector]
     public ConstrRoadState constrRoadState = ConstrRoadState.None;
-    [HideInInspector]
-    public int constrSide = 0;
 
 
 
@@ -333,7 +331,6 @@ public class ObstacleSpawner : MonoBehaviour
         {
             spawningConstrRoad = true;
             constrRoadState = ConstrRoadState.Start;
-            constrSide = Random.Range(0, 2);
 
             counterConstrRoad = 0f;
         }

@@ -1,3 +1,12 @@
+/*
+MESSAGE FROM CREATOR: This script was coded by Mena. You can use it in your games either these are commercial or
+personal projects. You can even add or remove functions as you wish. However, you cannot sell copies of this
+script by itself, since it is originally distributed as a free product.
+I wish you the best for your project. Good luck!
+
+P.S: If you need more cars, you can check my other vehicle assets on the Unity Asset Store, perhaps you could find
+something useful for your game. Best regards, Mena.
+*/
 
 using DG.Tweening;
 using System;
@@ -297,8 +306,8 @@ public class PrometeoCarController : MonoBehaviour
 
         Sequence laneChange = DOTween.Sequence();
 
-        laneChange.Append(playerController.transform.DORotateQuaternion(targetRotation, 0.15f).SetEase(Ease.InOutSine))
-            .Join(playerController.carRigidbody.DOMoveX(targetX, 0.15f).SetEase(Ease.InOutSine))
+        laneChange.Append(playerController.transform.DORotateQuaternion(targetRotation, 0.2f).SetEase(Ease.InOutSine))
+            .Join(playerController.carRigidbody.DOMoveX(targetX, 0.2f).SetEase(Ease.InOutSine))
             .OnUpdate(() => ApplySteering())
             .OnComplete(() =>
             {
@@ -373,7 +382,7 @@ public class PrometeoCarController : MonoBehaviour
     private void ApplySteeringCorrection(float correctionSteeringAxis)
     {
         float steeringAngle = correctionSteeringAxis * playerController.maxSteeringAngle;
-        playerController.steeringSpeed = 5;
+        playerController.steeringSpeed = 0.8f;
         playerController.frontLeftCollider.steerAngle = -steeringAngle;
         playerController.frontRightCollider.steerAngle = -steeringAngle;
     }
@@ -509,72 +518,10 @@ public class PrometeoCarController : MonoBehaviour
         sidewaysFriction.extremumValue = 1.7f;
         sidewaysFriction.asymptoteSlip = 1.0f;
         sidewaysFriction.asymptoteValue = 1.0f;
-        sidewaysFriction.stiffness = 40f;
+        sidewaysFriction.stiffness = 35f;
         collider.sidewaysFriction = sidewaysFriction;
     }
-    public void DriftCarPS()
-    {
-        if (playerController.useEffects)
-        {
-            try
-            {
-                if (playerController.isDrifting)
-                {
-                    playerController.RLWParticleSystem.Play();
-                    playerController.RRWParticleSystem.Play();
-                }
-                else if (!playerController.isDrifting)
-                {
-                    playerController.RLWParticleSystem.Stop();
-                    playerController.RRWParticleSystem.Stop();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning(ex);
-            }
 
-            try
-            {
-                if ((playerController.isTractionLocked || Mathf.Abs(playerController.localVelocityX) > 50f) && Mathf.Abs(playerController.carSpeed) > 12f)
-                {
-                    playerController.RLWTireSkid.emitting = true;
-                    playerController.RRWTireSkid.emitting = true;
-                }
-                else
-                {
-                    playerController.RLWTireSkid.emitting = false;
-                    playerController.RRWTireSkid.emitting = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning(ex);
-            }
-        }
-        else if (!playerController.useEffects)
-        {
-            if (playerController.RLWParticleSystem != null)
-            {
-                playerController.RLWParticleSystem.Stop();
-            }
-            if (playerController.RRWParticleSystem != null)
-            {
-                playerController.RRWParticleSystem.Stop();
-            }
-            if (playerController.RLWTireSkid != null)
-            {
-                playerController.RLWTireSkid.emitting = false;
-            }
-            if (playerController.RRWTireSkid != null)
-            {
-                playerController.RRWTireSkid.emitting = false;
-            }
-        }
-
-    }
-
-    #region Unused Code
     // This method apply negative torque to the wheels in order to go backwards.
     /*
     public void GoReverse()
@@ -630,7 +577,7 @@ public class PrometeoCarController : MonoBehaviour
             }
         }
     }
-    
+    */
 
     //The following function set the motor torque to 0 (in case the user is not pressing either W or S).
     public void ThrottleOff()
@@ -644,7 +591,6 @@ public class PrometeoCarController : MonoBehaviour
     // The following method decelerates the speed of the car according to the decelerationMultiplier variable, where
     // 1 is the slowest and 10 is the fastest deceleration. This method is called by the function InvokeRepeating,
     // usually every 0.1f when the user is not pressing W (throttle), S (reverse) or Space bar (handbrake).
-    
     public void DecelerateCar()
     {
         if (Mathf.Abs(playerController.localVelocityX) > 50.5f)
@@ -689,7 +635,7 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     // This function applies brake torque to the wheels according to the brake force given by the user.
-    
+    /*
     public void Brakes()
     {
         playerController.frontLeftCollider.brakeTorque = playerController.brakeForce;
@@ -753,15 +699,72 @@ public class PrometeoCarController : MonoBehaviour
         DriftCarPS();
 
     }
-    
+    */
     // This function is used to emit both the particle systems of the tires' smoke and the trail renderers of the tire skids
     // depending on the value of the bool variables 'isDrifting' and 'isTractionLocked'.
-    */
+    public void DriftCarPS()
+    {
+        if (playerController.useEffects)
+        {
+            try
+            {
+                if (playerController.isDrifting)
+                {
+                    playerController.RLWParticleSystem.Play();
+                    playerController.RRWParticleSystem.Play();
+                }
+                else if (!playerController.isDrifting)
+                {
+                    playerController.RLWParticleSystem.Stop();
+                    playerController.RRWParticleSystem.Stop();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning(ex);
+            }
 
+            try
+            {
+                if ((playerController.isTractionLocked || Mathf.Abs(playerController.localVelocityX) > 50f) && Mathf.Abs(playerController.carSpeed) > 12f)
+                {
+                    playerController.RLWTireSkid.emitting = true;
+                    playerController.RRWTireSkid.emitting = true;
+                }
+                else
+                {
+                    playerController.RLWTireSkid.emitting = false;
+                    playerController.RRWTireSkid.emitting = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning(ex);
+            }
+        }
+        else if (!playerController.useEffects)
+        {
+            if (playerController.RLWParticleSystem != null)
+            {
+                playerController.RLWParticleSystem.Stop();
+            }
+            if (playerController.RRWParticleSystem != null)
+            {
+                playerController.RRWParticleSystem.Stop();
+            }
+            if (playerController.RLWTireSkid != null)
+            {
+                playerController.RLWTireSkid.emitting = false;
+            }
+            if (playerController.RRWTireSkid != null)
+            {
+                playerController.RRWTireSkid.emitting = false;
+            }
+        }
 
+    }
 
     // This function is used to recover the traction of the car when the user has stopped using the car's handbrake.
-    /*
     public void RecoverTraction()
     {
         playerController.isTractionLocked = false;
@@ -809,7 +812,6 @@ public class PrometeoCarController : MonoBehaviour
         }
     }
 
-    */
-    #endregion
+
 
 }
