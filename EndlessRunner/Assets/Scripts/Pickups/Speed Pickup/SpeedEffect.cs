@@ -10,7 +10,7 @@ public class SpeedEffect : PowerUp_Effect
 
     public override void DisableEffect(GameObject target, ParticleSystem RocketParticles)
     {
-        target.GetComponent<PlayerController>().maxSpeed = 75;         //change the player's movemennt speed back to the original
+        target.GetComponent<PlayerController>().maxSpeed = 100;         //change the player's movemennt speed back to the original
     }
 
 }
