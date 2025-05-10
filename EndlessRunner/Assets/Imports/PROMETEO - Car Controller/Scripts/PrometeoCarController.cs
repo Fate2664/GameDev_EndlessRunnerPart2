@@ -1,11 +1,13 @@
-
+﻿
 using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public class PrometeoCarController : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class PrometeoCarController : MonoBehaviour
     private PlayerController playerController;
     [HideInInspector]
     public float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
+    private float steeringSpeed;  
     private float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
     private float driftingAxis;
     private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
@@ -154,7 +157,7 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
-   
+
     // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
     public void CarSpeedUI()
     {
@@ -222,9 +225,36 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     //
-    //STEERING METHOD
+    //Lane Methods
     //
+    IEnumerator SmoothLaneChange(Vector3 targetPos, float duration)
+    {
+        Vector3 startPos = playerController.transform.position;
+        float elapsed = 0f;
 
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+
+            float currentZ = playerController.transform.position.z;
+            float targetX = Mathf.Lerp(startPos.x, targetPos.x, t);
+            Vector3 newPos = new Vector3(targetX, startPos.y, currentZ);
+            playerController.carRigidbody.MovePosition(newPos);
+
+            //Limit the slip angle of the car
+            Vector3 velocity = playerController.carRigidbody.linearVelocity;
+            velocity.x = Mathf.Clamp(velocity.x, -50f, 50f);
+            playerController.carRigidbody.linearVelocity = velocity;
+
+            ApplySteering();
+            elapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        isSwitchingLane = false;
+    }
+
+    private Tween steeringAxisTween;
     public void LaneChange(int desiredLane)
     {
         if (!canChangeLanes || isSwitchingLane)
@@ -284,37 +314,23 @@ public class PrometeoCarController : MonoBehaviour
                 }
         }
 
-        int direction = (targetX - playerController.transform.position.x > 0) ? -1 : 1;
-        float rotationAmount = 18f * direction;
-
-        playerController.transform.DOKill();
-        DOTween.Kill(steeringAxisTween);
 
         isSwitchingLane = true;
 
-        Quaternion startRotation = playerController.transform.rotation;
-        Quaternion targetRotation = startRotation * Quaternion.Euler(0f, rotationAmount, 0f);
-
-        Sequence laneChange = DOTween.Sequence();
-
-        laneChange.Append(playerController.transform.DORotateQuaternion(targetRotation, 0.15f).SetEase(Ease.InOutSine))
-            .Join(playerController.carRigidbody.DOMoveX(targetX, 0.15f).SetEase(Ease.InOutSine))
-            .OnUpdate(() => ApplySteering())
-            .OnComplete(() =>
-            {
-                isSwitchingLane = false;
-            });
-
-        steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.2f)
+        DOTween.Kill(steeringAxisTween);
+        
+       steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.1f)
        .SetEase(Ease.OutSine)
        .OnComplete(() =>
        {
-           steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, 0f, 0.15f)
+           steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, 0f, 0.1f)
            .SetEase(Ease.OutSine);
        });
+
+        Vector3 targetPos = new Vector3(targetX, playerController.transform.position.y, playerController.transform.position.z);
+        StartCoroutine(SmoothLaneChange(targetPos, 0.25f));
     }
 
-    private Tween steeringAxisTween;
 
     private void ApplySteering()
     {
@@ -364,7 +380,13 @@ public class PrometeoCarController : MonoBehaviour
         correctionSteeringAxis = Mathf.Clamp(correctionSteeringAxis, -1f, 1f);
 
         if (Mathf.Abs(lateralVelocity) < 0.8f && Mathf.Abs(playerController.frontLeftCollider.steerAngle) < 17 && Mathf.Abs(playerController.frontRightCollider.steerAngle) < 17)
+        {
             _canChangeLanes = true;
+            steeringSpeed = 0.2f;
+        }else
+        {
+            steeringSpeed = 2f;
+        }
 
         ApplySteeringCorrection(correctionSteeringAxis);
 
@@ -373,7 +395,6 @@ public class PrometeoCarController : MonoBehaviour
     private void ApplySteeringCorrection(float correctionSteeringAxis)
     {
         float steeringAngle = correctionSteeringAxis * playerController.maxSteeringAngle;
-        playerController.steeringSpeed = 5;
         playerController.frontLeftCollider.steerAngle = -steeringAngle;
         playerController.frontRightCollider.steerAngle = -steeringAngle;
     }
@@ -387,19 +408,19 @@ public class PrometeoCarController : MonoBehaviour
     {
         if (steeringAxis < 0f)
         {
-            steeringAxis = steeringAxis + (Time.deltaTime * 10f * playerController.steeringSpeed);
+            steeringAxis = steeringAxis + (Time.deltaTime * 10f * steeringSpeed);
         }
         else if (steeringAxis > 0f)
         {
-            steeringAxis = steeringAxis - (Time.deltaTime * 10f * playerController.steeringSpeed);
+            steeringAxis = steeringAxis - (Time.deltaTime * 10f * steeringSpeed);
         }
         if (Mathf.Abs(playerController.frontLeftCollider.steerAngle) < 1f)
         {
             steeringAxis = 0f;
         }
         var steeringAngle = steeringAxis * playerController.maxSteeringAngle;
-        playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
-        playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, playerController.steeringSpeed);
+        playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
+        playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
     }
 
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.

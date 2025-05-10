@@ -2357,6 +2357,7 @@ MonoBehaviour:
   - {fileID: 2784273052758334028, guid: 660e18a6decacc34185ab63766ec705e, type: 3}
   - {fileID: 2784273052758334028, guid: 1dfd7e09988f2e44687f1c7f8790aa29, type: 3}
   Zoffset: 142
+  endConstrZ: 0
 --- !u!4 &1208644399
 Transform:
   m_ObjectHideFlags: 0
@@ -2414,6 +2415,7 @@ MonoBehaviour:
   - {fileID: 4928642715715310126, guid: 7ade677d5b21e454c999135c98369bc2, type: 3}
   indicators:
   - {fileID: 2081499581058635209, guid: 4d21ac3562874d244b66a985ac2f9d8d, type: 3}
+  roadSpawner: {fileID: 1208644398}
   spawningConstrRoad: 0
   middleConstrRemaining: 0
   constrRoadState: 0
@@ -8923,7 +8925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _maxSpeed
-      value: 75
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: scoreManager
@@ -8935,7 +8937,7 @@ PrefabInstance:
       objectReference: {fileID: 1208644397}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _dampingForce
-      value: 0.01
+      value: 0.008
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _laneDistance
@@ -8943,7 +8945,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _steeringSpeed
-      value: 0.552
+      value: 2.01
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _centeringForce

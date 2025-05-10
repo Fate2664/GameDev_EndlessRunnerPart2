@@ -18,13 +18,9 @@ public class PlayerController : MonoBehaviour
     [Range(1, 10000)]
     [SerializeField] private int _accelerationMultiplier = 2; // How fast the car can accelerate. 
     public int accelerationMultiplier { get { return _accelerationMultiplier; } }
-    [Space(10)]
     [Range(10, 45)]
     [SerializeField] private int _maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
     public int maxSteeringAngle { get { return _maxSteeringAngle; } set { _maxSteeringAngle = value; } }
-    [Range(0.1f, 5f)]
-    [SerializeField] private float _steeringSpeed = 0.5f; // How fast the steering wheel turns.
-    public float steeringSpeed { get { return _steeringSpeed; } set { _steeringSpeed = value; } }
     [Space(10)]
     [SerializeField] private Vector3 _bodyMassCenter;
     public Vector3 bodyMassCenter { get { return _bodyMassCenter; } }
@@ -38,7 +34,7 @@ public class PlayerController : MonoBehaviour
     [Range(0, 10)]
     [SerializeField] private float _centeringForce = 0.5f;
     public float centeringForce { get { return _centeringForce; } }
-    [Range(0, 0.2f)]
+    [Range(0, 0.05f)]
     [SerializeField] private float _dampingForce = 0.5f;
     public float dampingForce { get { return _dampingForce; } }
 

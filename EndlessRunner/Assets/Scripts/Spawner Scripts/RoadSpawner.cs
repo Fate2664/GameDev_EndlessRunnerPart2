@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,7 +23,8 @@ public class RoadSpawner : MonoBehaviour
 
     private List<GameObject> currentRoads;
     private ObstacleSpawner obstacleSpawner;
-
+    [HideInInspector]
+    public float endConstrZ = 0;
 
     void Start()
     {
@@ -77,8 +79,15 @@ public class RoadSpawner : MonoBehaviour
         GameObject movedRoad = currentRoads[0];
         float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
 
-        List<GameObject> constrSide = DetermineSide(obstacleSpawner.constrSide);
+        int constrSideChosen = obstacleSpawner.constrSide;
+        List<GameObject> constrSide = DetermineSide(constrSideChosen);
         GameObject constrRoad = null;
+
+        if (constrSideChosen == 1)
+        {
+            constrSideChosen = 2;
+        }
+        obstacleSpawner.laneManager.OccupyLane(constrSideChosen);
 
         switch (obstacleSpawner.constrRoadState)
         {
@@ -99,6 +108,7 @@ public class RoadSpawner : MonoBehaviour
             case ObstacleSpawner.ConstrRoadState.End:
                 constrRoad = constrSide[2];
                 obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.None;
+                endConstrZ = newZoffset - 80;
                 obstacleSpawner.spawningConstrRoad = false;
                 break;
         }

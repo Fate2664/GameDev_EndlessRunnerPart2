@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -32,13 +33,17 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> indicators;
     [Space(10)]
 
+    [Header("Connections")]
+    [SerializeField] private RoadSpawner roadSpawner;
+
 
     private float counter = 0f;
     private float counterTraffic = 0f;
     private float counterConstrRoad = 0f;
     private float[] initialTrafficOffsets = { 400, 600, 800, 1000, 1200 };
     private Transform playerTransform;
-    private LaneManager laneManager;
+    [HideInInspector]
+    public LaneManager laneManager;
     private readonly float[] lanePositions = { -40f, 0f, 40f };
     [HideInInspector]
     public bool spawningConstrRoad = false;
@@ -154,7 +159,7 @@ public class ObstacleSpawner : MonoBehaviour
             }
         }
 
-        foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+        foreach (int laneIndexTrig in laneManager.GetAllFreeLanes())
         {
             if (config.triggerPrefab != null)
             {
@@ -209,7 +214,7 @@ public class ObstacleSpawner : MonoBehaviour
             }
         }
 
-        foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+        foreach (int laneIndexTrig in laneManager.GetAllFreeLanes())
         {
             if (config.triggerPrefab != null)
             {
@@ -227,19 +232,22 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (obsTraffic.Count == 0 || playerTransform == null) return;
 
-        laneManager.ResetLanes();
 
         int numTraffToSpawn = 1;
         List<int> occupiedLanes = new List<int>();
-
         GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
         ObstacleLink link = prefab.GetComponent<ObstacleLink>();
         ObstacleConfig config = link.obsConfig;
 
+        //Reset the occupied lanes after the spawn distance is greater than the last construction prefab
+        if (!spawningConstrRoad && (roadSpawner.endConstrZ - playerTransform.position.z < -config.spawnOffset.z))   
+        {
+            laneManager.ResetLanes(); 
+        }
+
         while (occupiedLanes.Count < numTraffToSpawn)
         {
             int laneIndex = Random.Range(0, laneManager.laneCount);
-
             if (!occupiedLanes.Contains(laneIndex))
             {
                 occupiedLanes.Add(laneIndex);
@@ -255,7 +263,7 @@ public class ObstacleSpawner : MonoBehaviour
                 Destroy(spawnedTraffic, config.lifespan);
             }
         }
-        foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+        foreach (int laneIndexTrig in laneManager.GetAllFreeLanes())
         {
             if (config.triggerPrefab != null)
             {
@@ -309,7 +317,7 @@ public class ObstacleSpawner : MonoBehaviour
 
                 }
             }
-            foreach (int laneIndexTrig in laneManager.GetAllFreeLane())
+            foreach (int laneIndexTrig in laneManager.GetAllFreeLanes())
             {
                 if (config.triggerPrefab != null)
                 {

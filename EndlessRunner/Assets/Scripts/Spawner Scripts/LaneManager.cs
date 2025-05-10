@@ -34,7 +34,7 @@ public class LaneManager
     }
 
     //returns a random free lane index
-    public List<int> GetAllFreeLane()
+    public List<int> GetAllFreeLanes()
     {
         List<int> freeLanes = new List<int>();
         for (int i = 0; i < laneCount; i++)
