@@ -238,9 +238,10 @@ public class ObstacleSpawner : MonoBehaviour
         GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
         ObstacleLink link = prefab.GetComponent<ObstacleLink>();
         ObstacleConfig config = link.obsConfig;
-
+        float spawnz = playerTransform.position.z - config.spawnOffset.z;
         //Reset the occupied lanes after the spawn distance is greater than the last construction prefab
-        if (!spawningConstrRoad && (roadSpawner.endConstrZ - playerTransform.position.z < -config.spawnOffset.z))   
+        if (!spawningConstrRoad &&
+            (spawnz < roadSpawner.startConstrZ || spawnz > roadSpawner.endConstrZ))   
         {
             laneManager.ResetLanes(); 
         }

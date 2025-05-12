@@ -5,7 +5,7 @@ using UnityEngine;
 public class DoublePointsEffect : PowerUp_Effect
 {
    
-    public override void ApplyEffect(GameObject target, ParticleSystem RocketParticles)
+    public override void ApplyEffect(GameObject target)
     {
         Score Score = GameObject.FindObjectOfType<Score>();
 
@@ -17,7 +17,7 @@ public class DoublePointsEffect : PowerUp_Effect
 
     }
 
-    public override void DisableEffect(GameObject target, ParticleSystem RocketParticles)
+    public override void DisableEffect(GameObject target)
     {
         Score Score = GameObject.FindObjectOfType<Score>();
 

@@ -4,26 +4,29 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "PowerUp/RocketPickup")]
 public class RocketEffect : PowerUp_Effect
 {
+    PowerUp_Effect powerUp;
 
 
-    public override void ApplyEffect(GameObject target, ParticleSystem RocketParticles)
+    public override void ApplyEffect(GameObject target)
     {
-
+        powerUp = this.GetComponent<PickupLink>().powerUp_Effect;
         target.GetComponent<PlayerController>().maxSpeed = 150;
         target.GetComponent<PlayerDeath>().PlayerImmune = true;
-        RocketParticles.Play();
-
-
-
+        if (powerUp.particleSystem != null)
+        {
+            powerUp.particleSystem.Play();
+        }
     }
 
-    public override void DisableEffect(GameObject target, ParticleSystem RocketParticles)
+    public override void DisableEffect(GameObject target)
     {
-
+         powerUp = this.GetComponent<PickupLink>().powerUp_Effect;
         target.GetComponent<PlayerController>().maxSpeed = 100;
         target.GetComponent<PlayerDeath>().PlayerImmune = false;
-        RocketParticles.Stop();
-
+        if (powerUp.particleSystem != null)
+        {
+            powerUp.particleSystem.Stop();
+        }
     }
 }
 

@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b145c5ef68d90f4584132f81b687b1c, type: 3}
   m_Name: RocketBoost
   m_EditorClassIdentifier: 
+  duration: 5
+  yHeight: 2
+  particleSystem: {fileID: 7198253037567395392, guid: b0c60252731a2fa4393658fd6632a7c7, type: 3}

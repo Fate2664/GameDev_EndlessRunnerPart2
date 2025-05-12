@@ -25,6 +25,7 @@ public class RoadSpawner : MonoBehaviour
     private ObstacleSpawner obstacleSpawner;
     [HideInInspector]
     public float endConstrZ = 0;
+    public float startConstrZ = 0;
 
     void Start()
     {
@@ -94,6 +95,7 @@ public class RoadSpawner : MonoBehaviour
             case ObstacleSpawner.ConstrRoadState.Start:
                 constrRoad = constrSide[0];
                 obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.Middle;
+                startConstrZ = newZoffset + 80;
                 obstacleSpawner.middleConstrRemaining = 4;
                 break;
             case ObstacleSpawner.ConstrRoadState.Middle:
