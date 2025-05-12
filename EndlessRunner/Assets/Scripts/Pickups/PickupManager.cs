@@ -49,7 +49,9 @@ public class PickupManager : MonoBehaviour
 
             if (pEffect != null)
             {
-                Destroy(pEffect, pickupEffect.particleSystemPrefab.duration + pickupEffect.particleSystemPrefab.startLifetime);
+                float duration = pickupEffect.particleSystemPrefab.duration + pickupEffect.particleSystemPrefab.startLifetime;
+                float destroyDelay = duration + 10f;
+                StartCoroutine(StopPartical(pEffect, duration, destroyDelay));
             }
 
         }
@@ -63,6 +65,16 @@ public class PickupManager : MonoBehaviour
         pickupEffect.DisableEffect(player);
         powerUpCheck = false;
         activeRoutine = null;
+    }
+
+    private IEnumerator StopPartical(ParticleSystem effect, float duration, float destoryDelay)
+    {
+        yield return new WaitForSeconds(duration);
+        if (effect != null)
+        {
+            effect.Stop();
+            Destroy(effect,destoryDelay);
+        }
     }
 
 
