@@ -1,14 +1,15 @@
+using NUnit.Framework.Internal;
 using System.Collections;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PickupManager : MonoBehaviour
 {
+    [SerializeField] Camera mainCamera;
 
     [HideInInspector]
     public bool powerUpCheck = false;
-
-
     private Coroutine activeRoutine;
     private PickupLink _activePickupLink;
     [HideInInspector]
@@ -23,7 +24,7 @@ public class PickupManager : MonoBehaviour
         }
     }
 
-    
+
     public void ActivatePickup(PickupLink link)
     {
         if (!powerUpCheck)
@@ -38,6 +39,20 @@ public class PickupManager : MonoBehaviour
         PowerUp_Effect pickupEffect = link.powerUp_Effect;
         float setTime = 0f;
 
+        if (pickupEffect.particleSystemPrefab != null)
+        {
+            ParticleSystem pEffect = Instantiate(pickupEffect.particleSystemPrefab, mainCamera.transform.position, Quaternion.identity);
+            Vector3 zOffset = mainCamera.transform.forward * -2f;
+            pEffect.transform.SetParent(mainCamera.transform);
+            pEffect.transform.localPosition = zOffset;
+            pEffect.Play();
+
+            if (pEffect != null)
+            {
+                Destroy(pEffect, pickupEffect.particleSystemPrefab.duration + pickupEffect.particleSystemPrefab.startLifetime);
+            }
+
+        }
 
         while (setTime < pickupEffect.duration)
         {
@@ -45,7 +60,6 @@ public class PickupManager : MonoBehaviour
             pickupEffect.ApplyEffect(player);
             yield return null;
         }
-
         pickupEffect.DisableEffect(player);
         powerUpCheck = false;
         activeRoutine = null;

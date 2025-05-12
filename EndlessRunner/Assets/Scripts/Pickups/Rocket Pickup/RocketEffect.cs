@@ -9,24 +9,14 @@ public class RocketEffect : PowerUp_Effect
 
     public override void ApplyEffect(GameObject target)
     {
-        powerUp = this.GetComponent<PickupLink>().powerUp_Effect;
         target.GetComponent<PlayerController>().maxSpeed = 150;
         target.GetComponent<PlayerDeath>().PlayerImmune = true;
-        if (powerUp.particleSystem != null)
-        {
-            powerUp.particleSystem.Play();
-        }
     }
 
     public override void DisableEffect(GameObject target)
     {
-         powerUp = this.GetComponent<PickupLink>().powerUp_Effect;
         target.GetComponent<PlayerController>().maxSpeed = 100;
         target.GetComponent<PlayerDeath>().PlayerImmune = false;
-        if (powerUp.particleSystem != null)
-        {
-            powerUp.particleSystem.Stop();
-        }
     }
 }
 
