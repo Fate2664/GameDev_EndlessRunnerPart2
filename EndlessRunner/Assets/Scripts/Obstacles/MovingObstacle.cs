@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public class MovingObstacle : MonoBehaviour
 {
 
-    private float[] movementSpeed = { 700, 500, 100 };       //set the different speeds for the different obstacles
+    private float[] movementSpeed = { 900, 700, 100 };       //set the different speeds for the different obstacles
     [HideInInspector]
     private int _obstacleIndex;
     public int obstacleIndex { get { return _obstacleIndex; } set {  _obstacleIndex = value; } }

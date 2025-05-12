@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1683851279280957895
+--- !u!1001 &8371973171880016707
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,27 +10,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_LocalScale.x
-      value: 11.713
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_LocalScale.y
-      value: 11.713
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_LocalScale.z
-      value: 11.713
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.8715
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 16.4
+      value: 11.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 17.106
+      value: 69.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -60,14 +60,54 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
       propertyPath: m_Name
-      value: TruckUpdated
+      value: TruckUpdated 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
-    - {fileID: -8700617353114198275, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
     - {fileID: 65702495048144492, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
+    - {fileID: -8700617353114198275, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3262951845202353711}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2969827733050808854}
   m_SourcePrefab: {fileID: 100100000, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
+--- !u!1 &8713991319238673938 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6532e422630e5de4181859dd1707a1dc, type: 3}
+  m_PrefabInstance: {fileID: 8371973171880016707}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3262951845202353711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8713991319238673938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9dfacabe68707c4ea24c403c93308b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2969827733050808854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8713991319238673938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85fc4d6237eaf447a84ecde0130b8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obsConfig: {fileID: 11400000, guid: 3b9f497c7667d174aba6b5babc6ac484, type: 2}

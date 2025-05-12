@@ -1,9 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class RoadSpawner : MonoBehaviour
 {
@@ -18,6 +16,9 @@ public class RoadSpawner : MonoBehaviour
     [Header("Right:")]
     [SerializeField] private List<GameObject> rightConstrRoads;
 
+    [Header("Block Roads")]
+    [SerializeField] private List<GameObject> blockRoads;
+
     [Header("Settings")]
     [SerializeField] private float Zoffset = 142f;
 
@@ -25,7 +26,9 @@ public class RoadSpawner : MonoBehaviour
     private ObstacleSpawner obstacleSpawner;
     [HideInInspector]
     public float endConstrZ = 0;
+    [HideInInspector]
     public float startConstrZ = 0;
+  
 
     void Start()
     {
@@ -51,7 +54,7 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
-    public void Initialize(ObstacleSpawner obsSpawner)
+    public void InitializeObsSpawener(ObstacleSpawner obsSpawner)
     {
         obstacleSpawner = obsSpawner;
     }
@@ -65,16 +68,22 @@ public class RoadSpawner : MonoBehaviour
             Destroy(movedRoad);
             movedRoad = currentRoads[0];
         }
+        if (movedRoad.GetComponent<BlockRoadMarker>())
+        {
+            currentRoads.RemoveAt(0);
+            Destroy(movedRoad);
+            movedRoad = currentRoads[0];
+        }
 
         float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;   //get the position for the new road infront of the others
 
         currentRoads.RemoveAt(0);          //remove the first road from the list
         movedRoad.transform.position = new Vector3(0f, 0f, newZoffset);     //Create a new vector for the new road position
         currentRoads.Add(movedRoad);   //add the new road to the list
-
-
     }
 
+
+    //TODO make a no spawn trigger inside of the constuction zone
     public void SpawnNextConstructionRoad()
     {
         GameObject movedRoad = currentRoads[0];
@@ -133,6 +142,27 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
+    public void SpawnBlockRoad(bool spawnCheck)
+    {
+        if (spawnCheck)
+        {
+            GameObject movedRoad = currentRoads[0];
+            
+            float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
+         
+
+            if (blockRoads != null && blockRoads.Count > 0)
+            {
+                GameObject spawnedBlockRoad = Instantiate(blockRoads[Random.Range(0, blockRoads.Count)], new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f, 90f, 0f));
+                spawnedBlockRoad.transform.SetParent(transform, this);
+                spawnedBlockRoad.AddComponent<BlockRoadMarker>();
+                currentRoads.Add(spawnedBlockRoad);
+            }
+
+        }
+
+    }
+
     private List<GameObject> DetermineSide(int randomSide)
     {
         switch (randomSide)
@@ -145,7 +175,6 @@ public class RoadSpawner : MonoBehaviour
 
         }
     }
-
 
 
 }

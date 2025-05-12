@@ -6,13 +6,15 @@ public class SpawnManager : MonoBehaviour
     LandSpawner landSpawner;
     PickupManager pickupManager;
     ObstacleSpawner obstacleSpawner;
+    BossSpawner bossSpawner;
     void Start()
     {
         //get the scripts for each spawner
         roadSpawner = GetComponent<RoadSpawner>();
         landSpawner = GetComponent<LandSpawner>();
         obstacleSpawner = GetComponent<ObstacleSpawner>();
-        roadSpawner.Initialize(obstacleSpawner);
+        bossSpawner = GetComponent<BossSpawner>();
+        roadSpawner.InitializeObsSpawener(obstacleSpawner);
     }
 
 
