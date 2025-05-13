@@ -32,6 +32,9 @@ public class MovingObstacle : MonoBehaviour
             case 2:
                 transform.Translate(Vector3.forward * -movementSpeed[2] * Time.deltaTime);
                 break;
+            case 3:
+                transform.Translate(Vector3.forward * movementSpeed[2] * Time.deltaTime);
+                break;
         }
 
     }

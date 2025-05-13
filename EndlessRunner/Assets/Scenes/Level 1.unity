@@ -2436,7 +2436,13 @@ MonoBehaviour:
   obsMovingPastPlr:
   - {fileID: 5948713306678977575, guid: 5bcd9c81d082d514baf5cedb2c192f74, type: 3}
   obsTraffic:
-  - {fileID: 8713991319238673938, guid: 361abd18d2dfb54419f8900822dc1b17, type: 3}
+  - {fileID: 4040195401324006173, guid: 5a102ac1de5ff7846ab4eb8d726e77bc, type: 3}
+  - {fileID: 673670369152367155, guid: d5a74e319b069c9449ef35325e5b379d, type: 3}
+  - {fileID: 2478850398043797662, guid: d17ab9d8c8a79a8459036a4d6e5a1c44, type: 3}
+  - {fileID: 3051972123118144672, guid: 81e2a39ada842624480e8143736b8687, type: 3}
+  - {fileID: 5940895003043494506, guid: 3b7de5ba75872ae4bb095a39b6a9ff08, type: 3}
+  - {fileID: 6619582297278981724, guid: a4eee9eee6c4b0d488fa25210e62af87, type: 3}
+  - {fileID: 773849045993583741, guid: cd41b25524147994b9f49a0badfd115b, type: 3}
   indicators:
   - {fileID: 2081499581058635209, guid: 4d21ac3562874d244b66a985ac2f9d8d, type: 3}
   roadSpawner: {fileID: 1208644398}
@@ -2476,7 +2482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351de75ee550f1a4a8b2f9cd38e99280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToSpawn: 100
+  distanceToSpawn: 400
   distanceManager: {fileID: 1094905196}
   obstacleSpawner: {fileID: 1208644401}
   roadSpawner: {fileID: 1208644398}

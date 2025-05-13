@@ -261,10 +261,14 @@ public class ObstacleSpawner : MonoBehaviour
 
                 float spawnZ = playerTransform.position.z - config.spawnOffset.z;
                 Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-                Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+                Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
 
                 GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
                 spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                if (config.faceBackward)
+                {
+                    spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = 3;
+                }
                 spawnedTraffic.transform.SetParent(transform, this);
                 Destroy(spawnedTraffic, config.lifespan);
             }
@@ -314,10 +318,14 @@ public class ObstacleSpawner : MonoBehaviour
 
                     float spawnZ = playerTransform.position.z - initialTrafficOffset;
                     Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-                    Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+                    Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
 
                     GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
                     spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                    if (config.faceBackward)
+                    {
+                        spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = 3;
+                    }
                     spawnedTraffic.transform.SetParent(transform, this);
                     Destroy(spawnedTraffic, config.lifespan);
 
