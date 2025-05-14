@@ -25,10 +25,9 @@ public class Score : MonoBehaviour
             score += 2;    //increment the score value 
         }
 
-        if (score > 0)
-        {
-            ValueText.text = score.ToString("0");       //Change the text to show the new score
-        }
+
+        ValueText.text = score.ToString("0");       //Change the text to show the new score
+
     }
 
 

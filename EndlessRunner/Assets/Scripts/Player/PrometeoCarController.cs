@@ -382,7 +382,7 @@ public class PrometeoCarController : MonoBehaviour
         if (Mathf.Abs(lateralVelocity) < 0.8f && Mathf.Abs(playerController.frontLeftCollider.steerAngle) < 17 && Mathf.Abs(playerController.frontRightCollider.steerAngle) < 17)
         {
             _canChangeLanes = true;
-            steeringSpeed = 0.2f;
+            steeringSpeed = 0.1f;
         }else
         {
             steeringSpeed = 2f;

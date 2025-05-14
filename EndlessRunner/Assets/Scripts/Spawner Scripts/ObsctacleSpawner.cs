@@ -16,7 +16,7 @@ public class ObstacleSpawner : MonoBehaviour
     [Header("Spawn Details")]
     [SerializeField] private int initialTrafficAmount = 5;
     [Range(0.5f, 10f)]
-    [SerializeField] private float obsSpawnRate = 1f;
+    [SerializeField] private float obsSpawnRate = 5f;
     [Range(0.5f, 10f)]
     [SerializeField] private float trafficSpawnRate = 1f;
     [Range(5f, 30f)]
@@ -53,6 +53,10 @@ public class ObstacleSpawner : MonoBehaviour
     public ConstrRoadState constrRoadState = ConstrRoadState.None;
     [HideInInspector]
     public int constrSide = 0;
+    [HideInInspector]
+    public bool stopTraffic = false;
+    [HideInInspector]
+    public bool canSpawnConstrRoad = true;
 
 
 
@@ -68,14 +72,15 @@ public class ObstacleSpawner : MonoBehaviour
             ObsInitialTrafficSpawn();
             counterTraffic = 0f;
         }
-
-
     }
 
     void Update()
     {
         //SpawnObstacle();
-        SpawnTraffic();
+        if (!stopTraffic)
+        {
+            SpawnTraffic();
+        }
         ObsConstrRoadSpawn();
         //DifficultyScaling();
     }
@@ -94,7 +99,7 @@ public class ObstacleSpawner : MonoBehaviour
     }
 
 
-    private void SpawnObstacle()
+    public void SpawnObstacle()
     {
         counter += Time.deltaTime;
 
@@ -133,7 +138,7 @@ public class ObstacleSpawner : MonoBehaviour
 
         laneManager.ResetLanes();
 
-        int numObsToSpawn = 1;
+        int numObsToSpawn = Random.Range(1,2);
         List<int> occupiedLanes = new List<int>();
 
         GameObject prefab = obsMovingTowardPlr[Random.Range(0, obsMovingTowardPlr.Count)];
@@ -179,7 +184,7 @@ public class ObstacleSpawner : MonoBehaviour
 
         laneManager.ResetLanes();
 
-        int numObsToSpawn = 1;
+        int numObsToSpawn = Random.Range(1, 2);
         List<int> occupiedLanes = new List<int>();
 
         GameObject prefab = obsMovingPastPlr[Random.Range(0, obsMovingPastPlr.Count)];
@@ -241,9 +246,9 @@ public class ObstacleSpawner : MonoBehaviour
         float spawnz = playerTransform.position.z - config.spawnOffset.z;
         //Reset the occupied lanes after the spawn distance is greater than the last construction prefab
         if (!spawningConstrRoad &&
-            (spawnz < roadSpawner.startConstrZ || spawnz > roadSpawner.endConstrZ))   
+            (spawnz < roadSpawner.startConstrZ || spawnz > roadSpawner.endConstrZ))
         {
-            laneManager.ResetLanes(); 
+            laneManager.ResetLanes();
         }
 
         while (occupiedLanes.Count < numTraffToSpawn)
@@ -256,10 +261,14 @@ public class ObstacleSpawner : MonoBehaviour
 
                 float spawnZ = playerTransform.position.z - config.spawnOffset.z;
                 Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-                Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+                Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
 
                 GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
                 spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                if (config.faceBackward)
+                {
+                    spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = 3;
+                }
                 spawnedTraffic.transform.SetParent(transform, this);
                 Destroy(spawnedTraffic, config.lifespan);
             }
@@ -309,10 +318,14 @@ public class ObstacleSpawner : MonoBehaviour
 
                     float spawnZ = playerTransform.position.z - initialTrafficOffset;
                     Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-                    Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+                    Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
 
                     GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
                     spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+                    if (config.faceBackward)
+                    {
+                        spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = 3;
+                    }
                     spawnedTraffic.transform.SetParent(transform, this);
                     Destroy(spawnedTraffic, config.lifespan);
 
@@ -338,7 +351,7 @@ public class ObstacleSpawner : MonoBehaviour
     {
         counterConstrRoad += Time.deltaTime;
 
-        if (counterConstrRoad >= constructionRoadSpawnRate && constrRoadState == ConstrRoadState.None)
+        if (counterConstrRoad >= constructionRoadSpawnRate && constrRoadState == ConstrRoadState.None && canSpawnConstrRoad)
         {
             spawningConstrRoad = true;
             constrRoadState = ConstrRoadState.Start;
