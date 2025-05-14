@@ -2469,7 +2469,7 @@ MonoBehaviour:
   - {fileID: 2991919188807452402, guid: 0e0afea2351526443b24c9b39b665198, type: 3}
   - {fileID: 7393397310492272890, guid: 79b12a0bcfda4f14f86722de4edeec5c, type: 3}
   spawnRate: 5
-  distanceAhead: 700
+  distanceAhead: 1600
 --- !u!114 &1208644403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2482,7 +2482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351de75ee550f1a4a8b2f9cd38e99280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToSpawn: 400
+  distanceToSpawn: 500
   distanceManager: {fileID: 1094905196}
   obstacleSpawner: {fileID: 1208644401}
   roadSpawner: {fileID: 1208644398}

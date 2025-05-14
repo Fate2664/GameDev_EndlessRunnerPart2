@@ -12,6 +12,7 @@ TagManager:
   - Player Nose
   - Player Hitbox
   - PickupManager
+  - NoSpawnTrigger
   layers:
   - Default
   - TransparentFX
