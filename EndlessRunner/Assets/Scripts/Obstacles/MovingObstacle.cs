@@ -52,7 +52,7 @@ public class MovingObstacle : MonoBehaviour
         bool shouldStop = false;
 
         Vector3 rayOrigin = transform.position - direction * 1f;
-        Debug.DrawRay(rayOrigin, direction * distanceToCheck, Color.red);
+
         if (Physics.Raycast(rayOrigin, direction, out RaycastHit hit, distanceToCheck))
         {
             if (hit.collider.CompareTag("NoSpawnTrigger") || (hit.collider.CompareTag("Obstacle")) &&
