@@ -32,11 +32,11 @@ public class MovingObstacle : MonoBehaviour
                 break;
 
             case 2:
-                HandleTraffic(transform.forward, currentSpeed, -1f);
+                HandleTraffic(-transform.forward, currentSpeed, -1f);
                 break;
 
             case 3:
-                HandleTraffic(-transform.forward, currentSpeed, 1f);
+                HandleTraffic(transform.forward, currentSpeed, 1f);
                 break;
         }
     }
@@ -48,25 +48,21 @@ public class MovingObstacle : MonoBehaviour
 
     private void HandleTraffic(Vector3 direction, float targetSpeed, float directionMultiplier)
     {
-        float distanceToCheck = -80f;
+        float distanceToCheck = 80f;
         bool shouldStop = false;
 
-        Vector3 rayOrigin = transform.position + direction * 1f;
+        Vector3 rayOrigin = transform.position - direction * 1f;
         Debug.DrawRay(rayOrigin, direction * distanceToCheck, Color.red);
         if (Physics.Raycast(rayOrigin, direction, out RaycastHit hit, distanceToCheck))
         {
-            if (hit.collider.CompareTag("NoSpawnTrigger") &&
+            if (hit.collider.CompareTag("NoSpawnTrigger") || (hit.collider.CompareTag("Obstacle")) &&
                 Mathf.Abs(hit.point.x - transform.position.x) < 1f)
             {
                 shouldStop = true;
-                Debug.Log("True");
             }
         }
-        if (shouldStop)
-        {
-            currentSpeed = 0f;
-        }
-        //currentSpeed = Mathf.Lerp(currentSpeed, shouldStop ? 0f : targetSpeed, Time.deltaTime * (shouldStop ? 1f : 2f));
+      
+        currentSpeed = Mathf.Lerp(currentSpeed, shouldStop ? 0f : targetSpeed, Time.deltaTime * (shouldStop ? 5f : 2f));
         transform.Translate(Vector3.forward * currentSpeed * directionMultiplier * Time.deltaTime);
     }
 
