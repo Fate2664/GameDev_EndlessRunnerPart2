@@ -83,7 +83,6 @@ public class RoadSpawner : MonoBehaviour
     }
 
 
-    //TODO make a no spawn trigger inside of the constuction zone
     public void SpawnNextConstructionRoad()
     {
         GameObject movedRoad = currentRoads[0];

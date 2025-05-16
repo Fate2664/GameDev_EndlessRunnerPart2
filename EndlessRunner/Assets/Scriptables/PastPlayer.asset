@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleType: 1
   movementSpeedIndex: 0
-  spawnOffset: {x: 0, y: 0, z: 600}
+  spawnOffset: {x: 0, y: 6.7, z: 600}
   triggerOffset: {x: 0, y: 8, z: 600}
   faceBackward: 1
   triggerPrefab: {fileID: 708588188921009675, guid: 890c18353cea4d44bba39bef44664c67, type: 3}

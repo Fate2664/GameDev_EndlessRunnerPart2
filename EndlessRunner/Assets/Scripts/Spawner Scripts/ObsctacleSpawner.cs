@@ -337,10 +337,11 @@ public class ObstacleSpawner : MonoBehaviour
 
                     GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
                     spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
-                    if (config.faceBackward)
+                    if (config.faceBackward && config.movementSpeedIndex == 2)
                     {
                         spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = 3;
                     }
+                     
                     spawnedTraffic.transform.SetParent(transform, this);
                     Destroy(spawnedTraffic, config.lifespan);
 

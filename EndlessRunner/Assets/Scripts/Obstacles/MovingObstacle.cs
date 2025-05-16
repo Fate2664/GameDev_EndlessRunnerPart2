@@ -28,7 +28,7 @@ public class MovingObstacle : MonoBehaviour
                 break;
 
             case 1:
-                MoveObstacle(movementSpeed[1], 1f);
+                MoveObstacle(-movementSpeed[1], 1f);
                 break;
 
             case 2:
