@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEditor.Profiling;
 using UnityEngine;
 
@@ -39,11 +40,29 @@ public class PickupSpawner : MonoBehaviour
             
             int pickupSpawnPoint = Random.Range(0, 3);      //randomly choose the lane in which to spawn the pickup
             Vector3 spawnPosition = new Vector3(laneXPositions[pickupSpawnPoint], link.powerUp_Effect.yHeight, player.position.z - distanceAhead);      //create a vector with the spawn position for the pickup
-            GameObject pickupSpawned = Instantiate(pickups[randomIndex], spawnPosition, Quaternion.identity);       //create a clone of the pickup that is chosen 
-            pickupSpawned.transform.SetParent(transform, false);
-            if (pickupSpawned != null)
+
+            Collider[] overlaps = Physics.OverlapBox(spawnPosition, new Vector3(1f, 1f, 1f), Quaternion.identity, LayerMask.GetMask("Default"));
+            bool inNoSpawnZone = false;
+
+            foreach (Collider coll in overlaps)
             {
-                Destroy(pickupSpawned, 5f);      //destroy that clone after 5 increment points have past
+                if (coll.CompareTag("NoSpawnTrigger"))
+                {
+                    inNoSpawnZone = true;
+                    break;
+                }
+            }
+
+
+
+            if (!inNoSpawnZone)
+            {
+                GameObject pickupSpawned = Instantiate(pickups[randomIndex], spawnPosition, Quaternion.identity);       //create a clone of the pickup that is chosen 
+                pickupSpawned.transform.SetParent(transform, false);
+                if (pickupSpawned != null)
+                {
+                    Destroy(pickupSpawned, 5f);      //destroy that clone after 5 increment points have past
+                } 
             }
 
             counter = 0f;           //reset the counter

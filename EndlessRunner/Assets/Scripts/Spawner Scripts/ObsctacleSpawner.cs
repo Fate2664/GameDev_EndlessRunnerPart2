@@ -72,6 +72,7 @@ public class ObstacleSpawner : MonoBehaviour
             ObsInitialTrafficSpawn();
             counterTraffic = 0f;
         }
+        canSpawnConstrRoad = true;
     }
 
     void Update()
@@ -138,7 +139,7 @@ public class ObstacleSpawner : MonoBehaviour
 
         laneManager.ResetLanes();
 
-        int numObsToSpawn = Random.Range(1,2);
+        int numObsToSpawn = Random.Range(1, 2);
         List<int> occupiedLanes = new List<int>();
 
         GameObject prefab = obsMovingTowardPlr[Random.Range(0, obsMovingTowardPlr.Count)];
@@ -243,13 +244,9 @@ public class ObstacleSpawner : MonoBehaviour
         GameObject prefab = obsTraffic[Random.Range(0, obsTraffic.Count)];
         ObstacleLink link = prefab.GetComponent<ObstacleLink>();
         ObstacleConfig config = link.obsConfig;
-        float spawnz = playerTransform.position.z - config.spawnOffset.z;
-        //Reset the occupied lanes after the spawn distance is greater than the last construction prefab
-        if (!spawningConstrRoad &&
-            (spawnz < roadSpawner.startConstrZ || spawnz > roadSpawner.endConstrZ))
-        {
-            laneManager.ResetLanes();
-        }
+
+        laneManager.ResetLanes();
+
 
         while (occupiedLanes.Count < numTraffToSpawn)
         {
@@ -261,8 +258,26 @@ public class ObstacleSpawner : MonoBehaviour
 
                 float spawnZ = playerTransform.position.z - config.spawnOffset.z;
                 Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
-                Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
 
+                Collider[] overlaps = Physics.OverlapBox(spawnPos, new Vector3(1f, 1f, 1f), Quaternion.identity, LayerMask.GetMask("Default"));
+                bool inNoSpawnZone = false;
+
+                foreach (Collider coll in overlaps)
+                {
+                    if (coll.CompareTag("NoSpawnTrigger"))
+                    {
+                        inNoSpawnZone = true;
+                        break;
+                    }
+                }
+
+                if (inNoSpawnZone)
+                {
+                    continue;
+                }
+
+
+                Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
                 GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
                 spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
                 if (config.faceBackward)
