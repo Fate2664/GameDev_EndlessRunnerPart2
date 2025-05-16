@@ -67,11 +67,17 @@ public class PlayerController : MonoBehaviour
     //The following variable lets you to set up particle systems in your 
     [SerializeField] private bool _useEffects = false;
     public bool useEffects { get { return _useEffects; } }
-    // The following particle systems are used as tire smoke when the car drifts.
+    // The following particle systems are used as tire smoke when the car drifts and exhaust flames when the player picks up a rocket boost.
     [SerializeField] private ParticleSystem _RLWParticleSystem;
     public ParticleSystem RLWParticleSystem { get { return _RLWParticleSystem; } }
     [SerializeField] private ParticleSystem _RRWParticleSystem;
     public ParticleSystem RRWParticleSystem { get { return _RRWParticleSystem; } }
+
+    [Space(10)]
+    [SerializeField] private ParticleSystem _LeftExhaustFlame;
+    public ParticleSystem LeftExhaustFlame { get {  return _LeftExhaustFlame; } }
+    [SerializeField] private ParticleSystem _RightExhaustFlame;
+    public ParticleSystem RightExhaustFlame {  get {  return _RightExhaustFlame; } }
 
     [Space(10)]
     // The following trail renderers are used as tire skids when the car loses traction.
@@ -200,6 +206,7 @@ public class PlayerController : MonoBehaviour
         {
             scoreManager.IncrementScore();
         }
+
 
 
     }

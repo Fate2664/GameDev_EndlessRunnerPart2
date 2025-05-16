@@ -4,8 +4,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "PowerUp/RocketPickup")]
 public class RocketEffect : PowerUp_Effect
 {
-    PowerUp_Effect powerUp;
-
 
     public override void ApplyEffect(GameObject target)
     {
@@ -17,6 +15,11 @@ public class RocketEffect : PowerUp_Effect
     {
         target.GetComponent<PlayerController>().maxSpeed = 100;
         target.GetComponent<PlayerDeath>().PlayerImmune = false;
+        if (target.GetComponent<PlayerController>().LeftExhaustFlame != null && target.GetComponent<PlayerController>().RightExhaustFlame != null)
+        {
+            target.GetComponent<PlayerController>().LeftExhaustFlame.Stop();
+            target.GetComponent<PlayerController>().RightExhaustFlame.Stop();
+        }
     }
 }
 

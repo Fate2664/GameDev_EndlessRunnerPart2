@@ -15,3 +15,4 @@ MonoBehaviour:
   duration: 5
   yHeight: 2
   particleSystemPrefab: {fileID: 7198253037567395392, guid: b0c60252731a2fa4393658fd6632a7c7, type: 3}
+  hasTrail: 1

@@ -7,6 +7,7 @@ using UnityEngine;
 public class PickupManager : MonoBehaviour
 {
     [SerializeField] Camera mainCamera;
+    [SerializeField] PrometeoCarController prometeoCarController;
 
     [HideInInspector]
     public bool powerUpCheck = false;
@@ -22,6 +23,7 @@ public class PickupManager : MonoBehaviour
         {
             activeRoutine = StartCoroutine(PickupRoutine(_activePickupLink));        //start the coroutine if the powerup is active and it is not already running
         }
+
     }
 
 
@@ -47,12 +49,17 @@ public class PickupManager : MonoBehaviour
             pEffect.transform.localPosition = zOffset;
             pEffect.Play();
 
+            if (pickupEffect.hasTrail)
+            {
+                prometeoCarController.ExhaustFlamePS();
+            }
             if (pEffect != null)
             {
                 float duration = pickupEffect.particleSystemPrefab.duration + pickupEffect.particleSystemPrefab.startLifetime;
                 float destroyDelay = duration + 10f;
                 StartCoroutine(StopPartical(pEffect, duration, destroyDelay));
             }
+
 
         }
 

@@ -2,12 +2,7 @@
 using DG.Tweening;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 public class PrometeoCarController : MonoBehaviour
 {
@@ -20,7 +15,6 @@ public class PrometeoCarController : MonoBehaviour
     public float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
     private float steeringSpeed;  
     private float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
-    private float driftingAxis;
     private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
     private int currentLane = 0;
     [HideInInspector]
@@ -476,7 +470,6 @@ public class PrometeoCarController : MonoBehaviour
             playerController.isDrifting = false;
         }
         DriftCarPS();
-
         throttleAxis += Time.deltaTime * 3f;
         throttleAxis = Mathf.Clamp01(throttleAxis);
 
@@ -593,6 +586,15 @@ public class PrometeoCarController : MonoBehaviour
             }
         }
 
+    }
+
+    public void ExhaustFlamePS()
+    {
+        if (playerController.useEffects && playerController.RightExhaustFlame != null && playerController.LeftExhaustFlame)
+        {
+            playerController.LeftExhaustFlame.Play();
+            playerController.RightExhaustFlame.Play();
+        }
     }
 
     #region Unused Code
