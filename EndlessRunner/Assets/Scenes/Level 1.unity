@@ -2444,6 +2444,10 @@ MonoBehaviour:
   - {fileID: 5940895003043494506, guid: 3b7de5ba75872ae4bb095a39b6a9ff08, type: 3}
   - {fileID: 6619582297278981724, guid: a4eee9eee6c4b0d488fa25210e62af87, type: 3}
   - {fileID: 773849045993583741, guid: cd41b25524147994b9f49a0badfd115b, type: 3}
+  - {fileID: 2275090693705015410, guid: 2ec0260dc83c3844f9bc8dbd0eac816f, type: 3}
+  - {fileID: 612334514649990562, guid: cfb6dec2d21d3594eb9e8926447dcea6, type: 3}
+  - {fileID: 3158531222040256469, guid: 964d8dbfe21135a43a4184d6b8a0f0b1, type: 3}
+  - {fileID: 6919113919655570091, guid: 047acddcc38f3f54f8251173d211ec7c, type: 3}
   indicators:
   - {fileID: 2081499581058635209, guid: 4d21ac3562874d244b66a985ac2f9d8d, type: 3}
   roadSpawner: {fileID: 1208644398}
