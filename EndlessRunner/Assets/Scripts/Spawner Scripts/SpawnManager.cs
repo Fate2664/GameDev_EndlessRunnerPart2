@@ -7,6 +7,8 @@ public class SpawnManager : MonoBehaviour
     PickupManager pickupManager;
     ObstacleSpawner obstacleSpawner;
     BossSpawner bossSpawner;
+
+    
     void Start()
     {
         //get the scripts for each spawner
