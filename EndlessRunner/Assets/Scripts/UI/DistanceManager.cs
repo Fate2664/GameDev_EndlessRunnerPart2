@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DistanceManager : MonoBehaviour
 {
+    //This script manages the distance covered by the player
+
     private float startZ;
     private float actDistance = 0;
     private float _distanceCovered;
@@ -19,6 +21,7 @@ public class DistanceManager : MonoBehaviour
 
     void Update()
     {
+        //We get the actual z value that the player covers and increment the distance amount after every 100 units
         actDistance = -(transform.position.z - startZ);
         if (actDistance >= 100)
         {

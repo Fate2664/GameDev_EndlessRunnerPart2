@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu( menuName = "Obstacles/ObstacleConfig")]
 public class ObstacleConfig : ScriptableObject
 {
+    //This scriptable object will be applied onto all moving obstacles
     public enum ObstacleType { TowardPlayer, PastPlayer, Traffic }
 
     public ObstacleType obstacleType;

@@ -6,14 +6,14 @@ using UnityEngine;
 
 public class PrometeoCarController : MonoBehaviour
 {
-
+    //This script is the main script on controlling the car's physics when driving
 
     //PRIVATE VARIABLES
 
     private PlayerController playerController;
     [HideInInspector]
     public float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
-    private float steeringSpeed;  
+    private float steeringSpeed;
     private float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
     private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
     private int currentLane = 0;
@@ -42,7 +42,6 @@ public class PrometeoCarController : MonoBehaviour
     WheelFrictionCurve RRwheelFriction;
     float RRWextremumSlip;
 
-    // Start is called before the first frame update
     void Start()
     {
         //In this part, we set the 'carRigidbody' value with the Rigidbody attached to this
@@ -95,9 +94,7 @@ public class PrometeoCarController : MonoBehaviour
             initialCarEngineSoundPitch = playerController.carEngineSound.pitch;
         }
 
-        // We invoke 2 methods inside this script. CarSpeedUI() changes the text of the UI object that stores
-        // the speed of the car and CarSounds() controls the engine and drifting sounds. Both methods are invoked
-        // in 0 seconds, and repeatedly called every 0.1 seconds.
+
         if (playerController.useUI)
         {
             InvokeRepeating("CarSpeedUI", 0f, 0.1f);
@@ -152,75 +149,12 @@ public class PrometeoCarController : MonoBehaviour
     }
 
 
-    // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
-    public void CarSpeedUI()
-    {
-
-        if (playerController.useUI)
-        {
-            try
-            {
-                float absoluteCarSpeed = Mathf.Abs(playerController.carSpeed);
-                playerController.carSpeedText.text = Mathf.RoundToInt(absoluteCarSpeed).ToString();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning(ex);
-            }
-        }
-
-    }
-
-    // This method controls the car sounds. For example, the car engine will sound slow when the car speed is low because the
-    // pitch of the sound will be at its lowest point. On the other hand, it will sound fast when the car speed is high because
-    // the pitch of the sound will be the sum of the initial pitch + the car speed divided by 100f.
-    // Apart from that, the tireScreechSound will play whenever the car starts drifting or losing traction.
-    public void CarSounds()
-    {
-
-        if (playerController.useSounds)
-        {
-            try
-            {
-                if (playerController.carEngineSound != null)
-                {
-                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 25f);
-                    playerController.carEngineSound.pitch = engineSoundPitch;
-                }
-                if ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f))
-                {
-                    if (!playerController.tireScreechSound.isPlaying)
-                    {
-                        playerController.tireScreechSound.Play();
-                    }
-                }
-                else if ((!playerController.isDrifting) && (!playerController.isTractionLocked || Mathf.Abs(playerController.carSpeed) < 12f))
-                {
-                    playerController.tireScreechSound.Stop();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning(ex);
-            }
-        }
-        else if (!playerController.useSounds)
-        {
-            if (playerController.carEngineSound != null && playerController.carEngineSound.isPlaying)
-            {
-                playerController.carEngineSound.Stop();
-            }
-            if (playerController.tireScreechSound != null && playerController.tireScreechSound.isPlaying)
-            {
-                playerController.tireScreechSound.Stop();
-            }
-        }
-
-    }
 
     //
     //Lane Methods
     //
+
+    //This IEnumerator moves the car sideways smoothly to the desired lane position
     IEnumerator SmoothLaneChange(Vector3 targetPos, float duration)
     {
         Vector3 startPos = playerController.transform.position;
@@ -237,6 +171,7 @@ public class PrometeoCarController : MonoBehaviour
 
             //Limit the slip angle of the car
             Vector3 velocity = playerController.carRigidbody.linearVelocity;
+            //This clamp effects how much the car drifts when changing lanes
             velocity.x = Mathf.Clamp(velocity.x, -50f, 50f);
             playerController.carRigidbody.linearVelocity = velocity;
 
@@ -249,12 +184,12 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     private Tween steeringAxisTween;
+
+    //This method calculates the how and where the car should turn depending on the desired lane
     public void LaneChange(int desiredLane)
     {
+        //only allow lane changes when it is possible
         if (!canChangeLanes || isSwitchingLane)
-            return;
-
-        if (desiredLane < 0 || desiredLane > 2)
             return;
 
         _canChangeLanes = false;
@@ -312,20 +247,21 @@ public class PrometeoCarController : MonoBehaviour
         isSwitchingLane = true;
 
         DOTween.Kill(steeringAxisTween);
-        
-       steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.1f)
-       .SetEase(Ease.OutSine)
-       .OnComplete(() =>
-       {
-           steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, 0f, 0.1f)
-           .SetEase(Ease.OutSine);
-       });
+
+        //This DOTween turns the car's wheels to the direction of the desired turn
+        steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.1f)
+        .SetEase(Ease.OutSine)
+        .OnComplete(() =>
+        {
+            steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, 0f, 0.1f)
+            .SetEase(Ease.OutSine);
+        });
 
         Vector3 targetPos = new Vector3(targetX, playerController.transform.position.y, playerController.transform.position.z);
         StartCoroutine(SmoothLaneChange(targetPos, 0.25f));
     }
 
-
+    //This method effect the car's wheel's colliders so that the correct contact is being made
     private void ApplySteering()
     {
         float steeringAngle = steeringAxis * playerController.maxSteeringAngle;
@@ -333,7 +269,7 @@ public class PrometeoCarController : MonoBehaviour
         playerController.frontRightCollider.steerAngle = steeringAngle;
     }
 
-
+    //This method is a correction method to make sure the car stays inside their current lane
     public void KeepCarInLane()
     {
         float targetX = 0f;
@@ -350,7 +286,7 @@ public class PrometeoCarController : MonoBehaviour
                 break;
         }
 
-
+        //get the distance from the car's nose to the center of the lane
         float distanceFromCenter = targetX - playerNose.transform.position.x;
 
         Vector3 localVelocity = playerController.transform.InverseTransformDirection(playerController.carRigidbody.linearVelocity);
@@ -370,14 +306,17 @@ public class PrometeoCarController : MonoBehaviour
         if (Mathf.Abs(lateralVelocity) < lateralVelocityDeadzone)
             lateralVelocity = 0f;
 
+        //Make the correct steering axis to get the car more aligned with the center of the lane
         float correctionSteeringAxis = (distanceFromCenter * playerController.centeringForce) - (lateralVelocity * playerController.dampingForce);
         correctionSteeringAxis = Mathf.Clamp(correctionSteeringAxis, -1f, 1f);
 
+        //if the car is still correcting itself then don't allow the player to change lanes
         if (Mathf.Abs(lateralVelocity) < 0.8f && Mathf.Abs(playerController.frontLeftCollider.steerAngle) < 17 && Mathf.Abs(playerController.frontRightCollider.steerAngle) < 17)
         {
             _canChangeLanes = true;
             steeringSpeed = 0.1f;
-        }else
+        }
+        else
         {
             steeringSpeed = 2f;
         }
@@ -386,35 +325,12 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
+    //this method effects the car's wheel's colliders for the correcting 
     private void ApplySteeringCorrection(float correctionSteeringAxis)
     {
         float steeringAngle = correctionSteeringAxis * playerController.maxSteeringAngle;
         playerController.frontLeftCollider.steerAngle = -steeringAngle;
         playerController.frontRightCollider.steerAngle = -steeringAngle;
-    }
-
-
-
-    //The following method takes the front car wheels to their default position (rotation = 0). The speed of this movement will depend
-    // on the steeringSpeed variable.
-
-    public void ResetSteeringAngle()
-    {
-        if (steeringAxis < 0f)
-        {
-            steeringAxis = steeringAxis + (Time.deltaTime * 10f * steeringSpeed);
-        }
-        else if (steeringAxis > 0f)
-        {
-            steeringAxis = steeringAxis - (Time.deltaTime * 10f * steeringSpeed);
-        }
-        if (Mathf.Abs(playerController.frontLeftCollider.steerAngle) < 1f)
-        {
-            steeringAxis = 0f;
-        }
-        var steeringAngle = steeringAxis * playerController.maxSteeringAngle;
-        playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
-        playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
     }
 
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.
@@ -460,7 +376,7 @@ public class PrometeoCarController : MonoBehaviour
     public void GoForward()
     {
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
-        //3f, it means that the car is losing traction, then the car will start emitting particle systems.
+        //50.5f, it means that the car is losing traction, then the car will start emitting particle systems.
         if (Mathf.Abs(playerController.localVelocityX) > 50.5f)
         {
             playerController.isDrifting = true;
@@ -507,7 +423,8 @@ public class PrometeoCarController : MonoBehaviour
         playerController.rearRightCollider.motorTorque = torque;
 
     }
-
+    
+    //This method sets up the amount of traction that the wheels give forwards and during sidways motion
     public void SetupTraction(WheelCollider collider)
     {
         WheelFrictionCurve forwardFriction = collider.forwardFriction;
@@ -526,6 +443,8 @@ public class PrometeoCarController : MonoBehaviour
         sidewaysFriction.stiffness = 40f;
         collider.sidewaysFriction = sidewaysFriction;
     }
+
+    //This method controls the drift particles when the car is drifting
     public void DriftCarPS()
     {
         if (playerController.useEffects)
@@ -588,6 +507,7 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
+    //This method controls the exhaust flame particle effect
     public void ExhaustFlamePS()
     {
         if (playerController.useEffects && playerController.RightExhaustFlame != null && playerController.LeftExhaustFlame)
@@ -598,8 +518,91 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     #region Unused Code
-    // This method apply negative torque to the wheels in order to go backwards.
     /*
+     * //The following method takes the front car wheels to their default position (rotation = 0). The speed of this movement will depend
+    // on the steeringSpeed variable.
+
+    public void ResetSteeringAngle()
+    {
+        if (steeringAxis < 0f)
+        {
+            steeringAxis = steeringAxis + (Time.deltaTime * 10f * steeringSpeed);
+        }
+        else if (steeringAxis > 0f)
+        {
+            steeringAxis = steeringAxis - (Time.deltaTime * 10f * steeringSpeed);
+        }
+        if (Mathf.Abs(playerController.frontLeftCollider.steerAngle) < 1f)
+        {
+            steeringAxis = 0f;
+        }
+        var steeringAngle = steeringAxis * playerController.maxSteeringAngle;
+        playerController.frontLeftCollider.steerAngle = Mathf.Lerp(playerController.frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
+        playerController.frontRightCollider.steerAngle = Mathf.Lerp(playerController.frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
+    }
+     *  // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
+    public void CarSpeedUI()
+    {
+
+        if (playerController.useUI)
+        {
+            try
+            {
+                float absoluteCarSpeed = Mathf.Abs(playerController.carSpeed);
+                playerController.carSpeedText.text = Mathf.RoundToInt(absoluteCarSpeed).ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning(ex);
+            }
+        }
+
+    }
+
+
+    public void CarSounds()
+    {
+
+        if (playerController.useSounds)
+        {
+            try
+            {
+                if (playerController.carEngineSound != null)
+                {
+                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 25f);
+                    playerController.carEngineSound.pitch = engineSoundPitch;
+                }
+                if ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f))
+                {
+                    if (!playerController.tireScreechSound.isPlaying)
+                    {
+                        playerController.tireScreechSound.Play();
+                    }
+                }
+                else if ((!playerController.isDrifting) && (!playerController.isTractionLocked || Mathf.Abs(playerController.carSpeed) < 12f))
+                {
+                    playerController.tireScreechSound.Stop();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning(ex);
+            }
+        }
+        else if (!playerController.useSounds)
+        {
+            if (playerController.carEngineSound != null && playerController.carEngineSound.isPlaying)
+            {
+                playerController.carEngineSound.Stop();
+            }
+            if (playerController.tireScreechSound != null && playerController.tireScreechSound.isPlaying)
+            {
+                playerController.tireScreechSound.Stop();
+            }
+        }
+
+    }
+
     public void GoReverse()
     {
         //If the forces aplied to the rigidbody in the 'x' asis are greater than

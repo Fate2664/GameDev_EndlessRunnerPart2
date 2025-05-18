@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
+    //This script manages the spawning of the boss mechanic
     [Header("Settings")]
     [Space(10)]
     [SerializeField] private float distanceToSpawn;
@@ -28,6 +29,7 @@ public class BossSpawner : MonoBehaviour
         SpawnBoss();
     }
 
+    //This method calls the spawning of the road block and the new obstacles
     private void SpawnBoss()
     {
         if (distanceManager.distanceCovered > distanceToSpawn && !obstacleSpawner.spawningConstrRoad)

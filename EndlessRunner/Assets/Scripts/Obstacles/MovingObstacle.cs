@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MovingObstacle : MonoBehaviour
 {
+    //This script is for moving any obstacle 
     private float[] movementSpeed = { 900, 700, 100 };
 
     [HideInInspector]
@@ -12,6 +13,7 @@ public class MovingObstacle : MonoBehaviour
 
     private void Start()
     {
+        //traffic uses both index 2 and 3 so they need to be the same speed
         if (_obstacleIndex == 2 || _obstacleIndex == 3)
         {
             currentSpeed = movementSpeed[2];
@@ -20,6 +22,7 @@ public class MovingObstacle : MonoBehaviour
 
     private void Update()
     {
+        //Get the obstacle index to determine the speed of that obstacle type
         switch (_obstacleIndex)
         {
             case 0:
@@ -41,16 +44,19 @@ public class MovingObstacle : MonoBehaviour
         }
     }
 
+    //Move obstacle method
     private void MoveObstacle(float speed, float directionMultiplier)
     {
         transform.Translate(Vector3.forward * speed * directionMultiplier * Time.deltaTime);
     }
 
+    //Move traffic method
     private void HandleTraffic(Vector3 direction, float targetSpeed, float directionMultiplier)
     {
         float distanceToCheck = 80f;
         bool shouldStop = false;
 
+        //Send out a raycast to check if there is an obstacle infront of the traffic car
         Vector3 rayOrigin = transform.position - direction * 1f;
 
         if (Physics.Raycast(rayOrigin, direction, out RaycastHit hit, distanceToCheck))
@@ -61,7 +67,7 @@ public class MovingObstacle : MonoBehaviour
                 shouldStop = true;
             }
         }
-      
+        //stop the traffic car if there is an obstacle
         currentSpeed = Mathf.Lerp(currentSpeed, shouldStop ? 0f : targetSpeed, Time.deltaTime * (shouldStop ? 5f : 2f));
         transform.Translate(Vector3.forward * currentSpeed * directionMultiplier * Time.deltaTime);
     }

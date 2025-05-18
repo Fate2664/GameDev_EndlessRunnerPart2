@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class RoadSpawner : MonoBehaviour
 {
+    //This script manages the spawning and moving of the road prefabs
 
     [Header("Normal Roads")]
     [Space(10)]
@@ -34,9 +35,10 @@ public class RoadSpawner : MonoBehaviour
     {
         currentRoads = new List<GameObject>();
 
+        //Order the road lists
         if (normalRoads != null && normalRoads.Count > 0)
         {
-            normalRoads = normalRoads.OrderByDescending(r => r.transform.position.z).ToList();      //order the road list
+            normalRoads = normalRoads.OrderByDescending(r => r.transform.position.z).ToList();      
         }
         if (leftConstrRoads != null && leftConstrRoads.Count > 0)
         {
@@ -46,7 +48,7 @@ public class RoadSpawner : MonoBehaviour
         {
             rightConstrRoads = rightConstrRoads.OrderByDescending(r => r.name).ToList();
         }
-
+        //Add the starting roads to the current road list
         for (int i = 0; i < normalRoads.Count; i++)
         {
             currentRoads.Add(normalRoads[i]);
@@ -54,14 +56,19 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
+    //This method is just used to get the correct obstacle spawner script
     public void InitializeObsSpawener(ObstacleSpawner obsSpawner)
     {
         obstacleSpawner = obsSpawner;
     }
 
+    //This method moves the normal roads from the current road list to the front
     public void MoveNormalRoad()
     {
         GameObject movedRoad = currentRoads[0];        //assign the first road which is behind the player by now to a variable
+
+        //Check if the current road prefab has the contruction road marker or the block road marker
+        //if it does then destroy that prefab so that we don't move it back to the front 
         while (movedRoad.GetComponent<ConstructionRoadMarker>())
         {
             currentRoads.RemoveAt(0);
@@ -82,29 +89,34 @@ public class RoadSpawner : MonoBehaviour
         currentRoads.Add(movedRoad);   //add the new road to the list
     }
 
-
+    //This method manages the spawning of the construction roads
     public void SpawnNextConstructionRoad()
     {
         GameObject movedRoad = currentRoads[0];
         float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
 
         int constrSideChosen = obstacleSpawner.constrSide;
+        //Check which lane we need to spawn the new construction road
         List<GameObject> constrSide = DetermineSide(constrSideChosen);
         GameObject constrRoad = null;
 
+        //make sure we don't choose the middle lane
         if (constrSideChosen == 1)
         {
             constrSideChosen = 2;
         }
         obstacleSpawner.laneManager.OccupyLane(constrSideChosen);
 
+        //This switch statement determines which construction road prefab we need to spawn next 
         switch (obstacleSpawner.constrRoadState)
         {
             case ObstacleSpawner.ConstrRoadState.Start:
                 constrRoad = constrSide[0];
                 obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.Middle;
+                //keep note of where the construction road starts
                 startConstrZ = newZoffset + 80;
-                obstacleSpawner.middleConstrRemaining = 4;
+                //choose a random number of middle pieces to spawn
+                obstacleSpawner.middleConstrRemaining = Random.Range(2, 6);
                 break;
             case ObstacleSpawner.ConstrRoadState.Middle:
                 constrRoad = constrSide[1];
@@ -118,11 +130,13 @@ public class RoadSpawner : MonoBehaviour
             case ObstacleSpawner.ConstrRoadState.End:
                 constrRoad = constrSide[2];
                 obstacleSpawner.constrRoadState = ObstacleSpawner.ConstrRoadState.None;
+                //Keep note of the position of where the end of the construction road is
                 endConstrZ = newZoffset - 80;
                 obstacleSpawner.spawningConstrRoad = false;
                 break;
         }
 
+        //Spawn the correct construction road prefab for the correct side
         if (constrRoad != null)
         {
             switch (obstacleSpawner.constrSide)
@@ -141,6 +155,7 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
+    //This method manages the spawning of the road block before the boss
     public void SpawnBlockRoad(bool spawnCheck)
     {
         if (spawnCheck)
@@ -162,6 +177,7 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
+    //This method makes sure we stay to the correct lane to spawn the construction road
     private List<GameObject> DetermineSide(int randomSide)
     {
         switch (randomSide)

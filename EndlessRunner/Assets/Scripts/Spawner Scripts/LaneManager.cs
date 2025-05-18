@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class LaneManager
 {
+    //This script is used to manage the lanes of the road
+
     private readonly float[] lanePositions;
     private bool[] laneOccupied;
 

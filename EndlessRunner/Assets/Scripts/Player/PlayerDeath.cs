@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerDeath : MonoBehaviour
 {
+    //This script controlls when the player should die
     private PlayerController playerController;
     public DeathScreen deathScreen;
     public bool PlayerImmune;
@@ -9,7 +10,6 @@ public class PlayerDeath : MonoBehaviour
 
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerController = gameObject.GetComponent<PlayerController>();        //get the player's controller script

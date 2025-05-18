@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    //This script is used to control the camera behavior as to follow the player in a third person look
     private Transform player;
 
     public float yOffset = 5f;
     public float zOffset = -25f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         if (player == null)

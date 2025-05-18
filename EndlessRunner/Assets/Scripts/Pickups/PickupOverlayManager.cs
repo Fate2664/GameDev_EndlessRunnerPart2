@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class PickupOverlayManager : MonoBehaviour
 {
+    //This script manages the pickup overlays for when the pickup is active
     [SerializeField] private Canvas pickupOverlay;
 
     [Header("Pickup Panels")]
@@ -26,6 +27,7 @@ public class PickupOverlayManager : MonoBehaviour
     }
     void Start()
     {
+        //set the pickup overlays to be disabled
         rocketPanel.SetActive(false);
         hourGlassPanel.SetActive(false);
         doublePointsPanel.SetActive(false);
@@ -33,6 +35,7 @@ public class PickupOverlayManager : MonoBehaviour
 
     public void ShowPickupOverlay(PickupType type, float duration)
     {
+        //stops the coroutine if the coroutine is null
         if (activeTimer !=  null)
         {
             StopCoroutine(activeTimer);
@@ -42,6 +45,7 @@ public class PickupOverlayManager : MonoBehaviour
         hourGlassPanel.SetActive(false);
         doublePointsPanel.SetActive(false);
 
+        //switch statement to check which pickup is active and enable the panel with the circle timer coroutine 
         switch (type)
         {
             case PickupType.Rocket:
@@ -59,6 +63,7 @@ public class PickupOverlayManager : MonoBehaviour
         }
     }
 
+    //This IEnumerator will run down the circle timer until the end of the pickup duration 
     private IEnumerator RunCircleTimer(Image timerImage, GameObject panel , float duration)
     {
         float time = 0f;

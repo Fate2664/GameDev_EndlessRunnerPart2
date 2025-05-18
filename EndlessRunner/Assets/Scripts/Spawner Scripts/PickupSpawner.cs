@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class PickupSpawner : MonoBehaviour
 {
+    //This script manages the spawning of all pickups in the game
+
     [SerializeField] private List<GameObject> pickups;
     [SerializeField] private float spawnRate = 5f;
     [SerializeField] private float distanceAhead = 700f;
@@ -16,18 +18,17 @@ public class PickupSpawner : MonoBehaviour
     private Transform player;
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         player = GameObject.FindWithTag("Player").transform;        //get the player's position in the game
     }
 
-    // Update is called once per frame
     void Update()
     {
         SpawnPickup();
     }
 
+    //This method controls how the spawning of the pickups should happen and spawns them
     public void SpawnPickup()
     {
         counter += Time.deltaTime;
@@ -43,7 +44,7 @@ public class PickupSpawner : MonoBehaviour
 
             Collider[] overlaps = Physics.OverlapBox(spawnPosition, new Vector3(1f, 1f, 1f), Quaternion.identity, LayerMask.GetMask("Default"));
             bool inNoSpawnZone = false;
-
+            //Make sure the pickups don't spawn in a no spawn trigger
             foreach (Collider coll in overlaps)
             {
                 if (coll.CompareTag("NoSpawnTrigger"))

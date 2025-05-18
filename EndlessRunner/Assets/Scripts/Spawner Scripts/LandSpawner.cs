@@ -5,6 +5,7 @@ using UnityEngine.WSA;
 
 public class LandSpawner : MonoBehaviour
 {
+    //This script handles the spawning of the plots of land on either side of the road
 
     private int intialAmount = 15;
     private float landLength = 142f;
@@ -15,12 +16,11 @@ public class LandSpawner : MonoBehaviour
 
     public List<GameObject> plotsofLand;
     private List<GameObject> activePlots = new List<GameObject>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //get the intial plots of land and add them to the active list
-        GameObject FirstLandLeft = GameObject.Find("Land_Empty");
-        GameObject FirstLandRight = GameObject.Find("Land_Empty (1)");
+        GameObject FirstLandLeft = GameObject.Find("BlueHouse_Plot");
+        GameObject FirstLandRight = GameObject.Find("BlueHouse_Plot (1)");
         activePlots.Add(FirstLandLeft);
         activePlots.Add(FirstLandRight);
         //call the SpawnLand method for the inital amount
@@ -64,10 +64,4 @@ public class LandSpawner : MonoBehaviour
         
     }
 
-
-    
-
-    
-
-    
 }

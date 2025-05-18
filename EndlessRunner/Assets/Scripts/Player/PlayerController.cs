@@ -8,6 +8,7 @@ using DG.Tweening;
 using Unity.VisualScripting;
 public class PlayerController : MonoBehaviour
 {
+    //This script holds all the settings and setup for how the player's car will be controlled
     #region Settings
     [Space(20)]
     [Header("CAR SETUP")]
@@ -163,7 +164,7 @@ public class PlayerController : MonoBehaviour
         prometeoCarController.deceleratingCar = false;
         prometeoCarController.GoForward();
 
-
+        //This is to change the desired lane variable when the player wants to change lanes
         if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane && prometeoCarController.canChangeLanes)
         {
 
@@ -193,10 +194,10 @@ public class PlayerController : MonoBehaviour
         prometeoCarController.AnimateWheelMeshes();
     }
 
-
+    //This method will execute when the player comes in contact with a trigger
     private void OnTriggerEnter(Collider collision)
     {
-        //if the player collides with an object, call the corresponding method for that event
+
         if (collision.CompareTag("RoadSpawn"))
         {
             spawnManager.SpawnTriggerEntered();
@@ -210,7 +211,7 @@ public class PlayerController : MonoBehaviour
 
 
     }
-
+    //this method is used in the speed altering pickups to change the cars travel speed
     public void SetMaxSpeed(int Newspeed)
     {
         _maxSpeed = Newspeed;

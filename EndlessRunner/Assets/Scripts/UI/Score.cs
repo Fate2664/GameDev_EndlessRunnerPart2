@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
+    //This script manages the scoring of the player
+
     public TextMeshProUGUI ValueText;
 
     private float score;

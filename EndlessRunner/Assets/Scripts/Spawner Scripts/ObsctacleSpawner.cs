@@ -1,10 +1,14 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class ObstacleSpawner : MonoBehaviour
 {
+    //This script controls the spawning of all the obstacles within the game
+
+    //This enum tracks the state of the current construction road to spawn
     public enum ConstrRoadState
     {
         None,
@@ -67,6 +71,7 @@ public class ObstacleSpawner : MonoBehaviour
         laneManager = new LaneManager(lanePositions);
 
         counterTraffic = Time.deltaTime;
+        //Spawn the initial traffic bunch
         if (counterTraffic < trafficSpawnRate)
         {
             ObsInitialTrafficSpawn();
@@ -77,13 +82,11 @@ public class ObstacleSpawner : MonoBehaviour
 
     void Update()
     {
-        //SpawnObstacle();
         if (!stopTraffic)
         {
             SpawnTraffic();
         }
         ObsConstrRoadSpawn();
-        //DifficultyScaling();
     }
 
     private void DifficultyScaling()
@@ -99,7 +102,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     }
 
-
+    //This method controls the spawning of the moving obstacles that aren't traffic
     public void SpawnObstacle()
     {
         counter += Time.deltaTime;
@@ -122,6 +125,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
+    //This method controls the spawning of the traffic
     private void SpawnTraffic()
     {
         counterTraffic += Time.deltaTime;
@@ -133,6 +137,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
+    //This method controls the spawning of the obstacles moving towards the player (during the boss)
     private void ObsMovingTowardsPlayer()
     {
         if (obsMovingTowardPlr.Count == 0 || playerTransform == null) return;
@@ -142,29 +147,34 @@ public class ObstacleSpawner : MonoBehaviour
         int numObsToSpawn = Random.Range(1, 2);
         List<int> occupiedLanes = new List<int>();
 
+        //Get a random prefab from the list and get its scriptable object for that obstacle
         GameObject prefab = obsMovingTowardPlr[Random.Range(0, obsMovingTowardPlr.Count)];
         ObstacleLink link = prefab.GetComponent<ObstacleLink>();
         ObstacleConfig config = link.obsConfig;
 
+        //This loop spawns the obstacles in a free lane
         while (occupiedLanes.Count < numObsToSpawn)
         {
             int laneIndexObs = Random.Range(0, laneManager.laneCount);
-            if (!occupiedLanes.Contains(laneIndexObs))
+            if (!occupiedLanes.Contains(laneIndexObs)) //if the lane is not occupied already
             {
+                //mark it as occupied
                 laneManager.OccupyLane(laneIndexObs);
                 occupiedLanes.Add(laneIndexObs);
 
+                //Get the spawning details
                 float spawnZ = playerTransform.position.z - config.spawnOffset.z;
                 Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndexObs), config.spawnOffset.y, spawnZ);
                 Quaternion rotation = config.faceBackward ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
 
+                //Spawn the prefab
                 GameObject spawnedObstacle = Instantiate(prefab, spawnPos, rotation);
                 spawnedObstacle.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
                 spawnedObstacle.transform.SetParent(transform, this);
                 Destroy(spawnedObstacle, config.lifespan);
             }
         }
-
+        //This loop gets all the free lanes and adds a trigger box for incrementing the score
         foreach (int laneIndexTrig in laneManager.GetAllFreeLanes())
         {
             if (config.triggerPrefab != null)
@@ -179,6 +189,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
+    //This method controls the spawning of the obstacles moving past the player (during the boss)
     private void ObsMovingPastPlayer()
     {
         if (obsMovingPastPlr.Count == 0 || playerTransform == null) return;
@@ -210,6 +221,7 @@ public class ObstacleSpawner : MonoBehaviour
                 spawnedObstacle.transform.SetParent(transform, this);
                 Destroy(spawnedObstacle, config.lifespan);
 
+                //This loop spawns the indicator prefab infront of the obstacle
                 if (config.indicatorPrefab != null)
                 {
                     Vector3 indicatorPos = new Vector3(laneManager.GetLaneX(laneIndexObs), 35f, playerTransform.position.z - 600f);
@@ -234,6 +246,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
+    //This method controls the spawning of the traffic
     private void ObsTrafficSpawn()
     {
         if (obsTraffic.Count == 0 || playerTransform == null) return;
@@ -256,12 +269,14 @@ public class ObstacleSpawner : MonoBehaviour
                 occupiedLanes.Add(laneIndex);
                 laneManager.OccupyLane(laneIndex);
 
+                //Get the settings for spawning the traffic
                 float spawnZ = playerTransform.position.z - config.spawnOffset.z;
                 Vector3 spawnPos = new Vector3(laneManager.GetLaneX(laneIndex), config.spawnOffset.y, spawnZ);
+                Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
 
                 Collider[] overlaps = Physics.OverlapBox(spawnPos, new Vector3(1f, 1f, 1f), Quaternion.identity, LayerMask.GetMask("Default"));
                 bool inNoSpawnZone = false;
-
+                //This loop makes sure that the traffic don't spawn in a no spawn trigger zone
                 foreach (Collider coll in overlaps)
                 {
                     if (coll.CompareTag("NoSpawnTrigger"))
@@ -276,10 +291,11 @@ public class ObstacleSpawner : MonoBehaviour
                     continue;
                 }
 
-
-                Quaternion rotation = config.faceBackward ? prefab.transform.rotation : Quaternion.identity;
+                //Spawn the traffic prefab
                 GameObject spawnedTraffic = Instantiate(prefab, spawnPos, rotation);
                 spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = config.movementSpeedIndex;
+
+                //If the prefab is faced backwards give it an index of three
                 if (config.faceBackward)
                 {
                     spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = 3;
@@ -288,6 +304,7 @@ public class ObstacleSpawner : MonoBehaviour
                 Destroy(spawnedTraffic, config.lifespan);
             }
         }
+        //spawn the trigger boxes for all the free lanes
         foreach (int laneIndexTrig in laneManager.GetAllFreeLanes())
         {
             if (config.triggerPrefab != null)
@@ -303,6 +320,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     }
 
+    //This method is the same as the other spawning traffic method but this one spawns the initial bunch of traffic
     private void ObsInitialTrafficSpawn()
     {
         for (int i = 0; i < initialTrafficOffsets.Length; i++)
@@ -363,6 +381,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
+    //This method controls when the spawning of the contruction should happen
     private void ObsConstrRoadSpawn()
     {
         counterConstrRoad += Time.deltaTime;

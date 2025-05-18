@@ -7,6 +7,8 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class VignetteController : MonoBehaviour
 {
+    //This method controlls the vignette that is applied during a pickup
+
     [SerializeField] private Volume slowDownVolume;
     [Range(0f, 1f)]
     [SerializeField] private float intensity = 0.5f;
@@ -32,6 +34,7 @@ public class VignetteController : MonoBehaviour
         StartCoroutine(FadeVignette(intensity, 0f, duration));
     }
 
+    //This IENumerator controls the fade in and out of the vignette on the screen 
     private IEnumerator FadeVignette(float start, float end, float duration)
     {
         float elapsed = 0f;

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    //This script manages all the spawning scripts together and when they should be executed
+
     RoadSpawner roadSpawner;
     LandSpawner landSpawner;
     PickupManager pickupManager;
@@ -36,6 +38,7 @@ public class SpawnManager : MonoBehaviour
         landSpawner.DestroyLand();
     }
 
+    //This method decides wether or not to move a normal road prefab or spawn a construction road prefab
     private void SpawnRoad()
     {
         if (obstacleSpawner.spawningConstrRoad)

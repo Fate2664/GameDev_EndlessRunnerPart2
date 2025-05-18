@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class DoublePointsPickup : MonoBehaviour
 {
+    //This script will be on the double points prefab
+    //Once the player comes into contact with it, it calls to activate the pickup passing the double points scriptable object
     private void OnTriggerEnter(Collider collision)
     {
         GameObject DoublePointsObj = this.gameObject;
