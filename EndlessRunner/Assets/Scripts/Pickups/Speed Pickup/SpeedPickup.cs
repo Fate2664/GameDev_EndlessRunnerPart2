@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class SpeedPickup : MonoBehaviour
 {
-    PickupManager manager;
     private void OnTriggerEnter(Collider collision)
     {
         GameObject speedobj = this.gameObject;

@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdeed8fd9bc054f449b62d27b8d6f743, type: 3}
   m_Name: SpeedNerf
   m_EditorClassIdentifier: 
-  SpeedNerf: 200
+  duration: 5
+  yHeight: 2
+  particleSystemPrefab: {fileID: 0}
+  hasTrail: 0
+  hasVignette: 1
