@@ -13,6 +13,8 @@ How to make a lowpoly truck in blender | part3 |. 2020. YouTube Video, added by 
 
 Yellow Images. n.d. Low Poly Police Car. [Online] Available at: https://yellowimages.com/stock/low-poly-police-car-yi3602157?ca=1_15 [Accessed 14 May 2025].
 
+Hexagonal Sphere - Blender Quick Tip. 2022. YouTube Video, added by  https://www.youtube.com/watch?v=xp3P9G8RsJk [Accessed 18 May 2025].
+
  * 
  * 
  * 
