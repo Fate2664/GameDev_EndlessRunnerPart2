@@ -12,23 +12,27 @@ public class PickupManager : MonoBehaviour
     [HideInInspector]
     public bool powerUpCheck = false;
     [HideInInspector]
-    public PickupLink activePickupLink { get { return _activePickupLink; } }
+    private PowerUp_Effect _activeEffect;
+    public PowerUp_Effect activeEffect { get { return _activeEffect; } }
 
 
     private Coroutine activeRoutine;
-    private PickupLink _activePickupLink;
+    private string pickupName;
     private VignetteController vignetteController;
+    private PickupOverlayManager pickupOverlayManager;
+
 
     private void Start()
     {
         vignetteController = this.GetComponent<VignetteController>();
+        pickupOverlayManager = this.GetComponent<PickupOverlayManager>();
     }
 
     private void Update()
     {
         if (powerUpCheck && activeRoutine == null)
         {
-            activeRoutine = StartCoroutine(PickupRoutine(_activePickupLink));        //start the coroutine if the powerup is active and it is not already running
+            activeRoutine = StartCoroutine(PickupRoutine(_activeEffect));        //start the coroutine if the powerup is active and it is not already running
         }
 
     }
@@ -39,13 +43,14 @@ public class PickupManager : MonoBehaviour
         if (!powerUpCheck)
         {
             powerUpCheck = true;
-            _activePickupLink = link;
+            pickupName = link.name;
+            _activeEffect = link.powerUp_Effect;
         }
     }
-    public IEnumerator PickupRoutine(PickupLink link)
+    public IEnumerator PickupRoutine(PowerUp_Effect link)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        PowerUp_Effect pickupEffect = link.powerUp_Effect;
+        PowerUp_Effect pickupEffect = link;
         float setTime = 0f;
 
         if (pickupEffect.particleSystemPrefab != null)
@@ -74,6 +79,18 @@ public class PickupManager : MonoBehaviour
             vignetteController.ApplyVignette(0.5f);
         }
 
+        switch (pickupName)
+        {
+            case "Rocket(Clone)":
+                pickupOverlayManager.ShowPickupOverlay(PickupOverlayManager.PickupType.Rocket, pickupEffect.duration);
+                break;
+            case "DoublePoints(Clone)":
+                pickupOverlayManager.ShowPickupOverlay(PickupOverlayManager.PickupType.DoublePoints, pickupEffect.duration);
+                break;
+            case "HourglassUpdated(Clone)":
+                pickupOverlayManager.ShowPickupOverlay(PickupOverlayManager.PickupType.HourGlass, pickupEffect.duration);
+                break;
+        }
         //Apply the effect for the duration of the pickup
         while (setTime < pickupEffect.duration)
         {
