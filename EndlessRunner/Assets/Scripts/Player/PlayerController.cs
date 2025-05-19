@@ -76,9 +76,9 @@ public class PlayerController : MonoBehaviour
 
     [Space(10)]
     [SerializeField] private ParticleSystem _LeftExhaustFlame;
-    public ParticleSystem LeftExhaustFlame { get {  return _LeftExhaustFlame; } }
+    public ParticleSystem LeftExhaustFlame { get { return _LeftExhaustFlame; } }
     [SerializeField] private ParticleSystem _RightExhaustFlame;
-    public ParticleSystem RightExhaustFlame {  get {  return _RightExhaustFlame; } }
+    public ParticleSystem RightExhaustFlame { get { return _RightExhaustFlame; } }
 
     [Space(10)]
     // The following trail renderers are used as tire skids when the car loses traction.
@@ -121,6 +121,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PrometeoCarController prometeoCarController;
     [SerializeField] private SpawnManager spawnManager;
     [SerializeField] private Score scoreManager;
+    [SerializeField] private PauseScreen pauseScreen;
 
     #endregion
 
@@ -147,9 +148,10 @@ public class PlayerController : MonoBehaviour
         {
             prometeoCarController.KeepCarInLane();
         }
+        PauseGame();
     }
 
-  
+
 
     private void MoveCharacter()
     {
@@ -173,7 +175,7 @@ public class PlayerController : MonoBehaviour
             {
                 desiredLane = 0;
             }
-           
+
             prometeoCarController.LaneChange(desiredLane);
 
         }
@@ -185,7 +187,7 @@ public class PlayerController : MonoBehaviour
             {
                 desiredLane = 2;
             }
-            
+
             prometeoCarController.LaneChange(desiredLane);
 
         }
@@ -215,6 +217,14 @@ public class PlayerController : MonoBehaviour
     public void SetMaxSpeed(int Newspeed)
     {
         _maxSpeed = Newspeed;
+    }
+
+    private void PauseGame()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            pauseScreen.ActivatePauseScreen();
+        }
     }
 
 

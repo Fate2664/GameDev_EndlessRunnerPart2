@@ -4,11 +4,10 @@ using UnityEngine.UI;
 
 public class DeathScreen : MonoBehaviour
 {
-    PickupManager pickupManager;
     public GameObject deathScreen;
+    public GameObject mainUI;
     public Button restartButton;
-   
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         deathScreen.SetActive(false);   //Don't show the death screen when game begins
@@ -17,8 +16,9 @@ public class DeathScreen : MonoBehaviour
 
     public void ShowDeathScreen()
     {
-      
-      deathScreen.SetActive(true);      //Show the death screen
+
+        deathScreen.SetActive(true);      //Show the death screen
+        mainUI.SetActive(false);
         Time.timeScale = 0f;            //Freeze the game
 
     }
@@ -26,7 +26,6 @@ public class DeathScreen : MonoBehaviour
     private void RestartGame()
     {
         Time.timeScale = 1f;            //reset the game timer
-        //pickupManager.powerUpCheck = false;     //reset the pickup power up
         SceneManager.LoadScene("Level 1");      //reload the level
 
     }

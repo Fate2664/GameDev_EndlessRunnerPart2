@@ -1,6 +1,7 @@
 using System.Diagnostics.Tracing;
 using TMPro;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DistanceManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class DistanceManager : MonoBehaviour
     public float distanceCovered { get { return _distanceCovered; } }
 
 
-    public TextMeshProUGUI distanceValue;
+    public List<TextMeshProUGUI> distanceValue;
 
     void Start()
     {
@@ -30,7 +31,12 @@ public class DistanceManager : MonoBehaviour
         }
         if (distanceValue != null)
         {
-            distanceValue.text = _distanceCovered.ToString("0");
+
+            for (int i = 0; i < distanceValue.Count; i++)
+            {
+                distanceValue[i].text = _distanceCovered.ToString("0"); 
+            }
+            
         }
     }
 }

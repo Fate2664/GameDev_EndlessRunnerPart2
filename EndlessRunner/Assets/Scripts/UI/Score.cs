@@ -3,12 +3,12 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 public class Score : MonoBehaviour
 {
     //This script manages the scoring of the player
 
-    public TextMeshProUGUI ValueText;
+    public List<TextMeshProUGUI> ValueText;
 
     private float score;
 
@@ -27,8 +27,10 @@ public class Score : MonoBehaviour
             score += 2;    //increment the score value 
         }
 
-
-        ValueText.text = score.ToString("0");       //Change the text to show the new score
+        for (int i = 0; i < ValueText.Count; i++)
+        {
+            ValueText[i].text = score.ToString("0");       //Change the text to show the new score
+        }
 
     }
 
