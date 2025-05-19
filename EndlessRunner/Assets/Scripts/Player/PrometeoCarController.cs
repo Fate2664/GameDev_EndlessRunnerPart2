@@ -393,9 +393,6 @@ public class PrometeoCarController : MonoBehaviour
         {
             throttleAxis = 1f;
         }
-        //If the car is going backwards, then apply brakes in order to avoid strange
-        //behaviours. If the local velocity in the 'z' axis is less than -1f, then it
-        //is safe to apply positive torque to go forward.
 
         if (Mathf.RoundToInt(playerController.carSpeed) < playerController.maxSpeed)
         {
