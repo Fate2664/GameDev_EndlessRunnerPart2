@@ -142,7 +142,6 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (obsMovingTowardPlr.Count == 0 || playerTransform == null) return;
 
-        laneManager.ResetLanes();
 
         int numObsToSpawn = Random.Range(1, 2);
         List<int> occupiedLanes = new List<int>();
@@ -156,7 +155,7 @@ public class ObstacleSpawner : MonoBehaviour
         while (occupiedLanes.Count < numObsToSpawn)
         {
             int laneIndexObs = Random.Range(0, laneManager.laneCount);
-            if (!occupiedLanes.Contains(laneIndexObs)) //if the lane is not occupied already
+            if (!occupiedLanes.Contains(laneIndexObs) && laneManager.IsLaneFree(laneIndexObs)) //if the lane is not occupied already
             {
                 //mark it as occupied
                 laneManager.OccupyLane(laneIndexObs);
@@ -187,6 +186,7 @@ public class ObstacleSpawner : MonoBehaviour
                 Destroy(spawnedTrigger, config.lifespan);
             }
         }
+        laneManager.ResetLanes();
     }
 
     //This method controls the spawning of the obstacles moving past the player (during the boss)
@@ -194,7 +194,6 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (obsMovingPastPlr.Count == 0 || playerTransform == null) return;
 
-        laneManager.ResetLanes();
 
         int numObsToSpawn = Random.Range(1, 2);
         List<int> occupiedLanes = new List<int>();
@@ -244,6 +243,7 @@ public class ObstacleSpawner : MonoBehaviour
                 Destroy(spawnedTrigger, config.lifespan);
             }
         }
+        laneManager.ResetLanes();
     }
 
     //This method controls the spawning of the traffic

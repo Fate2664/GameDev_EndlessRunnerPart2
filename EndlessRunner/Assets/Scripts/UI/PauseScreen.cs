@@ -1,7 +1,10 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEditor.Search;
 
 public class PauseScreen : MonoBehaviour
 {
@@ -9,16 +12,23 @@ public class PauseScreen : MonoBehaviour
     public Button continueButton;
     public GameObject mainUI;
 
-    private PauseVolume volume;
+    [SerializeField] private Volume _volume;
+    [Range(-100, 100)]
+    [SerializeField] private float _saturation = 0f;
+    [Range(-10, 10)]
+    [SerializeField] private float _postExposure = 0f;
+
     private GameObject pauseScreen;
     private bool inPause = false;
+    private PauseVolume pauseVolume;
+
     void Start()
     {
-        volume = this.GetComponent<PauseVolume>();
         pauseScreen = this.gameObject;
         pauseScreen.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
         continueButton.onClick.AddListener(ContinueGame);
+        pauseVolume = new PauseVolume(_volume, _saturation, _postExposure);
     }
 
     private void ShowPauseScreen()
@@ -26,7 +36,7 @@ public class PauseScreen : MonoBehaviour
         inPause = true;
         pauseScreen.SetActive(true);
         mainUI.SetActive(false);
-        volume.ApplyPauseEffect();
+        pauseVolume.ApplyPauseEffect();
         Time.timeScale = 0f;
 
     }
@@ -47,15 +57,17 @@ public class PauseScreen : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Level 1");
-        volume.RemovePauseEffect();
+        pauseVolume.RemovePauseEffect();
     }
 
     private void ContinueGame()
     {
-        volume.RemovePauseEffect();
         Time.timeScale = 1f;
+        pauseVolume.RemovePauseEffect();
         mainUI.SetActive(true);
         pauseScreen.SetActive(false);
         inPause = false;
     }
+    
+
 }

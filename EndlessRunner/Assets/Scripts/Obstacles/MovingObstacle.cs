@@ -72,6 +72,6 @@ public class MovingObstacle : MonoBehaviour
         transform.Translate(Vector3.forward * currentSpeed * directionMultiplier * Time.deltaTime);
     }
 
-    
+  
 
 }

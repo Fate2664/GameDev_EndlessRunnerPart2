@@ -4,30 +4,31 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
-public class PauseVolume : MonoBehaviour
+public class PauseVolume 
 {
-    [SerializeField] private Volume pauseVolume;
-    [Range(-100, 100)]
-    [SerializeField] private float saturation = 0f;
-    [Range(-10, 10)]
-    [SerializeField] private float postExposure = 0f;
-    [SerializeField] private float duration = 0.2f;
-
+    private Volume pVolume;
+    private float sat = 0f;
+    private float pExposure = 0f;
     private ColorAdjustments colorAdjustments;
 
-    void Start()
+    public PauseVolume(Volume volume, float sateration, float postExposure)
     {
-        if (pauseVolume.profile.TryGet(out colorAdjustments))
+        this.sat = sateration;
+        this.pExposure = postExposure;
+        this.pVolume = volume;
+        if (pVolume.profile.TryGet(out colorAdjustments))
         {
             colorAdjustments.postExposure.overrideState = true;
             colorAdjustments.saturation.overrideState = true;
+            colorAdjustments.saturation.value = 0f;
+            colorAdjustments.postExposure.value = 0f;
         }
     }
 
     public void ApplyPauseEffect()
     {
-        colorAdjustments.postExposure.value = postExposure;
-        colorAdjustments.saturation.value = saturation;
+        colorAdjustments.postExposure.value = pExposure;
+        colorAdjustments.saturation.value = sat;
     }
 
     public void RemovePauseEffect()

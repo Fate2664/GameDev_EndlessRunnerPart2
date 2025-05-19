@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerDeath : MonoBehaviour
@@ -6,7 +7,8 @@ public class PlayerDeath : MonoBehaviour
     private PlayerController playerController;
     public DeathScreen deathScreen;
     public bool PlayerImmune;
-
+    [HideInInspector]
+    public bool isDead =false;
 
 
 
@@ -19,10 +21,11 @@ public class PlayerDeath : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle") && !PlayerImmune)        //if the collision that the player had is with an obstacle
+        if ((collision.gameObject.CompareTag("Obstacle")) || (collision.gameObject.CompareTag("NoSpawnTrigger")) && !PlayerImmune)        //if the collision that the player had is with an obstacle
         {
             if (this != null)
             {
+                isDead = true;
                 Destroy(this);                        //destroy the player game object
             }
             deathScreen.ShowDeathScreen();              //show the deathscreen

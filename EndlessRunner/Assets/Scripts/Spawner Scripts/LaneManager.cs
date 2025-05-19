@@ -47,5 +47,10 @@ public class LaneManager
         return freeLanes;
     }
 
+    //return the bool to say if the given lane index is free or not
+    public bool IsLaneFree(int laneIndex)
+    {
+        return !laneOccupied[laneIndex];
+    }
     public int laneCount => lanePositions.Length;
 }

@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PrometeoCarController prometeoCarController;
     [SerializeField] private SpawnManager spawnManager;
     [SerializeField] private Score scoreManager;
-    [SerializeField] private PauseScreen pauseScreen;
+    [SerializeField] private GameObject pauseScreenObject;
 
     #endregion
 
@@ -136,9 +136,12 @@ public class PlayerController : MonoBehaviour
 
 
     private int desiredLane = 0; //0 = left lane; 1 = right lane
-
+    private PauseScreen pauseScreen;
+    private PlayerDeath playerDeath;
     private void Start()
     {
+         pauseScreen = pauseScreenObject.GetComponent<PauseScreen>();
+        playerDeath = this.GetComponent<PlayerDeath>();
         _carRigidbody = GetComponent<Rigidbody>();
     }
     private void Update()
@@ -221,9 +224,9 @@ public class PlayerController : MonoBehaviour
 
     private void PauseGame()
     {
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape) && !playerDeath.isDead)
         {
-            pauseScreen.ActivatePauseScreen();
+           pauseScreen.ActivatePauseScreen();
         }
     }
 
