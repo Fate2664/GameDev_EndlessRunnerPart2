@@ -4,7 +4,6 @@ public class MovingObstacle : MonoBehaviour
 {
     //This script is for moving any obstacle 
     private float[] movementSpeed = { 900, 700, 100 };
-
     [HideInInspector]
     private int _obstacleIndex;
     public int obstacleIndex { get => _obstacleIndex; set => _obstacleIndex = value; }
@@ -18,6 +17,7 @@ public class MovingObstacle : MonoBehaviour
         {
             currentSpeed = movementSpeed[2];
         }
+
     }
 
     private void Update()
@@ -72,6 +72,5 @@ public class MovingObstacle : MonoBehaviour
         transform.Translate(Vector3.forward * currentSpeed * directionMultiplier * Time.deltaTime);
     }
 
-  
 
 }

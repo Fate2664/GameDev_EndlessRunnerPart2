@@ -3904,7 +3904,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351de75ee550f1a4a8b2f9cd38e99280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToSpawn: 200
+  distanceToSpawn: 100
   distanceManager: {fileID: 1094905196}
   obstacleSpawner: {fileID: 1208644401}
   roadSpawner: {fileID: 1208644398}
