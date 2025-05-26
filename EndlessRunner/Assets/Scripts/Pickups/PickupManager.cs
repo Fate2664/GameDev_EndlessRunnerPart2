@@ -10,7 +10,7 @@ public class PickupManager : MonoBehaviour
 
     [SerializeField] Camera mainCamera;
     [SerializeField] PrometeoCarController prometeoCarController;
-    
+
     [HideInInspector]
     public bool powerUpCheck = false;
     [HideInInspector]
@@ -20,13 +20,11 @@ public class PickupManager : MonoBehaviour
 
     private Coroutine activeRoutine;
     private string pickupName;
-    private VignetteController vignetteController;
     private PickupOverlayManager pickupOverlayManager;
 
 
     private void Start()
     {
-        vignetteController = this.GetComponent<VignetteController>();
         pickupOverlayManager = this.GetComponent<PickupOverlayManager>();
     }
 
@@ -56,34 +54,6 @@ public class PickupManager : MonoBehaviour
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         PowerUp_Effect pickupEffect = link;
-        float setTime = 0f;
-
-        //this is for the hyperdrive effect on the rocket pickup
-        if (pickupEffect.particleSystemPrefab != null)
-        {
-            ParticleSystem pEffect = Instantiate(pickupEffect.particleSystemPrefab, mainCamera.transform.position, Quaternion.identity);
-            Vector3 zOffset = mainCamera.transform.forward * -2f;
-            pEffect.transform.SetParent(mainCamera.transform);
-            pEffect.transform.localPosition = zOffset;
-            pEffect.Play();
-
-            if (pEffect != null)
-            {
-                float duration = pickupEffect.particleSystemPrefab.duration + pickupEffect.particleSystemPrefab.startLifetime;
-                float destroyDelay = duration + 10f;
-                StartCoroutine(StopPartical(pEffect, duration, destroyDelay));
-            }
-        }
-        //Apply the exhaust flames if the effect has them
-        if (pickupEffect.hasTrail)
-        {
-            prometeoCarController.ExhaustFlamePS();
-        }
-        //Apply the vignette if the effect has it
-        if (pickupEffect.hasVignette)
-        {
-            vignetteController.ApplyVignette(0.5f);
-        }
 
         //This is to show the pickup overlay when the pickup is active
         switch (pickupName)
@@ -100,31 +70,12 @@ public class PickupManager : MonoBehaviour
         }
 
         //Apply the effect for the duration of the pickup
-        while (setTime < pickupEffect.duration)
-        {
-            setTime += Time.deltaTime;
-            pickupEffect.ApplyEffect(player);
-            yield return null;
-        }
+    
+        pickupEffect.ApplyEffect(player, this);
+        yield return null;
 
-        if (pickupEffect.hasVignette)
-        {
-            vignetteController.RemoveVignette(0.5f);
-        }
-        pickupEffect.DisableEffect(player);
         powerUpCheck = false;
         activeRoutine = null;
-    }
-
-    //This IEnumerator is used to stop and then destroy the hyperdrive effect once it is finished
-    private IEnumerator StopPartical(ParticleSystem effect, float duration, float destoryDelay)
-    {
-        yield return new WaitForSeconds(duration);
-        if (effect != null)
-        {
-            effect.Stop();
-            Destroy(effect, destoryDelay);
-        }
     }
 
 

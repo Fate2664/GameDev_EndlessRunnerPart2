@@ -19,7 +19,6 @@ public class PlayerDeath : MonoBehaviour
             {
                 isDead = true;
             }
-            Debug.Log("True");
             deathScreen.ShowDeathScreen();              //show the deathscreen
         }
         else

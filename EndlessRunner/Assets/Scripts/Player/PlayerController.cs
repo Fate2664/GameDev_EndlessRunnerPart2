@@ -2,10 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
-using System.Runtime.CompilerServices;
-using UnityEditor;
-using DG.Tweening;
-using Unity.VisualScripting;
+
 public class PlayerController : MonoBehaviour
 {
     //This script holds all the settings and setup for how the player's car will be controlled

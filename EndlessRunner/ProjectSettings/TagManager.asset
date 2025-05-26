@@ -13,6 +13,7 @@ TagManager:
   - Player Hitbox
   - PickupManager
   - NoSpawnTrigger
+  - PostProcessing
   layers:
   - Default
   - TransparentFX
