@@ -8,26 +8,43 @@ public class VignetteController
     //This method controlls the vignette that is applied during a pickup
 
     private float intensity = 0.6f;
+    private float fadeDuration = 0.5f;
     private Vignette vignette;
 
-
-    public VignetteController(Volume slowDownVolume, float intensity)
+    public VignetteController(float intensity, Volume slowDownV)
     {
         this.intensity = intensity;
+
+        if (slowDownV != null)
+        {
+            if (slowDownV.profile.TryGet(out vignette))
+            {
+                vignette.active = true;
+                vignette.intensity.overrideState = true;
+                vignette.color.overrideState = true;
+            }
+        }
     }
 
 
-    public void ApplyVignette(float duration, MonoBehaviour coroutineHost)
+    public void ApplyVignette(float waitDuration, MonoBehaviour coroutineHost)
     {
-        coroutineHost.StartCoroutine(FadeVignette(0f, intensity, duration / 2f, () =>
-        {
-            coroutineHost.StartCoroutine(FadeVignette(intensity, 0f, duration / 2f, null));
 
-        }));
+        coroutineHost.StartCoroutine(ApplyVignetteRoutine(waitDuration));
+
+    }
+
+    private IEnumerator ApplyVignetteRoutine(float waitDuration)
+    {
+        yield return FadeVignette(0f, intensity, fadeDuration);
+
+        yield return new WaitForSeconds(waitDuration - .5f);
+
+        yield return FadeVignette(intensity, 0f, fadeDuration);
     }
 
     //This IENumerator controls the fade in and out of the vignette on the screen 
-    private IEnumerator FadeVignette(float start, float end, float duration, System.Action onComplete)
+    private IEnumerator FadeVignette(float start, float end, float duration)
     {
         float elapsed = 0f;
         while (elapsed < duration)
@@ -38,6 +55,5 @@ public class VignetteController
         }
         vignette.intensity.value = end;
 
-        onComplete?.Invoke();
     }
 }

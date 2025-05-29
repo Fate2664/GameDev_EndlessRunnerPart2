@@ -13,7 +13,7 @@ TagManager:
   - Player Hitbox
   - PickupManager
   - NoSpawnTrigger
-  - PostProcessing
+  - SlowVolume
   layers:
   - Default
   - TransparentFX

@@ -6,23 +6,15 @@ using UnityEngine.Rendering.HighDefinition;
 public class SpeedEffect : PowerUp_Effect
 {
     private VignetteController vigController;
-    private Volume vigVolume;
-    private float vigDuration = 0.1f;
     private float intesity = 0.6f;
-    private Vignette vignette;
-
+    private Volume slowDownV;
     public override void ApplyEffect(GameObject target, MonoBehaviour coroutineHost)
     {
-
-        vigVolume = GameObject.FindWithTag("PostProcessing").GetComponent<Volume>();
-        if (vigVolume != null)
+        slowDownV = GameObject.FindGameObjectWithTag("SlowVolume").GetComponent<Volume>();
+        if (slowDownV != null)
         {
-            vigController = new VignetteController(vigVolume, intesity);
-            if (vigVolume.profile.TryGet(out vignette))
-            {
-                vignette.intensity.overrideState = true;
-            }
-            vigController.ApplyVignette(vigDuration, coroutineHost);
+            vigController = new VignetteController(intesity, slowDownV );
+            vigController.ApplyVignette(this.duration, coroutineHost);
         }
         coroutineHost.StartCoroutine(PlayEffect(target));
     }
@@ -31,6 +23,7 @@ public class SpeedEffect : PowerUp_Effect
     private IEnumerator PlayEffect(GameObject target)
     {
         float setTime = 0f;
+
         target.GetComponent<PlayerController>().maxSpeed = 50;       //change the player's movement speed to the given value 
 
         while (setTime < this.duration)
