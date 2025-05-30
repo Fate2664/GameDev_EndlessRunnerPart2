@@ -65,8 +65,8 @@ Material:
     - _EnableFogOnTransparent: 1
     - _ExcludeFromTUAndAA: 0
     - _Exposure: 0
-    - _Fresnel_Amount: 5.6
-    - _Intensity: 1.17
+    - _Fresnel_Amount: 1.42
+    - _Intensity: 0.32
     - _MaterialID: 1
     - _MaterialTypeMask: 2
     - _Offset: -0.97
