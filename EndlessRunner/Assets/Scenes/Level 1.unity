@@ -2696,7 +2696,6 @@ GameObject:
   m_Component:
   - component: {fileID: 862795435}
   - component: {fileID: 862795434}
-  - component: {fileID: 862795436}
   - component: {fileID: 862795437}
   m_Layer: 0
   m_Name: PickupManager
@@ -2735,18 +2734,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 705152456}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &862795436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862795433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7fa4b4450b561c41822c761efaef4c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &862795437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7058,7 +7045,7 @@ PrefabInstance:
       objectReference: {fileID: 1208644397}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _dampingForce
-      value: 0.008
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _laneDistance

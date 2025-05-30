@@ -25,7 +25,7 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnTriggerEntered()
     {
-        Invoke(nameof(SpawnRoad), 0.4f);    // call the road spawner
+        Invoke(nameof(SpawnRoad), 0.8f);    // call the road spawner
         //call for the land to be spawned and destroyed
         landSpawner.SpawnLand();
         Invoke(nameof(DestroyLands), 1f);

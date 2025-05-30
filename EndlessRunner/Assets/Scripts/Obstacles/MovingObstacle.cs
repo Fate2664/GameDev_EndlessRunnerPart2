@@ -3,11 +3,19 @@ using UnityEngine;
 public class MovingObstacle : MonoBehaviour
 {
     //This script is for moving any obstacle 
+
+    //Movement idexes for different moving obstacles:
+    // 0 = moving past player
+    // 1 = moving towards player
+    // 2 = traffic
     private float[] movementSpeed = { 900, 700, 100 };
+
+
     [HideInInspector]
     private int _obstacleIndex;
     public int obstacleIndex { get => _obstacleIndex; set => _obstacleIndex = value; }
 
+    private float direction = 0f;
     private float currentSpeed = 0f;
 
     private void Start()
@@ -26,12 +34,13 @@ public class MovingObstacle : MonoBehaviour
         switch (_obstacleIndex)
         {
             case 0:
-                float direction0 = CompareTag("MovingObstacleTrigger") ? -1f : 1f;
-                MoveObstacle(movementSpeed[0], direction0);
+                direction = CompareTag("MovingObstacleTrigger") ? -1f : 1f;
+                MoveObstacle(movementSpeed[0], direction);
                 break;
 
             case 1:
-                MoveObstacle(-movementSpeed[1], 1f);
+                direction = CompareTag("MovingObstacleTrigger") ? -1f : 1f;
+                MoveObstacle(-movementSpeed[1], direction);
                 break;
 
             case 2:
