@@ -18,7 +18,6 @@ public class ObstacleSpawner : MonoBehaviour
     }
 
     [Header("Spawn Details")]
-    [SerializeField] private int initialTrafficAmount = 5;
     [Range(0.5f, 10f)]
     [SerializeField] private float obsSpawnRate = 5f;
     [Range(0.5f, 10f)]

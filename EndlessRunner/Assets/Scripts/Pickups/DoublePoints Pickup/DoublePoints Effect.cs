@@ -15,7 +15,7 @@ public class DoublePointsEffect : PowerUp_Effect
     private IEnumerator PlayEffect(GameObject target)
     {
         float setTime = 0;
-        Score Score = FindObjectOfType<Score>();
+        Score Score = FindFirstObjectByType<Score>();
         if (Score != null)
         {
             Score.DoublePointsActive = true;
