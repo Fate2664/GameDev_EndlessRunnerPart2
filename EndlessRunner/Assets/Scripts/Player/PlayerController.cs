@@ -76,6 +76,8 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem LeftExhaustFlame { get { return _LeftExhaustFlame; } }
     [SerializeField] private ParticleSystem _RightExhaustFlame;
     public ParticleSystem RightExhaustFlame { get { return _RightExhaustFlame; } }
+    [SerializeField] private GameObject shield;
+    public GameObject Shield { get { return shield; } }
 
     [Space(10)]
     // The following trail renderers are used as tire skids when the car loses traction.

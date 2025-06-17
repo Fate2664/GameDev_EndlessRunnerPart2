@@ -29,7 +29,7 @@ public class RocketEffect : PowerUp_Effect
 
 
     }
-
+    
 
     private IEnumerator StopParticle(ParticleSystem pEffect, float stopDelay, float destroyDelay)
     {
@@ -43,11 +43,13 @@ public class RocketEffect : PowerUp_Effect
     private IEnumerator PlayEffect(GameObject target)
     {
         float setTime = 0;
-
+        
         target.GetComponent<PlayerController>().maxSpeed = 150;
         target.GetComponent<PlayerDeath>().playerImmune = true;
         target.GetComponent<PlayerController>()?.LeftExhaustFlame.Play();
         target.GetComponent<PlayerController>()?.RightExhaustFlame.Play();
+        target.GetComponent<PlayerController>().Shield.SetActive(true);
+
 
         while (setTime < this.duration)
         {
@@ -60,6 +62,7 @@ public class RocketEffect : PowerUp_Effect
         target.GetComponent<PlayerDeath>().playerImmune = false;
         target.GetComponent<PlayerController>().LeftExhaustFlame?.Stop();
         target.GetComponent<PlayerController>().RightExhaustFlame?.Stop();
+        target.GetComponent<PlayerController>().Shield.SetActive(false);
 
 
     }
