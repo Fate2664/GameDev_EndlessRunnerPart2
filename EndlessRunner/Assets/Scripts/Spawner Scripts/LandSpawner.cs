@@ -1,11 +1,22 @@
-using NUnit.Framework;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.WSA;
 
 public class LandSpawner : MonoBehaviour
 {
     //This script handles the spawning of the plots of land on either side of the road
+
+    [SerializeField] private List<GameObject> transitionLandPrefabs;
+    public List<GameObject> TransitionLandPrefabs => transitionLandPrefabs;
+    [SerializeField] private List<GameObject> residentialLandPrefabs;
+    public List<GameObject> ResidentialLandPrefabs => residentialLandPrefabs;
+    [SerializeField] private List<GameObject> cityLandPrefabs;
+    public List<GameObject> CityLandPrefabs => cityLandPrefabs;
+
+    [Range(5, 20)]
+    [SerializeField] private int transitionLandCount;
+    public int TransitionLandCount => transitionLandCount;
 
     private int intialAmount = 15;
     private float landLength = 142f;
@@ -14,7 +25,6 @@ public class LandSpawner : MonoBehaviour
     private float previousZ = 160f;
     private float yPos = 1.4f;
 
-    public List<GameObject> plotsofLand;
     private List<GameObject> activePlots = new List<GameObject>();
     void Start()
     {
@@ -26,17 +36,17 @@ public class LandSpawner : MonoBehaviour
         //call the SpawnLand method for the inital amount
         for (int i = 0; i < intialAmount; i++)
         {
-            SpawnLand();
+            SpawnLand(residentialLandPrefabs);
         }
 
     }
 
 
-    public void SpawnLand()
+    public void SpawnLand(List<GameObject> landPrefabs)
     {
         //create a clone from a random plot of land from the list and place it after the previous plot
-        GameObject landLeft = Instantiate(plotsofLand[Random.Range(0, plotsofLand.Count)], new Vector3(xPosLeft, yPos, previousZ - landLength), new Quaternion(0, 180, 0, 0));
-        GameObject landRight = Instantiate(plotsofLand[Random.Range(0, plotsofLand.Count)], new Vector3(xPosRight, yPos, previousZ - landLength), Quaternion.identity);
+        GameObject landLeft = Instantiate(landPrefabs[Random.Range(0, landPrefabs.Count)], new Vector3(xPosLeft, yPos, previousZ - landLength), new Quaternion(0, 180, 0, 0));
+        GameObject landRight = Instantiate(landPrefabs[Random.Range(0, landPrefabs.Count)], new Vector3(xPosRight, yPos, previousZ - landLength), Quaternion.identity);
         landLeft.transform.SetParent(transform, false);
         landRight.transform.SetParent(transform, false);
         //add them to the active plots list
@@ -63,5 +73,6 @@ public class LandSpawner : MonoBehaviour
         }
         
     }
+
 
 }

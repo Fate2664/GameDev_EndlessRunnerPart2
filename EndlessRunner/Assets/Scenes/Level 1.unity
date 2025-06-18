@@ -3755,6 +3755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b790f869c704e4bb60754fd4aabc2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distanceManager: {fileID: 1094905196}
+  currentType: 0
 --- !u!114 &1208644398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3797,6 +3799,10 @@ MonoBehaviour:
   - {fileID: 2784273052758334028, guid: 1dfd7e09988f2e44687f1c7f8790aa29, type: 3}
   blockRoads:
   - {fileID: 2784273052758334028, guid: 2285188157687c04ba5a5c20cb6f98b3, type: 3}
+  leftSpikeRoads:
+  - {fileID: 2784273052758334028, guid: ebd74da87f29e2843b715bf571442ae6, type: 3}
+  rightSpikeRoads:
+  - {fileID: 2784273052758334028, guid: 1088214125c542d47a01f594efa785ac, type: 3}
   Zoffset: 142
   endConstrZ: 0
   startConstrZ: 0
@@ -3827,13 +3833,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21a65a960a3da164f9ca8648622eb5ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plotsofLand:
+  transitionLandPrefabs:
+  - {fileID: 3439438538703453492, guid: 61d08afc90d10d9438dad8770989c917, type: 3}
+  residentialLandPrefabs:
   - {fileID: 3439438538703453492, guid: d4aa7784fbf7f94418bd0476924355fb, type: 3}
-  - {fileID: 3439438538703453492, guid: 72f30bd6f55b1f343a730219b230a3eb, type: 3}
-  - {fileID: 3439438538703453492, guid: d2d2e0d9bd340384d8f8716e4e0481dd, type: 3}
   - {fileID: 3439438538703453492, guid: 91c113ba0b3d51145a161d723ed932e2, type: 3}
+  - {fileID: 3439438538703453492, guid: 72f30bd6f55b1f343a730219b230a3eb, type: 3}
   - {fileID: 3439438538703453492, guid: bf227f0276dbf2147af01d736453d19f, type: 3}
+  - {fileID: 3439438538703453492, guid: d2d2e0d9bd340384d8f8716e4e0481dd, type: 3}
   - {fileID: 3439438538703453492, guid: a25b3e79563344a40829ddecd4099a87, type: 3}
+  cityLandPrefabs:
+  - {fileID: 3302445084502881760, guid: b27657886e62fcf469f02583201e1a1b, type: 3}
+  transitionLandCount: 15
 --- !u!114 &1208644401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3849,6 +3860,7 @@ MonoBehaviour:
   obsSpawnRate: 1
   trafficSpawnRate: 1
   constructionRoadSpawnRate: 13
+  spikeRoadSpawnRate: 10
   obsMovingTowardPlr:
   - {fileID: 1430516274933998581, guid: 8c60961491903384eb28ccd97a77ac89, type: 3}
   obsMovingPastPlr:
@@ -3869,6 +3881,7 @@ MonoBehaviour:
   - {fileID: 2081499581058635209, guid: 4d21ac3562874d244b66a985ac2f9d8d, type: 3}
   roadSpawner: {fileID: 1208644398}
   spawningConstrRoad: 0
+  spawningSpikeRoad: 0
   middleConstrRemaining: 0
   constrRoadState: 0
   constrSide: 0
@@ -3904,11 +3917,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351de75ee550f1a4a8b2f9cd38e99280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToSpawn: 100
+  distanceToSpawn: 50
+  distanceToDespawn: 50
   distanceManager: {fileID: 1094905196}
   obstacleSpawner: {fileID: 1208644401}
   roadSpawner: {fileID: 1208644398}
   trafficConfig: {fileID: 11400000, guid: 3b9f497c7667d174aba6b5babc6ac484, type: 2}
+  landSpawner: {fileID: 1208644400}
+  spawnManager: {fileID: 1208644397}
+  bossDefeated: 0
 --- !u!1 &1283524071
 GameObject:
   m_ObjectHideFlags: 0

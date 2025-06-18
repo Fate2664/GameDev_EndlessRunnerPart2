@@ -24,6 +24,8 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private float trafficSpawnRate = 1f;
     [Range(5f, 30f)]
     [SerializeField] private float constructionRoadSpawnRate = 10f;
+    [Range(5f, 30f)]
+    [SerializeField] private float spikeRoadSpawnRate = 10f;
     [Space(10)]
 
     [Header("Obstacles")]
@@ -50,6 +52,8 @@ public class ObstacleSpawner : MonoBehaviour
     private readonly float[] lanePositions = { -40f, 0f, 40f };
     [HideInInspector]
     public bool spawningConstrRoad = false;
+    [HideInInspector]
+    public bool spawningSpikeRoad = false;
     [HideInInspector]
     public int middleConstrRemaining = 0;
     [HideInInspector]
@@ -102,7 +106,7 @@ public class ObstacleSpawner : MonoBehaviour
     }
 
     //This method controls the spawning of the moving obstacles that aren't traffic
-    public void SpawnObstacle()
+    public void SpawnBossResidential()
     {
         counter += Time.deltaTime;
 
@@ -121,6 +125,34 @@ public class ObstacleSpawner : MonoBehaviour
 
             }
             counter = 0f;
+        }
+    }
+
+    public void SpawnBossCity()
+    {
+        counter += Time.deltaTime;
+
+        if (counter >= obsSpawnRate)
+        {
+            
+            int randomSpawn = Random.Range(0, 3);
+
+            switch (randomSpawn)
+            {
+                case 0:
+                    ObsSpikeRoadSpawn();
+                    break;
+                case 1:
+                    ObsSpikeRoadSpawn();
+                    break;
+                case 2:
+                    ObsSpikeRoadSpawn();
+                    break;
+
+            }
+            counter = 0f;
+            
+         
         }
     }
 
@@ -358,7 +390,7 @@ public class ObstacleSpawner : MonoBehaviour
                     {
                         spawnedTraffic.GetComponent<MovingObstacle>().obstacleIndex = 3;
                     }
-                     
+
                     spawnedTraffic.transform.SetParent(transform, this);
                     Destroy(spawnedTraffic, config.lifespan);
 
@@ -392,6 +424,16 @@ public class ObstacleSpawner : MonoBehaviour
             constrSide = Random.Range(0, 2);
 
             counterConstrRoad = 0f;
+        }
+    }
+
+    private void ObsSpikeRoadSpawn()
+    {
+        if (!spawningSpikeRoad)
+        {
+            spawningSpikeRoad = true;
+            roadSpawner.SpawnSpikeRoad();
+
         }
     }
 }

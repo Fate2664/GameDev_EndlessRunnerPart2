@@ -20,6 +20,11 @@ public class RoadSpawner : MonoBehaviour
     [Header("Block Roads")]
     [SerializeField] private List<GameObject> blockRoads;
 
+    [Header("Spike Roads")]
+    [Header("Left:")]
+    [SerializeField] private List<GameObject> leftSpikeRoads;
+    [Header("Right:")]
+    [SerializeField] private List<GameObject> rightSpikeRoads;
     [Header("Settings")]
     [SerializeField] private float Zoffset = 142f;
 
@@ -29,7 +34,7 @@ public class RoadSpawner : MonoBehaviour
     public float endConstrZ = 0;
     [HideInInspector]
     public float startConstrZ = 0;
-  
+
 
     void Start()
     {
@@ -38,7 +43,7 @@ public class RoadSpawner : MonoBehaviour
         //Order the road lists
         if (normalRoads != null && normalRoads.Count > 0)
         {
-            normalRoads = normalRoads.OrderByDescending(r => r.transform.position.z).ToList();      
+            normalRoads = normalRoads.OrderByDescending(r => r.transform.position.z).ToList();
         }
         if (leftConstrRoads != null && leftConstrRoads.Count > 0)
         {
@@ -57,7 +62,7 @@ public class RoadSpawner : MonoBehaviour
     }
 
     //This method is just used to get the correct obstacle spawner script
-    public void InitializeObsSpawener(ObstacleSpawner obsSpawner)
+    public void InitializeObsSpawner(ObstacleSpawner obsSpawner)
     {
         obstacleSpawner = obsSpawner;
     }
@@ -97,7 +102,7 @@ public class RoadSpawner : MonoBehaviour
 
         int constrSideChosen = obstacleSpawner.constrSide;
         //Check which lane we need to spawn the new construction road
-        List<GameObject> constrSide = DetermineSide(constrSideChosen);
+        List<GameObject> constrSide = DetermineSide(constrSideChosen, leftConstrRoads, rightConstrRoads);
         GameObject constrRoad = null;
 
         //make sure we don't choose the middle lane
@@ -156,14 +161,14 @@ public class RoadSpawner : MonoBehaviour
     }
 
     //This method manages the spawning of the road block before the boss
-    public void SpawnBlockRoad(bool spawnCheck)
+    public void SpawnBlockRoad(bool spawnBlockCheck)
     {
-        if (spawnCheck)
+        if (spawnBlockCheck)
         {
             GameObject movedRoad = currentRoads[0];
-            
+
             float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
-         
+
 
             if (blockRoads != null && blockRoads.Count > 0)
             {
@@ -177,16 +182,49 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
+    public void SpawnSpikeRoad()
+    {
+        if (leftSpikeRoads.Count > 0 && rightSpikeRoads.Count > 0)
+        {
+            int randomSide = Random.Range(0, 1);
+            List<GameObject> spikeRoads = DetermineSide(randomSide, leftSpikeRoads, rightSpikeRoads);
+            GameObject movedRoad = currentRoads[0];
+            float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
+            GameObject spawnedSpikeRoad = Instantiate(spikeRoads[Random.Range(0, spikeRoads.Count)], new Vector3(0f, 0f, newZoffset), Quaternion.Euler(0f, 90f, 0f));
+            spawnedSpikeRoad.transform.SetParent(transform, this);
+            spawnedSpikeRoad.AddComponent<SpikeRoadMarker>();
+            currentRoads.Add(spawnedSpikeRoad);
+            obstacleSpawner.spawningSpikeRoad = false;
+        }
+    }
+
+    //Write a method to replace the spike roads with normal roads in the current road list
+    public void ReplaceSpikeRoads()
+    {
+        for (int i = 0; i < currentRoads.Count; i++)
+        {
+            if (currentRoads[i].GetComponent<SpikeRoadMarker>())
+            {
+                GameObject normalRoad = normalRoads[Random.Range(0, normalRoads.Count)];
+                GameObject newNormalRoad = Instantiate(normalRoad, currentRoads[i].transform.position, Quaternion.Euler(0f, 90f, 0f));
+                newNormalRoad.transform.SetParent(transform, this);
+                Destroy(currentRoads[i]);
+                currentRoads[i] = newNormalRoad;
+            }
+        }
+    }
+
+
     //This method makes sure we stay to the correct lane to spawn the construction road
-    private List<GameObject> DetermineSide(int randomSide)
+    private List<GameObject> DetermineSide(int randomSide, List<GameObject> leftRoads, List<GameObject> rightRoads)
     {
         switch (randomSide)
         {
             case 0:
-                return leftConstrRoads;
+                return leftRoads;
             case 1:
-                return rightConstrRoads;
-            default: return leftConstrRoads;
+                return rightRoads;
+            default: return leftRoads;
 
         }
     }

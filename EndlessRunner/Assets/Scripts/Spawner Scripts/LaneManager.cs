@@ -14,7 +14,7 @@ public class LaneManager
         this.lanePositions = lanePositions;
         laneOccupied = new bool[lanePositions.Length];
     }
-
+    
     //Clears lane at the start of each spawn cycle
     public void ResetLanes()
     {

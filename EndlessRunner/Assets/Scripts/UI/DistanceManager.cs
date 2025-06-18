@@ -11,6 +11,9 @@ public class DistanceManager : MonoBehaviour
     private float actDistance = 0;
     private float _distanceCovered;
     public float distanceCovered { get { return _distanceCovered; } }
+    private float _virtualDistanceCovered;
+    public float virtualDistanceCovered { get { return _virtualDistanceCovered; } }
+
 
 
     public List<TextMeshProUGUI> distanceValue;
@@ -26,6 +29,7 @@ public class DistanceManager : MonoBehaviour
         actDistance = -(transform.position.z - startZ);
         if (actDistance >= 100)
         {
+            _virtualDistanceCovered++;
             _distanceCovered++;
             startZ = transform.position.z;
         }
@@ -38,5 +42,10 @@ public class DistanceManager : MonoBehaviour
             }
             
         }
+    }
+
+    public void ResetDistance()
+    {
+        _virtualDistanceCovered = 0;
     }
 }
