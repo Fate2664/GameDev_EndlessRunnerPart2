@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2b3c22a3b098594796f588efd03f2b5, type: 3}
+  m_Name: Gameplay
+  m_EditorClassIdentifier: 
+  Category: Gameplay
+  Settings:
+  - rid: 7332598407519797422
+  - rid: 7332598407519797423
+  references:
+    version: 2
+    RefIds:
+    - rid: 7332598407519797422
+      type: {class: MultiOptionSetting, ns: , asm: Assembly-CSharp}
+      data:
+        Name: Difficulty
+        Options:
+        - Easy
+        - Medium
+        - Hard
+        - Nightmare
+        SelectedIndex: 1
+    - rid: 7332598407519797423
+      type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
+      data:
+        Name: Brightness
+        value: 44.39853
+        Min: 0
+        Max: 100
+        ValueFormat: '{0:0}'

@@ -19,7 +19,9 @@ public class ObstacleSpawner : MonoBehaviour
 
     [Header("Spawn Details")]
     [Range(0.5f, 10f)]
-    [SerializeField] private float obsSpawnRate = 5f;
+    [SerializeField] private float obsSpawnRateResidential = 5f;
+    [Range(0.5f, 10f)]
+    [SerializeField] private float obsSpawnRateCity = 5f;
     [Range(0.5f, 10f)]
     [SerializeField] private float trafficSpawnRate = 1f;
     [Range(5f, 30f)]
@@ -40,6 +42,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     [Header("Connections")]
     [SerializeField] private RoadSpawner roadSpawner;
+    [SerializeField] private BossSpawner bossSpawner;
 
 
     private float counter = 0f;
@@ -96,9 +99,9 @@ public class ObstacleSpawner : MonoBehaviour
     {
         float difficulyTimer = Time.deltaTime;
         float diffIncInterval = 5.0f;
-        if (difficulyTimer >= diffIncInterval && obsSpawnRate > 2f)
+        if (difficulyTimer >= diffIncInterval && obsSpawnRateResidential > 2f)
         {
-            obsSpawnRate -= -0.5f;
+            obsSpawnRateResidential -= -0.5f;
             difficulyTimer = 0f;
         }
 
@@ -110,17 +113,17 @@ public class ObstacleSpawner : MonoBehaviour
     {
         counter += Time.deltaTime;
 
-        if (counter >= obsSpawnRate)
+        if (counter >= obsSpawnRateResidential)
         {
             int randomSpawn = Random.Range(0, 2);
 
             switch (randomSpawn)
             {
                 case 0:
-                    ObsMovingPastPlayer();
+                    Invoke(nameof(ObsMovingPastPlayer), 3f);
                     break;
                 case 1:
-                    ObsMovingTowardsPlayer();
+                    Invoke(nameof(ObsMovingTowardsPlayer), 3f);
                     break;
 
             }
@@ -130,9 +133,12 @@ public class ObstacleSpawner : MonoBehaviour
 
     public void SpawnBossCity()
     {
+        if (bossSpawner != null && bossSpawner.bossDefeated)
+            return;
+
         counter += Time.deltaTime;
 
-        if (counter >= obsSpawnRate)
+        if (counter >= obsSpawnRateCity)
         {
             
             int randomSpawn = Random.Range(0, 3);
@@ -140,10 +146,10 @@ public class ObstacleSpawner : MonoBehaviour
             switch (randomSpawn)
             {
                 case 0:
-                    ObsSpikeRoadSpawn();
+                    Invoke(nameof(ObsMovingPastPlayer), 4f);
                     break;
                 case 1:
-                    ObsSpikeRoadSpawn();
+                    Invoke(nameof(ObsMovingTowardsPlayer), 4f);
                     break;
                 case 2:
                     ObsSpikeRoadSpawn();
@@ -429,6 +435,14 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void ObsSpikeRoadSpawn()
     {
+        if (bossSpawner != null && bossSpawner.bossDefeated)
+            return;
+
+        float distanceDuringBoss = bossSpawner.DistanceManager.virtualDistanceCovered - bossSpawner.DistanceToSpawn;
+        float buffer = bossSpawner.SpikeRoadSpawnBuffer;
+        if (distanceDuringBoss >= bossSpawner.DistanceToDespawn - buffer)
+            return;
+       
         if (!spawningSpikeRoad)
         {
             spawningSpikeRoad = true;

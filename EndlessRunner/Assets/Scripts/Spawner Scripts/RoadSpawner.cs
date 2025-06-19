@@ -86,12 +86,20 @@ public class RoadSpawner : MonoBehaviour
             Destroy(movedRoad);
             movedRoad = currentRoads[0];
         }
+        else
+        if (movedRoad.GetComponent<SpikeRoadMarker>())
+        {
+            currentRoads.RemoveAt(0);
+            Destroy(movedRoad);
+            movedRoad = currentRoads[0];
+        }else
+        {
+            float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;   //get the position for the new road infront of the others
 
-        float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;   //get the position for the new road infront of the others
-
-        currentRoads.RemoveAt(0);          //remove the first road from the list
-        movedRoad.transform.position = new Vector3(0f, 0f, newZoffset);     //Create a new vector for the new road position
-        currentRoads.Add(movedRoad);   //add the new road to the list
+            currentRoads.RemoveAt(0);          //remove the first road from the list
+            movedRoad.transform.position = new Vector3(0f, 0f, newZoffset);     //Create a new vector for the new road position
+            currentRoads.Add(movedRoad);   //add the new road to the list 
+        }
     }
 
     //This method manages the spawning of the construction roads
@@ -186,7 +194,7 @@ public class RoadSpawner : MonoBehaviour
     {
         if (leftSpikeRoads.Count > 0 && rightSpikeRoads.Count > 0)
         {
-            int randomSide = Random.Range(0, 1);
+            int randomSide = Random.Range(0, 2);
             List<GameObject> spikeRoads = DetermineSide(randomSide, leftSpikeRoads, rightSpikeRoads);
             GameObject movedRoad = currentRoads[0];
             float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
@@ -197,23 +205,6 @@ public class RoadSpawner : MonoBehaviour
             obstacleSpawner.spawningSpikeRoad = false;
         }
     }
-
-    //Write a method to replace the spike roads with normal roads in the current road list
-    public void ReplaceSpikeRoads()
-    {
-        for (int i = 0; i < currentRoads.Count; i++)
-        {
-            if (currentRoads[i].GetComponent<SpikeRoadMarker>())
-            {
-                GameObject normalRoad = normalRoads[Random.Range(0, normalRoads.Count)];
-                GameObject newNormalRoad = Instantiate(normalRoad, currentRoads[i].transform.position, Quaternion.Euler(0f, 90f, 0f));
-                newNormalRoad.transform.SetParent(transform, this);
-                Destroy(currentRoads[i]);
-                currentRoads[i] = newNormalRoad;
-            }
-        }
-    }
-
 
     //This method makes sure we stay to the correct lane to spawn the construction road
     private List<GameObject> DetermineSide(int randomSide, List<GameObject> leftRoads, List<GameObject> rightRoads)

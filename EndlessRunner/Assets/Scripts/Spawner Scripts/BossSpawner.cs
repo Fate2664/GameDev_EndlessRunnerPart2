@@ -8,11 +8,15 @@ public class BossSpawner : MonoBehaviour
     [SerializeField] private float distanceToSpawn;//Distance after which the boss will be spawned
     public float DistanceToSpawn => distanceToSpawn;
     [SerializeField] private float distanceToDespawn = 100f; // Distance after which the boss will be despawned
+    public float DistanceToDespawn => distanceToDespawn;
+    [SerializeField] private float spikeRoadSpawnBuffer = 500f;
+    public float SpikeRoadSpawnBuffer => spikeRoadSpawnBuffer;
 
 
     [Header("Connections")]
     [Space(10)]
     [SerializeField] private DistanceManager distanceManager;
+    public DistanceManager DistanceManager => distanceManager;
     [SerializeField] private ObstacleSpawner obstacleSpawner;
     [SerializeField] private RoadSpawner roadSpawner;
     [SerializeField] private ObstacleConfig trafficConfig;
@@ -23,6 +27,8 @@ public class BossSpawner : MonoBehaviour
     private bool spawnBlockRoadCheck = true;
     [HideInInspector]
     public bool bossDefeated = false;
+    [HideInInspector]
+    public bool isBossActive = false;
 
 
     private void Start()
@@ -32,36 +38,39 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (!bossDefeated && distanceManager.virtualDistanceCovered > distanceToSpawn && spawnBlockRoadCheck)
+        if (!bossDefeated && !bossDefeated && distanceManager.virtualDistanceCovered > distanceToSpawn && spawnBlockRoadCheck && !obstacleSpawner.spawningConstrRoad)
         {
-            Debug.Log("Spawning Boss");
-            SpawnBoss();
+            StartBossPhase();
         }
         else
-        if (!bossDefeated)
+        if (!bossDefeated && isBossActive)
         {
+            SpawnBossObstacles();
             CheckDespawnBoss();
         }
 
     }
 
-    //This method calls the spawning of the road block and the new obstacles
-    private void SpawnBoss()
+    private void StartBossPhase()
     {
         obstacleSpawner.stopTraffic = true;
         obstacleSpawner.canSpawnConstrRoad = false;
         roadSpawner.SpawnBlockRoad(spawnBlockRoadCheck);
+        spawnBlockRoadCheck = false;
+        bossDefeated = false;
+        isBossActive = true;
+    }
+
+    private void SpawnBossObstacles()
+    {
         if (spawnManager.currentType == SpawnType.Resindential)
         {
-            Invoke(nameof(SpawnCityBoss), 5f);
+            obstacleSpawner.SpawnBossResidential();
         }
         else if (spawnManager.currentType == SpawnType.City)
         {
-            Invoke(nameof(SpawnCityBoss), 5f);
+            obstacleSpawner.SpawnBossCity();
         }
-        spawnBlockRoadCheck = false;
-        bossDefeated = false;
-
     }
 
     private void CheckDespawnBoss()
@@ -70,23 +79,14 @@ public class BossSpawner : MonoBehaviour
         float distanceDuringBoss = distanceManager.virtualDistanceCovered - distanceToSpawn;
         if (distanceDuringBoss >= distanceToDespawn)
         {
+            isBossActive = false;
             bossDefeated = true;
             spawnManager.ResetTransitionCounter();
             Invoke(nameof(ReEnableTrafficAndConstr), 5f);
-            Invoke(nameof(roadSpawner.ReplaceSpikeRoads), 5f);
+            //Invoke(nameof(ReplaceSpikeRoads), 8f);
             spawnBlockRoadCheck = true;
         }
 
-    }
-
-    private void SpawnResidentialBoss()
-    {
-        obstacleSpawner.SpawnBossResidential();
-    }
-
-    private void SpawnCityBoss()
-    {
-        obstacleSpawner.SpawnBossCity();
     }
 
     private void ReEnableTrafficAndConstr()
@@ -94,4 +94,6 @@ public class BossSpawner : MonoBehaviour
         obstacleSpawner.stopTraffic = false;
         obstacleSpawner.canSpawnConstrRoad = true;
     }
+
+
 }
