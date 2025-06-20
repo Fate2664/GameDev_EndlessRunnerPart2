@@ -8,6 +8,7 @@ public class DeathScreen : MonoBehaviour
     public GameObject deathScreen;
     public GameObject mainUI;
     public Button restartButton;
+    public Button menuButton;
 
     [SerializeField] private Volume _volume;
     [Range(-100, 100)]
@@ -20,6 +21,7 @@ public class DeathScreen : MonoBehaviour
     {
         deathScreen.SetActive(false);   //Don't show the death screen when game begins
         restartButton.onClick.AddListener(RestartGame);     //When clicked on the restart button call the RestartGame method
+        menuButton.onClick.AddListener(LoadMainMenu);         //When clicked on the menu button call the RestartGame method
         pauseVolume = new PauseVolume(_volume, _saturation, _postExposure);
     }
 
@@ -37,8 +39,34 @@ public class DeathScreen : MonoBehaviour
     {
         Time.timeScale = 1f;            //reset the game timer
         pauseVolume.RemovePauseEffect();
+        if (Score.Instance != null)
+        {
+            Score.Instance.SaveScore();  //Save the score before starting a new game
+            Destroy(Score.Instance.gameObject);  //Destroy the previous score instance to avoid duplicates
+        }
+        if (DistanceManager.Instance != null)
+        {
+            DistanceManager.Instance.SaveDistance();  //Save the distance before starting a new game
+            Destroy(DistanceManager.Instance.gameObject);  //Destroy the previous distance instance to avoid duplicates
+        }
+        if (SpawnManager.Instance != null)
+        {
+            Destroy(SpawnManager.Instance.gameObject);  //Destroy the previous spawn manager instance to avoid duplicates
+        }
         SceneManager.LoadScene("Level 1");      //reload the level
 
+    }
+
+    private void LoadMainMenu()
+    {
+        Time.timeScale = 1f;            //reset the game timer
+        Score.Instance?.SaveScore();  //Save the score before quitting
+        DistanceManager.Instance?.SaveDistance();  //Save the distance before quitting
+        if (SpawnManager.Instance != null)
+        {
+            Destroy(SpawnManager.Instance.gameObject);  //Destroy the previous spawn manager instance to avoid duplicates
+        }
+        SceneManager.LoadScene("MainMenu");      //load the main menu
     }
 
 

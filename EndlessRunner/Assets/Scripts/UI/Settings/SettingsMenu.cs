@@ -13,16 +13,6 @@ public class SettingsMenu : MonoBehaviour
     public ListView TabBar = null;
     public ListView SettingsList = null;
 
-    /*
-    [Header("Temporary")]
-    public BoolSetting BoolSetting = new BoolSetting();
-    public ItemView ToggleItemView = null;
-    public FloatSetting FloatSetting = new FloatSetting();
-    public ItemView SliderItemView = null;
-    public MultiOptionSetting MultiOptionSetting = new MultiOptionSetting();
-    public ItemView DropDownItemView = null;
-    */
-
     private int selectedIndex = -1;
 
     private List<Setting> CurrentSettings => SettingsCollection[selectedIndex].Settings;

@@ -145,6 +145,11 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        if (playerDeath.isDead)
+        {
+            return; // If the player is dead, do not allow movement.
+        }
+
         MoveCharacter();    //call the MoveCharacter method
         if (!prometeoCarController.isSwitchingLane)
         {
@@ -157,6 +162,11 @@ public class PlayerController : MonoBehaviour
 
     private void MoveCharacter()
     {
+        if (playerDeath.isDead)
+        {
+            return; // If the player is dead, do not allow movement.
+        }
+
         // We determine the speed of the car.
         carSpeed = (2 * Mathf.PI * frontLeftCollider.radius * frontLeftCollider.rpm * 60) / 2000;
         // Save the local velocity of the car in the x axis. Used to know if the car is drifting.

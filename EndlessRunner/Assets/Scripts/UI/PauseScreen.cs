@@ -56,8 +56,22 @@ public class PauseScreen : MonoBehaviour
     private void RestartGame()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Level 1");
         pauseVolume.RemovePauseEffect();
+        if (Score.Instance != null)
+        {
+            Score.Instance.SaveScore();  //Save the score before starting a new game
+            Destroy(Score.Instance.gameObject);  //Destroy the previous score instance to avoid duplicates
+        }
+        if (DistanceManager.Instance != null)
+        {
+            DistanceManager.Instance.SaveDistance();  //Save the distance before starting a new game
+            Destroy(DistanceManager.Instance.gameObject);  //Destroy the previous distance instance to avoid duplicates
+        }
+        if (SpawnManager.Instance != null)
+        {
+            Destroy(SpawnManager.Instance.gameObject);  //Destroy the previous spawn manager instance to avoid duplicates
+        }
+        SceneManager.LoadScene("Level 1");
     }
 
     private void ContinueGame()

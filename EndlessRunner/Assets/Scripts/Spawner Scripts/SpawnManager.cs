@@ -27,6 +27,21 @@ public class SpawnManager : MonoBehaviour
     public SpawnType currentType = SpawnType.Resindential; // current type of land being spawned
     private SpawnType nextType = SpawnType.City;
 
+    public static SpawnManager Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;  //Singleton instance
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);  //Destroy duplicate instances
+        }
+    }
+
     void Start()
     {
         //get the scripts for each spawner
@@ -81,7 +96,7 @@ public class SpawnManager : MonoBehaviour
                 currentType = nextType; 
                 inTransition = false; 
                 counter = 0; 
-                distanceManager.ResetDistance(); 
+                distanceManager.ResetVirtualDistance(); 
                 bossSpawner.bossDefeated = false; 
                 SpawnLand(); 
                
