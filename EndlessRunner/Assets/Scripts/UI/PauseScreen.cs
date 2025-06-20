@@ -36,6 +36,7 @@ public class PauseScreen : MonoBehaviour
         inPause = true;
         pauseScreen.SetActive(true);
         mainUI.SetActive(false);
+        AudioManager.Instance?.PlaySFX(AudioManager.Instance.menuMusic);
         pauseVolume.ApplyPauseEffect();
         Time.timeScale = 0f;
 

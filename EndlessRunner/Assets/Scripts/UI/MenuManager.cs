@@ -16,6 +16,7 @@ public class MenuManager : MonoBehaviour
             DistanceManager.Instance.SaveDistance();  //Save the distance before starting a new game
             Destroy(DistanceManager.Instance.gameObject);  //Destroy the previous distance instance to avoid duplicates
         }
+        AudioManager.Instance?.PlaySFX(AudioManager.Instance.gameplayMusic);  
         SceneManager.LoadScene("Level 1");
     }
 

@@ -15,6 +15,7 @@ TagManager:
   - NoSpawnTrigger
   - SlowVolume
   - TrafficSpawner
+  - Audio
   layers:
   - Default
   - TransparentFX

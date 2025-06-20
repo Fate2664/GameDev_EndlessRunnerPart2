@@ -60,8 +60,16 @@ public class DeathScreen : MonoBehaviour
     private void LoadMainMenu()
     {
         Time.timeScale = 1f;            //reset the game timer
-        Score.Instance?.SaveScore();  //Save the score before quitting
-        DistanceManager.Instance?.SaveDistance();  //Save the distance before quitting
+        if (Score.Instance != null)
+        {
+            Score.Instance.SaveScore();  //Save the score before starting a new game
+            Destroy(Score.Instance.gameObject);  //Destroy the previous score instance to avoid duplicates
+        }
+        if (DistanceManager.Instance != null)
+        {
+            DistanceManager.Instance.SaveDistance();  //Save the distance before starting a new game
+            Destroy(DistanceManager.Instance.gameObject);  //Destroy the previous distance instance to avoid duplicates
+        }
         if (SpawnManager.Instance != null)
         {
             Destroy(SpawnManager.Instance.gameObject);  //Destroy the previous spawn manager instance to avoid duplicates

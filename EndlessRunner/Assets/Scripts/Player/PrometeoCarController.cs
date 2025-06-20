@@ -504,6 +504,48 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
+    public void CarSounds()
+    {
+
+        if (playerController.useSounds)
+        {
+            try
+            {
+                if (playerController.carEngineSound != null)
+                {
+                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 25f);
+                    playerController.carEngineSound.pitch = engineSoundPitch;
+                }
+                if ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f))
+                {
+                    if (!playerController.tireScreechSound.isPlaying)
+                    {
+                        playerController.tireScreechSound.Play();
+                    }
+                }
+                else if ((!playerController.isDrifting) && (!playerController.isTractionLocked || Mathf.Abs(playerController.carSpeed) < 12f))
+                {
+                    playerController.tireScreechSound.Stop();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning(ex);
+            }
+        }
+        else if (!playerController.useSounds)
+        {
+            if (playerController.carEngineSound != null && playerController.carEngineSound.isPlaying)
+            {
+                playerController.carEngineSound.Stop();
+            }
+            if (playerController.tireScreechSound != null && playerController.tireScreechSound.isPlaying)
+            {
+                playerController.tireScreechSound.Stop();
+            }
+        }
+
+    }
     //This method controls the exhaust flame particle effect
     public void ExhaustFlamePS()
     {
@@ -557,48 +599,7 @@ public class PrometeoCarController : MonoBehaviour
     }
 
 
-    public void CarSounds()
-    {
-
-        if (playerController.useSounds)
-        {
-            try
-            {
-                if (playerController.carEngineSound != null)
-                {
-                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 25f);
-                    playerController.carEngineSound.pitch = engineSoundPitch;
-                }
-                if ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f))
-                {
-                    if (!playerController.tireScreechSound.isPlaying)
-                    {
-                        playerController.tireScreechSound.Play();
-                    }
-                }
-                else if ((!playerController.isDrifting) && (!playerController.isTractionLocked || Mathf.Abs(playerController.carSpeed) < 12f))
-                {
-                    playerController.tireScreechSound.Stop();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning(ex);
-            }
-        }
-        else if (!playerController.useSounds)
-        {
-            if (playerController.carEngineSound != null && playerController.carEngineSound.isPlaying)
-            {
-                playerController.carEngineSound.Stop();
-            }
-            if (playerController.tireScreechSound != null && playerController.tireScreechSound.isPlaying)
-            {
-                playerController.tireScreechSound.Stop();
-            }
-        }
-
-    }
+    
 
     public void GoReverse()
     {
