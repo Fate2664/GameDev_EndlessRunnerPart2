@@ -8,7 +8,7 @@ public class SpeedPickup : MonoBehaviour
         if (collision.gameObject.CompareTag("Player Hitbox"))          //check if the player has hit the speed pickup
         {
             PickupLink link = GetComponent<PickupLink>();
-            FindFirstObjectByType<PickupManager>().ActivatePickup(link);
+            FindFirstObjectByType<PickupManager>().OnHourglassPickup.Invoke(link.powerUp_Effect);
             Destroy(speedobj);                          //destroy the speed pickup after it is picked up
         }
     }

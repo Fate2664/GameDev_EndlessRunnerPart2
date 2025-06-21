@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.CompareTag("StaticObstacleTrigger") || (collision.CompareTag("MovingObstacleTrigger")))
         {
-            scoreManager.IncrementScore();
+            Score.Instance?.OnScoreIncrement.Invoke(); // Increment the score when the player passes through an obstacle trigger.
         }
 
 

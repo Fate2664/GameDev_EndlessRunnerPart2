@@ -10,7 +10,7 @@ public class RocketPickup : MonoBehaviour
         if (collision.gameObject.CompareTag("Player Hitbox"))
         {
             PickupLink link = GetComponent<PickupLink>();
-            FindFirstObjectByType<PickupManager>().ActivatePickup(link);
+            FindFirstObjectByType<PickupManager>().OnRocketPickup.Invoke(link.powerUp_Effect);
             Destroy(rocketObj);
         }
     }

@@ -1,8 +1,10 @@
 using NUnit.Framework.Internal;
+using System;
 using System.Collections;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PickupManager : MonoBehaviour
 {
@@ -17,6 +19,11 @@ public class PickupManager : MonoBehaviour
     private PowerUp_Effect _activeEffect;
     public PowerUp_Effect activeEffect { get { return _activeEffect; } }
 
+    [Header("Pickup Events")]
+    public UnityEvent<PowerUp_Effect> OnRocketPickup;
+    public UnityEvent<PowerUp_Effect> OnDoublePointsPickup;
+    public UnityEvent<PowerUp_Effect> OnHourglassPickup;
+
 
     private Coroutine activeRoutine;
     private string pickupName;
@@ -26,6 +33,29 @@ public class PickupManager : MonoBehaviour
     private void Start()
     {
         pickupOverlayManager = this.GetComponent<PickupOverlayManager>();
+
+        OnRocketPickup ??= new UnityEvent<PowerUp_Effect>();
+        OnDoublePointsPickup ??= new UnityEvent<PowerUp_Effect>();
+        OnHourglassPickup ??= new UnityEvent<PowerUp_Effect>();
+
+        OnRocketPickup.AddListener(HandleRocketPickup);
+        OnDoublePointsPickup.AddListener(HandleDoublePointsPickup);
+        OnHourglassPickup.AddListener(HandleHourglassPickup);
+    }
+
+    private void HandleDoublePointsPickup(PowerUp_Effect effect)
+    {
+        ActivatePickup(effect, "DoublePoints(Clone)", PickupOverlayManager.PickupType.DoublePoints);
+    }
+
+    private void HandleHourglassPickup(PowerUp_Effect effect)
+    {
+        ActivatePickup(effect, "HourglassUpdated(Clone)", PickupOverlayManager.PickupType.HourGlass);
+    }
+
+    private void HandleRocketPickup(PowerUp_Effect effect)
+    {
+        ActivatePickup(effect, "Rocket(Clone)", PickupOverlayManager.PickupType.Rocket);
     }
 
     private void Update()
@@ -39,39 +69,28 @@ public class PickupManager : MonoBehaviour
     }
 
     //use this method to get the corresponding pickup scriptable object
-    public void ActivatePickup(PickupLink link)
+    public void ActivatePickup(PowerUp_Effect effect, string name, PickupOverlayManager.PickupType type)
     {
         if (!powerUpCheck)
         {
             powerUpCheck = true;
-            pickupName = link.name;
-            _activeEffect = link.powerUp_Effect;
+            pickupName = name;
+            _activeEffect = effect;
+        }
+
+        pickupOverlayManager.ShowPickupOverlay(type, effect.duration);
+
+        if (activeRoutine == null)
+        {
+            activeRoutine = StartCoroutine(PickupRoutine(_activeEffect));
         }
     }
 
     //This is the IEnumerator that will run while the pickup is active
-    public IEnumerator PickupRoutine(PowerUp_Effect link)
+    public IEnumerator PickupRoutine(PowerUp_Effect effect)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        PowerUp_Effect pickupEffect = link;
-
-        //This is to show the pickup overlay when the pickup is active
-        switch (pickupName)
-        {
-            case "Rocket(Clone)":
-                pickupOverlayManager.ShowPickupOverlay(PickupOverlayManager.PickupType.Rocket, pickupEffect.duration);
-                break;
-            case "DoublePoints(Clone)":
-                pickupOverlayManager.ShowPickupOverlay(PickupOverlayManager.PickupType.DoublePoints, pickupEffect.duration);
-                break;
-            case "HourglassUpdated(Clone)":
-                pickupOverlayManager.ShowPickupOverlay(PickupOverlayManager.PickupType.HourGlass, pickupEffect.duration);
-                break;
-        }
-
-        //Apply the effect for the duration of the pickup
-    
-        pickupEffect.ApplyEffect(player, this);
+        effect.ApplyEffect(player, this);
         yield return null;
 
         powerUpCheck = false;

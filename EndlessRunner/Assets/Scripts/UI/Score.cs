@@ -3,16 +3,20 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.Services.CloudSave;
 using Unity.Services.Leaderboards;
+using UnityEngine.Events;
 
 public class Score : MonoBehaviour
 {
     //This script manages the scoring of the player
 
     public List<TextMeshProUGUI> ValueText;
+    public bool DoublePointsActive;
+
+    [Header("Events")]
+    public UnityEvent OnScoreIncrement;
 
     private float score;
 
-    public bool DoublePointsActive;
 
     public static Score Instance { get; private set; }
 
@@ -26,6 +30,23 @@ public class Score : MonoBehaviour
         else
         {
             Destroy(gameObject);  //Destroy duplicate instances
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (OnScoreIncrement == null)
+        {
+            OnScoreIncrement = new UnityEvent();  //Initialize the event if it's null
+        }
+        OnScoreIncrement.AddListener(IncrementScore);  //Add the IncrementScore method to the event
+    }
+
+    private void OnDisable()
+    {
+        if (OnScoreIncrement != null)
+        {
+            OnScoreIncrement.RemoveListener(IncrementScore);  //Remove the IncrementScore method from the event
         }
     }
 

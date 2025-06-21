@@ -3028,6 +3028,15 @@ MonoBehaviour:
   mainCamera: {fileID: 1671258074}
   prometeoCarController: {fileID: 1699189293}
   powerUpCheck: 0
+  OnRocketPickup:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDoublePointsPickup:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHourglassPickup:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &862795435
 Transform:
   m_ObjectHideFlags: 0
@@ -3845,6 +3854,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e3d011a8fd27764cac42fd12ceb62b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BossDistanceReached:
+    m_PersistentCalls:
+      m_Calls: []
+  BossExitDistanceReached:
+    m_PersistentCalls:
+      m_Calls: []
+  bossSpawner: {fileID: 1208644403}
   distanceValue:
   - {fileID: 1772206315}
   - {fileID: 1703051990}
@@ -3866,6 +3882,9 @@ MonoBehaviour:
   - {fileID: 729040027}
   - {fileID: 637286431}
   DoublePointsActive: 0
+  OnScoreIncrement:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1094905204 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
@@ -4138,7 +4157,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transitionLandPrefabs:
-  - {fileID: 3439438538703453492, guid: 61d08afc90d10d9438dad8770989c917, type: 3}
+  - {fileID: 3439438538703453492, guid: 47a1289d692e3304b8a587c9e9dc4cd8, type: 3}
+  - {fileID: 3439438538703453492, guid: 813435fb686c7d14fbd42aaf09dbd773, type: 3}
+  - {fileID: 3439438538703453492, guid: aa2b3a9e441f9e0448fc2cb2d97099a7, type: 3}
   residentialLandPrefabs:
   - {fileID: 3439438538703453492, guid: d4aa7784fbf7f94418bd0476924355fb, type: 3}
   - {fileID: 3439438538703453492, guid: 91c113ba0b3d51145a161d723ed932e2, type: 3}

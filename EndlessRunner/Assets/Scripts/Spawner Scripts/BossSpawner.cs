@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BossSpawner : MonoBehaviour
 {
@@ -23,45 +24,37 @@ public class BossSpawner : MonoBehaviour
     [SerializeField] private LandSpawner landSpawner;
     [SerializeField] private SpawnManager spawnManager;
 
-    private Transform playerT;
     private bool spawnBlockRoadCheck = true;
     [HideInInspector]
     public bool bossDefeated = false;
     [HideInInspector]
     public bool isBossActive = false;
 
+  
+
+
 
     private void Start()
     {
-        playerT = GameObject.FindGameObjectWithTag("Player").transform;
+       distanceManager.BossDistanceReached.AddListener(StartBossPhase);
+       distanceManager.BossExitDistanceReached.AddListener(CheckDespawnBoss);
     }
 
-    private void Update()
-    {
-        if (!bossDefeated && !bossDefeated && distanceManager.virtualDistanceCovered > distanceToSpawn && spawnBlockRoadCheck && !obstacleSpawner.spawningConstrRoad)
-        {
-            StartBossPhase();
-        }
-        else
-        if (!bossDefeated && isBossActive)
-        {
-            SpawnBossObstacles();
-            CheckDespawnBoss();
-        }
-
-    }
 
     private void StartBossPhase()
     {
-        obstacleSpawner.stopTraffic = true;
-        obstacleSpawner.canSpawnConstrRoad = false;
-        roadSpawner.SpawnBlockRoad(spawnBlockRoadCheck);
-        spawnBlockRoadCheck = false;
-        bossDefeated = false;
-        isBossActive = true;
+        //if (!obstacleSpawner.spawningConstrRoad)
+        {
+            obstacleSpawner.stopTraffic = true;
+            obstacleSpawner.canSpawnConstrRoad = false;
+            roadSpawner.SpawnBlockRoad(spawnBlockRoadCheck);
+            spawnBlockRoadCheck = false;
+            bossDefeated = false;
+            isBossActive = true; 
+        }
     }
 
-    private void SpawnBossObstacles()
+    public void SpawnBossObstacles()
     {
         if (spawnManager.currentType == SpawnType.Resindential)
         {
@@ -85,6 +78,7 @@ public class BossSpawner : MonoBehaviour
             Invoke(nameof(ReEnableTrafficAndConstr), 5f);
             //Invoke(nameof(ReplaceSpikeRoads), 8f);
             spawnBlockRoadCheck = true;
+
         }
 
     }

@@ -10,7 +10,7 @@ public class DoublePointsPickup : MonoBehaviour
         if (collision.gameObject.CompareTag("Player Hitbox"))
         {
             PickupLink link = GetComponent<PickupLink>();
-            FindFirstObjectByType<PickupManager>().ActivatePickup(link);
+            FindFirstObjectByType<PickupManager>().OnDoublePointsPickup.Invoke(link.powerUp_Effect);
             Destroy(DoublePointsObj);
         }
     }
