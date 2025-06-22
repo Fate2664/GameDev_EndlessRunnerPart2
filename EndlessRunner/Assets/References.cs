@@ -18,6 +18,17 @@ Hexagonal Sphere - Blender Quick Tip. 2022. YouTube Video, added by  https://www
 Cartoon Fire - Shader Graph VFX Unity, 2021. A Bit Of Game Dev. [YouTube video] Available at: https://www.youtube.com/watch?v=qE6kRTOKzU0 [Accessed 19 May 2025]
 FORCE FIELD in Unity - Shader Graph. 2019. Brackeys. [YouTube video] Available at: https://www.youtube.com/watch?v=NiOGWZXBg4Y [Accessed 19 May 2025].
 OpenAI. 2024. Chat-GPT (Version 4o). [Large Language Model]. Available at: https://chat.openai.com/ [Accessed: 19 May 2025].
+
+Kevin MacLeod. 2020. Neon Laser Horizon. [Sound Recording]. Available at: https://incompetech.com/music/royalty-free/music.html (Accessed 20 June 2025).
+
+muscle car sound effect | warning this video contains loud sounds etc… YouTube Video, added by Jester Tingson. [Online]. Available at: https://www.youtube.com/watch?v=rJ9CT_nfqMw [Accessed 20 June 2025].
+
+Floraphonic. 2024. Rubber Tire Screech 6. [Sound Recording]. Available at: https://pixabay.com/sound-effects/rubber-tire-screech-6-202577/ [Accessed 20 June 2025].
+
+Freesound_community. 2022. Rocket Loop. [Sound Recording]. Available at: https://pixabay.com/sound-effects/rocket-loop-99748/ [20 June 2025].
+
+MrMark81. 2025. car crash (support appreciated) (click like). [Sound Recording]. Available at: https://pixabay.com/sound-effects/car-crash-support-appreciated-click-like-353288/ [20 Junes 2025].
+
  * 
  * 
  * 
