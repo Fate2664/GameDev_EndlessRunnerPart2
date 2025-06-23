@@ -16,7 +16,8 @@ namespace NovaSamples.UIControls
         public UIBlock2D Background = null;
         [Tooltip("The TextBlock to display the button's label.")]
         public TextBlock Label = null;
-
+        
         protected override UIBlock TransitionTargetFallback => Background;
+
     }
 }

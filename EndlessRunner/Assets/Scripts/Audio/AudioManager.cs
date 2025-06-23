@@ -1,18 +1,11 @@
 using UnityEngine;
+using System;
+
 
 public class AudioManager : MonoBehaviour
 {
-    [Header ("Audio Sources")]
-    [SerializeField] AudioSource musicSource;
-    [SerializeField] AudioSource sfxSource;
-
     [Header ("Audio Clips")]
-    public AudioClip menuMusic;
-    public AudioClip gameplayMusic;
-    public AudioClip crash;
-    public AudioClip engine;
-    public AudioClip pickup;
-    public AudioClip menuClick;
+    [SerializeField] Sound[] sounds;
 
     public static AudioManager Instance { get; private set; }
 
@@ -27,23 +20,39 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);  // Destroy duplicate instances
         }
-    }
-    private void Start()
-    {
-        musicSource.clip = menuMusic;
-        musicSource.loop = true;
-        musicSource.Play();
+
+        foreach (Sound s in sounds)
+        {
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.clip;
+
+            s.source.volume = s.volume;
+            s.source.pitch = s.pitch;
+        }
+        PlaySFX("MenuMusic");  // Play the menu music on start
+
     }
 
-    public void PlaySFX(AudioClip clip)
+    // Method to play a specific sound effect
+    public void PlaySFX(string name)
     {
-        if (clip != null)
+        if (Array.Exists(sounds, sound => sound.name == name && sound.source.isPlaying))
         {
-            if (musicSource.isPlaying && musicSource.clip != clip)
-            {
-                musicSource.Stop();
-            }
-            sfxSource.PlayOneShot(clip);
+            Array.Find(sounds, sound => sound.name == name)?.source.Stop();
+        }
+        if (Array.Find(sounds, sound => sound.name == name) == null)
+            return;
+
+        Array.Find(sounds, sound => sound.name == name)?.source.Play();
+    }
+
+    // Method to stop a specific sound
+    public void StopSFX(string name)
+    {
+        Sound sound = Array.Find(sounds, s => s.name == name);
+        if (sound != null && sound.source.isPlaying)
+        {
+            sound.source.Stop();
         }
     }
 

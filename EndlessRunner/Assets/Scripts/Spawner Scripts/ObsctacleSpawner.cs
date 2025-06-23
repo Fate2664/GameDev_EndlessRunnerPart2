@@ -108,7 +108,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     }
 
-    //This method controls the spawning of the moving obstacles that aren't traffic
+    //This method controls the spawning of the boss obstacles that are specific to the residential area
     public void SpawnBossResidential()
     {
         counter += Time.deltaTime;
@@ -131,6 +131,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
+    //This method controls the spawning of the boss obstacles that are specific to the city
     public void SpawnBossCity()
     {
         if (bossSpawner != null && bossSpawner.bossDefeated)
@@ -433,6 +434,7 @@ public class ObstacleSpawner : MonoBehaviour
         }
     }
 
+    //This method helps to spawn the spike road during the boss phase
     private void ObsSpikeRoadSpawn()
     {
         if (bossSpawner != null && bossSpawner.bossDefeated)

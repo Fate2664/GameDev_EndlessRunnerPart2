@@ -5,6 +5,7 @@ using Unity.Services.Leaderboards;
 using UnityEngine;
 using static UGSBootstrapper;
 
+// This script fetches the leaderboard data from Unity's Leaderboards service and displays it using the LeaderboardVisuals component.
 
 public class LeaderboardFetcher : MonoBehaviour
 {
@@ -27,10 +28,11 @@ public class LeaderboardFetcher : MonoBehaviour
 
             var entries = new List<LeaderboardEntryData>();
             int index = 0;
+            //for each entry in the leaderboard results, create a LeaderboardEntryData object and add it to the entries list.
             foreach (var entry in scoreResults.Results)
             {
                 string playerName = string.IsNullOrEmpty(entry.PlayerName) ? "Anonymous" : entry.PlayerName;
-                entries.Add(new LeaderboardEntryData(playerName, entry.Score, index));
+                entries.Add(new LeaderboardEntryData(playerName, entry.Score, index));  
                 index++;
             }
 

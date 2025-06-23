@@ -5,6 +5,7 @@ using UnityEngine;
 
 public static class UGSInitializer
 {
+    // This static class initializes Unity Gaming Services (UGS) and signs in the user anonymously.
     private static bool _isInitializing = false;
     private static bool _initialized = false;
 
@@ -14,12 +15,12 @@ public static class UGSInitializer
             return;
 
         _isInitializing = true;
-
+        // Ensure that Unity Services is initialized and the user is signed in anonymously.
         if (UnityServices.State != ServicesInitializationState.Initialized)
         {
             await UnityServices.InitializeAsync();
         }
-
+        // Check if the user is already signed in
         if (!AuthenticationService.Instance.IsSignedIn)
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();

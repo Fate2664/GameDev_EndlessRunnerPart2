@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class ToggleVisuals : ItemVisuals
 {
+    // This script defines the visuals for the toggle button in the settings UI
+
     public TextBlock label = null;
     public UIBlock2D CheckBox = null;
     public UIBlock2D CheckMark = null;
@@ -22,11 +24,13 @@ public class ToggleVisuals : ItemVisuals
     internal static void HandleHover(Gesture.OnHover evt, ToggleVisuals target)
     {
         target.CheckBox.Color = target.HoverColor;
+        AudioManager.Instance?.PlaySFX("HoverSound");
     }
 
     internal static void HandlePress(Gesture.OnPress evt, ToggleVisuals target)
     {
         target.CheckBox.Color = target.PressedColor;
+        AudioManager.Instance?.PlaySFX("ClickSound");
     }
 
     internal static void HandleRelease(Gesture.OnRelease evt, ToggleVisuals target)

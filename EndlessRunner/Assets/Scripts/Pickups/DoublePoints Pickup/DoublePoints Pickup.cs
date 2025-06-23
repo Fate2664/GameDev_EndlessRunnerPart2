@@ -11,6 +11,7 @@ public class DoublePointsPickup : MonoBehaviour
         {
             PickupLink link = GetComponent<PickupLink>();
             FindFirstObjectByType<PickupManager>().OnDoublePointsPickup.Invoke(link.powerUp_Effect);
+            AudioManager.Instance?.PlaySFX("DoublePointsPickup");
             Destroy(DoublePointsObj);
         }
     }

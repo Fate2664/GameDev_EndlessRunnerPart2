@@ -6,6 +6,8 @@ using NovaSamples.SettingsMenu;
 [CreateAssetMenu(menuName = "Settings/Collection")]
 public class SettingsCollection : ScriptableObject
 {
+    //This script is used to create a settings collection that can be used in the settings menu.
+
     public string Category = null;
 
     [SerializeReference]

@@ -29,6 +29,9 @@ Freesound_community. 2022. Rocket Loop. [Sound Recording]. Available at: https:/
 
 MrMark81. 2025. car crash (support appreciated) (click like). [Sound Recording]. Available at: https://pixabay.com/sound-effects/car-crash-support-appreciated-click-like-353288/ [20 Junes 2025].
 
+Kenney. 2020. Interface Sounds, 11 February 2020. [Online]. Available at: https://kenney.nl/assets/interface-sounds [Accessed 26 March 2025].
+
+Unity UI Settings Menu Tutorial (1/5) | Setup | Nova. 2023. YouTube Video, added by Nova. [Online]. Available at: https://www.youtube.com/watch?v=8CiZF2G4yEQ [Accessed 10 May 2025].
  * 
  * 
  * 

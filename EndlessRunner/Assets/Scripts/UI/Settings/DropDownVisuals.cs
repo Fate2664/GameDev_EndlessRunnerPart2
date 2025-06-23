@@ -2,6 +2,8 @@ using Nova;
 using System;
 using UnityEngine;
 
+//this script defines the visuals for a dropdown menu in the settings UI
+
 [System.Serializable]
 public class DropDownItemVisuals : ItemVisuals
 {
@@ -39,6 +41,7 @@ public class DropDownVisuals : ItemVisuals
             return;
         }
         target.Background.Color = target.HoveredColor;
+        AudioManager.Instance?.PlaySFX("HoverSound");
     }
 
     internal static void HandlePress(Gesture.OnPress evt, DropDownVisuals target)
@@ -48,6 +51,7 @@ public class DropDownVisuals : ItemVisuals
             return;
         }
         target.Background.Color = target.PressedColor;
+        AudioManager.Instance?.PlaySFX("ClickSound");
     }
 
     internal static void HandleRelease(Gesture.OnRelease evt, DropDownVisuals target)
@@ -83,6 +87,7 @@ public class DropDownVisuals : ItemVisuals
         OptionsList.JumpToIndex(dataSource.SelectedIndex);
     }
 
+    // This method is called when the visuals are initialized.
     private void EnsureEventHandlers()
     {
         if (eventHandlersRegistered)
@@ -123,6 +128,7 @@ public class DropDownVisuals : ItemVisuals
     private void HandleItemPressed(Gesture.OnPress evt, DropDownItemVisuals target, int index)
     {
         target.Background.Color = PressedColor;
+        AudioManager.Instance?.PlaySFX("ClickSound");
     }
 
     private void HandleItemUnHovered(Gesture.OnUnhover evt, DropDownItemVisuals target, int index)
@@ -133,5 +139,6 @@ public class DropDownVisuals : ItemVisuals
     private void HandleItemHovered(Gesture.OnHover evt, DropDownItemVisuals target, int index)
     {
         target.Background.Color = HoveredColor;
+        AudioManager.Instance?.PlaySFX("HoverSound");
     }
 }

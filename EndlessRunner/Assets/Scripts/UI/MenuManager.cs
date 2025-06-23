@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-
+    //This script manages the main menu
     public void StartGame()
     {
         if (Score.Instance != null)
@@ -16,7 +16,8 @@ public class MenuManager : MonoBehaviour
             DistanceManager.Instance.SaveDistance();  //Save the distance before starting a new game
             Destroy(DistanceManager.Instance.gameObject);  //Destroy the previous distance instance to avoid duplicates
         }
-        AudioManager.Instance?.PlaySFX(AudioManager.Instance.gameplayMusic);  
+        AudioManager.Instance?.PlaySFX("GameplayMusic");
+        AudioManager.Instance?.StopSFX("MenuMusic");
         SceneManager.LoadScene("Level 1");
     }
 

@@ -21,6 +21,7 @@ public class DistanceManager : MonoBehaviour
     private float startZ;
     private float actDistance = 0;
     private float _distanceCovered;
+    private float bossesCompleted = 0;
     public float distanceCovered { get { return _distanceCovered; } }
     private float _virtualDistanceCovered;
     public float virtualDistanceCovered { get { return _virtualDistanceCovered; } }
@@ -28,6 +29,7 @@ public class DistanceManager : MonoBehaviour
     public static DistanceManager Instance { get; private set; }
 
     public List<TextMeshProUGUI> distanceValue;
+    public List<TextMeshProUGUI> bossesCompletedValue;
 
     private bool bossSpawnEventFired = false;
     private bool bossDespawnEventFired = false;
@@ -76,6 +78,16 @@ public class DistanceManager : MonoBehaviour
             }
             
         }
+        if (bossesCompletedValue != null)
+        {
+            for (int i = 0; i < bossesCompletedValue.Count; i++)
+            {
+                if (bossesCompletedValue[i] != null)
+                {
+                    bossesCompletedValue[i].text = bossesCompleted.ToString("0");
+                }
+            }
+        }
 
         if (!bossSpawnEventFired && _virtualDistanceCovered > bossSpawner.DistanceToSpawn)
         {
@@ -98,6 +110,7 @@ public class DistanceManager : MonoBehaviour
         _virtualDistanceCovered = 0;
         bossSpawnEventFired = false;
         bossDespawnEventFired = false;
+        bossesCompleted++;  //increment the number of bosses completed
     }
 
     public async void SaveDistance()
@@ -128,6 +141,7 @@ public class DistanceManager : MonoBehaviour
         }
 
     }
+
 
     public void ResetDistance()
     {

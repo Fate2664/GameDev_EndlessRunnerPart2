@@ -34,10 +34,12 @@ public class PickupManager : MonoBehaviour
     {
         pickupOverlayManager = this.GetComponent<PickupOverlayManager>();
 
+        // Initialize the pickup events if they are not already set
         OnRocketPickup ??= new UnityEvent<PowerUp_Effect>();
         OnDoublePointsPickup ??= new UnityEvent<PowerUp_Effect>();
         OnHourglassPickup ??= new UnityEvent<PowerUp_Effect>();
 
+        // Subscribe to the pickup events
         OnRocketPickup.AddListener(HandleRocketPickup);
         OnDoublePointsPickup.AddListener(HandleDoublePointsPickup);
         OnHourglassPickup.AddListener(HandleHourglassPickup);
@@ -68,7 +70,7 @@ public class PickupManager : MonoBehaviour
 
     }
 
-    //use this method to get the corresponding pickup scriptable object
+    //use this method to get the corresponding pickup scriptable objects
     public void ActivatePickup(PowerUp_Effect effect, string name, PickupOverlayManager.PickupType type)
     {
         if (!powerUpCheck)

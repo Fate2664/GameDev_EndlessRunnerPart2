@@ -22,6 +22,7 @@ public class PrometeoCarController : MonoBehaviour
     public bool canChangeLanes { get { return _canChangeLanes; } }
     private bool canTurnLeft = true;
     private bool canTurnRight = true;
+    private float smoothPitch = 1f;
     private static GameObject playerNose;
     [HideInInspector]
     public bool isSwitchingLane = false;
@@ -248,6 +249,7 @@ public class PrometeoCarController : MonoBehaviour
 
         DOTween.Kill(steeringAxisTween);
 
+        AudioManager.Instance?.PlaySFX("ScreechSound"); 
         //This DOTween turns the car's wheels to the direction of the desired turn
         steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.1f)
         .SetEase(Ease.OutSine)
@@ -504,6 +506,7 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
+    //This method controls the sounds of the car, such as the engine.
     public void CarSounds()
     {
 
@@ -513,8 +516,9 @@ public class PrometeoCarController : MonoBehaviour
             {
                 if (playerController.carEngineSound != null)
                 {
-                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 25f);
-                    playerController.carEngineSound.pitch = engineSoundPitch;
+                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 1000f);
+                    smoothPitch = Mathf.Lerp(smoothPitch, engineSoundPitch, Time.deltaTime * 20f);
+                    playerController.carEngineSound.pitch = smoothPitch;
                 }
                 if ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f))
                 {

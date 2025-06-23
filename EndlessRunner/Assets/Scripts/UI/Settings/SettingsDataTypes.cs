@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
+//this script defines various setting types used in a settings menu
 public abstract class Setting
 {
     public string Name;

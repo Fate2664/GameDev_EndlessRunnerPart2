@@ -190,6 +190,7 @@ public class RoadSpawner : MonoBehaviour
 
     }
 
+    //This method manages the spawning of the spike roads
     public void SpawnSpikeRoad()
     {
         if (leftSpikeRoads.Count > 0 && rightSpikeRoads.Count > 0)

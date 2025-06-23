@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
+    //This script is used to create a settings menu with tabs, toggles, sliders, and dropdowns.
+
     public UIBlock Root = null;
 
     public List<SettingsCollection> SettingsCollection = null;
@@ -35,13 +37,7 @@ public class SettingsMenu : MonoBehaviour
         SettingsList.AddGestureHandler<Gesture.OnDrag, SliderVisuals>(HandleSliderDragged);
         SettingsList.AddGestureHandler<Gesture.OnClick, DropDownVisuals>(HandleDropDownClick);
 
-        //Temporary
-        /*
-        BindToggle(BoolSetting, ToggleItemView.Visuals as ToggleVisuals);
-        BindSlider(FloatSetting, SliderItemView.Visuals as SliderVisuals);
-        BindDropDown(MultiOptionSetting, DropDownItemView.Visuals as DropDownVisuals);
-        */
-
+        //Data Binding
         SettingsList.AddDataBinder<BoolSetting, ToggleVisuals>(BindToggle);
         SettingsList.AddDataBinder<FloatSetting, SliderVisuals>(BindSlider);
         SettingsList.AddDataBinder<MultiOptionSetting, DropDownVisuals>(BindDropDown);
@@ -63,6 +59,7 @@ public class SettingsMenu : MonoBehaviour
 
     }
 
+    //This method is used to select a tab and update the settings list accordingly.
     private void SelectTab(TabButtonVisuals visuals, int index)
     {
         if (index == selectedIndex)
@@ -99,6 +96,7 @@ public class SettingsMenu : MonoBehaviour
         }
     }
 
+    // This method is called when the slider is dragged. It updates the value of the setting based on the position of the pointer.
     private void HandleSliderDragged(Gesture.OnDrag evt, SliderVisuals target, int index)
     {
         FloatSetting setting = CurrentSettings[index] as FloatSetting;
@@ -123,6 +121,10 @@ public class SettingsMenu : MonoBehaviour
         setting.State = !setting.State;
         target.IsChecked = setting.State;
     }
+
+    //
+    //These methods are used to bind the data to the visuals for each type of setting.
+    //
 
     private void BindTab(Data.OnBind<SettingsCollection> evt, TabButtonVisuals target, int index)
     {

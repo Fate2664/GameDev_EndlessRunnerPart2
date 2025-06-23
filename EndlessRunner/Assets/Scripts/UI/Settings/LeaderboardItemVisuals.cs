@@ -2,6 +2,8 @@ using Nova;
 using System.Collections.Generic;
 using UnityEngine;
 
+// This script defines the visuals and data structure for a leaderboard system.
+
 [System.Serializable]
 public class LeaderboardItemVisuals : ItemVisuals
 {
@@ -44,6 +46,7 @@ public class LeaderboardVisuals : ItemVisuals
         OptionsList.SetDataSource(entries);
     }
 
+    // ensures that the event handlers are only added once.
     private void EnsureEventHandlers()
     {
         if (initialized)
@@ -54,15 +57,16 @@ public class LeaderboardVisuals : ItemVisuals
         OptionsList.AddDataBinder<LeaderboardEntryData, LeaderboardItemVisuals>(BindItem);
     }
 
+    // This method is called when the visuals are initialized.
     private void BindItem(Data.OnBind<LeaderboardEntryData> evt, LeaderboardItemVisuals visuals, int index)
     {
         var data = evt.UserData;
 
-        visuals.PositionLabel.Text = (data.Position + 1).ToString();
+        visuals.PositionLabel.Text = (data.Position + 1).ToString();    //  add 1 to the index
         visuals.UserNameLabel.Text = string.IsNullOrEmpty(data.UserName) ? "Anonymous" : data.UserName;
         visuals.ScoreLabel.Text = data.Score.ToString();
 
-        visuals.Background.Color = index % 2 == 0 ? PrimaryRowColor : SecondaryRowColor;
+        visuals.Background.Color = index % 2 == 0 ? PrimaryRowColor : SecondaryRowColor;    // alternate row colors
     }
 }
 

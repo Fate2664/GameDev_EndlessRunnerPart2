@@ -11,7 +11,7 @@ public class UGSBootstrapper : MonoBehaviour
     private async void Start()
     {
         await UGSInitializer.EnsureInitializedAsync();
-
+        
         if (autoLoadLeaderboardOnStart && leaderboardFetcher != null)
         {
             leaderboardFetcher.LoadAndDisplayLeaderboard();

@@ -10,6 +10,7 @@ public class DeathScreen : MonoBehaviour
     public Button restartButton;
     public Button menuButton;
 
+    [SerializeField] private AudioSource engineSource;
     [SerializeField] private Volume _volume;
     [Range(-100, 100)]
     [SerializeField] private float _saturation = 0f;
@@ -30,6 +31,7 @@ public class DeathScreen : MonoBehaviour
 
         deathScreen.SetActive(true);      //Show the death screen
         mainUI.SetActive(false);
+        engineSource.Pause();             //Pause the engine sound
         pauseVolume.ApplyPauseEffect();
         Time.timeScale = 0f;            //Freeze the game
 
@@ -74,6 +76,8 @@ public class DeathScreen : MonoBehaviour
         {
             Destroy(SpawnManager.Instance.gameObject);  //Destroy the previous spawn manager instance to avoid duplicates
         }
+        AudioManager.Instance?.StopSFX("GameplayMusic"); //Stop the gameplay music
+        AudioManager.Instance?.PlaySFX("MenuMusic"); //Play the main menu music
         SceneManager.LoadScene("MainMenu");      //load the main menu
     }
 

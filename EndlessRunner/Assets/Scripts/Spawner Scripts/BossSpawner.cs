@@ -40,7 +40,7 @@ public class BossSpawner : MonoBehaviour
        distanceManager.BossExitDistanceReached.AddListener(CheckDespawnBoss);
     }
 
-
+    // This method is called when the boss distance is reached
     private void StartBossPhase()
     {
         //if (!obstacleSpawner.spawningConstrRoad)
@@ -54,6 +54,7 @@ public class BossSpawner : MonoBehaviour
         }
     }
 
+    // This method is called to spawn the boss obstacles
     public void SpawnBossObstacles()
     {
         if (spawnManager.currentType == SpawnType.Resindential)
@@ -66,6 +67,7 @@ public class BossSpawner : MonoBehaviour
         }
     }
 
+    // This method is called to check if the boss should be despawned
     private void CheckDespawnBoss()
     {
 
@@ -76,13 +78,13 @@ public class BossSpawner : MonoBehaviour
             bossDefeated = true;
             spawnManager.ResetTransitionCounter();
             Invoke(nameof(ReEnableTrafficAndConstr), 5f);
-            //Invoke(nameof(ReplaceSpikeRoads), 8f);
             spawnBlockRoadCheck = true;
 
         }
 
     }
 
+    // This method is called to re-enable traffic and construction road spawning
     private void ReEnableTrafficAndConstr()
     {
         obstacleSpawner.stopTraffic = false;

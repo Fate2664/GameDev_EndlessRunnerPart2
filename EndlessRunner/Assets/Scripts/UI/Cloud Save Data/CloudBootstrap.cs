@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CloudBootstrap : MonoBehaviour
 {
+    // This script initializes Unity Services and signs in the user anonymously
     async void Awake()
     {
         await UnityServices.InitializeAsync();
