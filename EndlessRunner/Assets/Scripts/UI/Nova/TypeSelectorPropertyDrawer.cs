@@ -5,11 +5,7 @@ using UnityEngine;
 
 namespace NovaSamples.SettingsMenu
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class TypeSelectorAttribute : PropertyAttribute { }
-    /// <summary>
-    /// A custom property drawer for the <see cref="TypeSelectorAttribute"/>, which will allow us to select the type of object to serialized for a given <see cref="SerializeReference"/> field.
-    /// </summary>
+   
     [CustomPropertyDrawer(typeof(TypeSelectorAttribute))]
     public class TypeSelectorPropertyDrawer : PropertyDrawer
     {
