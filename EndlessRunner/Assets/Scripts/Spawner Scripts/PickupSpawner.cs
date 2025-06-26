@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
-using UnityEditor.Profiling;
+
 using UnityEngine;
 
 public class PickupSpawner : MonoBehaviour

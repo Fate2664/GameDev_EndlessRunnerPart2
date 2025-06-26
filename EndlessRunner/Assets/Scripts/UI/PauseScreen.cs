@@ -4,7 +4,7 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEditor.Search;
+
 using DG.Tweening;
 
 public class PauseScreen : MonoBehaviour
