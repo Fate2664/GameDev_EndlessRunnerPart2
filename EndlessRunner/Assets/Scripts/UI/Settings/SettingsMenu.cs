@@ -1,5 +1,6 @@
 using Nova;
 using NovaSamples.UIControls;
+using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,9 @@ public class SettingsMenu : MonoBehaviour
 
     private void Start()
     {
+        LoadAllSettings();
+        //ResetAllSettings();
+
         //Visual
         Root.AddGestureHandler<Gesture.OnHover, ToggleVisuals>(ToggleVisuals.HandleHover);
         Root.AddGestureHandler<Gesture.OnUnhover, ToggleVisuals>(ToggleVisuals.HandleUnhover);
@@ -59,7 +63,13 @@ public class SettingsMenu : MonoBehaviour
 
     }
 
+    private void OnDisable()
+    {
+        SaveAllSettings();
+    }
+
     //This method is used to select a tab and update the settings list accordingly.
+    #region HandleData
     private void SelectTab(TabButtonVisuals visuals, int index)
     {
         if (index == selectedIndex)
@@ -122,10 +132,10 @@ public class SettingsMenu : MonoBehaviour
         target.IsChecked = setting.State;
     }
 
-    //
-    //These methods are used to bind the data to the visuals for each type of setting.
-    //
+    #endregion
 
+    //These methods are used to bind the data to the visuals for each type of setting.
+    #region BindData
     private void BindTab(Data.OnBind<SettingsCollection> evt, TabButtonVisuals target, int index)
     {
         target.label.Text = evt.UserData.Category;
@@ -154,4 +164,55 @@ public class SettingsMenu : MonoBehaviour
         visuals.SelectedLabel.Text = setting.CurrentSelection;
         visuals.Collapse();
     }
+
+    #endregion
+
+
+    #region HandleSettings
+    private void ResetAllSettings()
+    {
+        foreach (var collection in SettingsCollection)
+        {
+            foreach(var setting in collection.Settings)
+            {
+                setting.ResetToDefault();
+            }
+        }
+        PlayerPrefs.Save();
+    }
+
+    private void LoadAllSettings()
+    {
+        foreach (var collection in SettingsCollection)
+        {
+            foreach(var setting in collection.Settings)
+            {
+                switch (setting)
+                {
+                    case BoolSetting boolSetting: boolSetting.Load(); break;
+                    case FloatSetting floatSetting: floatSetting.Load(); break;
+                    case MultiOptionSetting multiOptionSetting: multiOptionSetting.Load(); break;
+                }
+            }
+        }
+    }
+
+    private void SaveAllSettings()
+    {
+        foreach (var collection in SettingsCollection)
+        {
+            foreach (var setting in collection.Settings)
+            {
+                switch (setting)
+                {
+                    case BoolSetting booleanSetting: booleanSetting?.Save(); break;
+                    case FloatSetting floatSetting: floatSetting?.Save(); break;
+                    case MultiOptionSetting multiOptionSetting: multiOptionSetting?.Save(); break;
+                }
+            }
+        }
+        PlayerPrefs.Save();
+    }
+    #endregion
+
 }

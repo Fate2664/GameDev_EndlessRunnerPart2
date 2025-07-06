@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEditor;
 
 
 public class AudioManager : MonoBehaviour
@@ -28,6 +29,7 @@ public class AudioManager : MonoBehaviour
 
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
+            s.source.loop = s.loop; 
         }
         PlaySFX("MenuMusic");  // Play the menu music on start
 
@@ -36,14 +38,23 @@ public class AudioManager : MonoBehaviour
     // Method to play a specific sound effect
     public void PlaySFX(string name)
     {
-        if (Array.Exists(sounds, sound => sound.name == name && sound.source.isPlaying))
-        {
-            Array.Find(sounds, sound => sound.name == name)?.source.Stop();
-        }
-        if (Array.Find(sounds, sound => sound.name == name) == null)
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
             return;
+        
+        //Stop Dupicate
+        if (s.source.isPlaying)
+        {
+            s.source.Stop();
+        }
 
-        Array.Find(sounds, sound => sound.name == name)?.source.Play();
+        if (s.source.loop)
+        {
+            s.source.loop = true;
+        }
+
+        float categoryVolume = GetCategoryVolume(s.category);
+        s.source.volume = (s.volume * categoryVolume * (SettingsManager.Instance.MasterVolume / 100) / 100);
     }
 
     // Method to stop a specific sound
@@ -53,6 +64,21 @@ public class AudioManager : MonoBehaviour
         if (sound != null && sound.source.isPlaying)
         {
             sound.source.Stop();
+        }
+    }
+
+    private float GetCategoryVolume(SoundCategory category)
+    {
+        switch (category)
+        {
+            case SoundCategory.Music:
+                return SettingsManager.Instance.MusicVolume; 
+            case SoundCategory.Effects:
+                return SettingsManager.Instance.EffectsVolume;
+            case SoundCategory.Menu:
+                return SettingsManager.Instance.MenuVolume;
+            default:
+                return 1f;
         }
     }
 
