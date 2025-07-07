@@ -22,13 +22,19 @@ MonoBehaviour:
     - rid: 7332598407519797417
       type: {class: BoolSetting, ns: , asm: Assembly-CSharp}
       data:
+        Key: ColorBlindEnabled
         Name: Color Blind Mode
         State: 0
+        DefaultValue: 0
+        Type: 4
     - rid: 7332598407519797418
       type: {class: MultiOptionSetting, ns: , asm: Assembly-CSharp}
       data:
+        Key: ControlPrest
         Name: Control Preset
+        Type: 4
         Options:
         - WASD
         - Arrow Keys
         SelectedIndex: 0
+        DefaultIndex: 0

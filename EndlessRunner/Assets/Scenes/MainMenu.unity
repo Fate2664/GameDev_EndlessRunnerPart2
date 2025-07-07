@@ -7010,42 +7010,42 @@ MonoBehaviour:
     volume: 0.252
     pitch: 1.25
     loop: 0
-    category: 0
+    category: 3
     source: {fileID: 0}
   - name: ClickSound
     clip: {fileID: 8300000, guid: 76a3887de897d8641b9a70c232bb4e4f, type: 3}
     volume: 0.129
     pitch: 0.67
     loop: 0
-    category: 0
+    category: 3
     source: {fileID: 0}
   - name: ScreechSound
     clip: {fileID: 8300000, guid: 5c93ba264a5bab34692462e0b2cded15, type: 3}
     volume: 0.074
     pitch: 1.13
     loop: 0
-    category: 0
+    category: 2
     source: {fileID: 0}
   - name: DoublePointsPickup
     clip: {fileID: 8300000, guid: 94204294140cd4743b7bc3371b579b82, type: 3}
     volume: 0.416
     pitch: 0.99
     loop: 0
-    category: 0
+    category: 2
     source: {fileID: 0}
   - name: MenuMusic
     clip: {fileID: 8300000, guid: 9fb8f71440523be40afd4b16500074ed, type: 3}
     volume: 1
     pitch: 1
-    loop: 0
-    category: 0
+    loop: 1
+    category: 1
     source: {fileID: 0}
   - name: GameplayMusic
     clip: {fileID: 8300000, guid: 54ce71b1f749e1c4294f8acb01062609, type: 3}
     volume: 0.3
     pitch: 1
-    loop: 0
-    category: 0
+    loop: 1
+    category: 1
     source: {fileID: 0}
 --- !u!1 &2083814037
 GameObject:

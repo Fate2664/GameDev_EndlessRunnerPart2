@@ -54,7 +54,9 @@ public class AudioManager : MonoBehaviour
         }
 
         float categoryVolume = GetCategoryVolume(s.category);
-        s.source.volume = (s.volume * categoryVolume * (SettingsManager.Instance.MasterVolume / 100) / 100);
+        s.source.volume = (s.volume * (categoryVolume / 100) * (SettingsManager.Instance.MasterVolume / 100));
+        Debug.Log(s.source.volume.ToString());
+        s.source.Play();
     }
 
     // Method to stop a specific sound
@@ -79,6 +81,15 @@ public class AudioManager : MonoBehaviour
                 return SettingsManager.Instance.MenuVolume;
             default:
                 return 1f;
+        }
+    }
+
+    public void UpdateAllVolumes()
+    {
+        foreach (Sound s in sounds)
+        {
+            float categoryVolume = GetCategoryVolume(s.category);
+            s.source.volume = (s.volume * (categoryVolume / 100) * (SettingsManager.Instance.MasterVolume / 100));
         }
     }
 

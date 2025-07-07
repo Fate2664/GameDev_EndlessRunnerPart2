@@ -45,6 +45,7 @@ public class SettingsMenu : MonoBehaviour
         SettingsList.AddDataBinder<BoolSetting, ToggleVisuals>(BindToggle);
         SettingsList.AddDataBinder<FloatSetting, SliderVisuals>(BindSlider);
         SettingsList.AddDataBinder<MultiOptionSetting, DropDownVisuals>(BindDropDown);
+        SettingsList.AddDataBinder<ResolutionSetting, DropDownVisuals>(BindResolution);
 
         //Tabs
         TabBar.AddDataBinder<SettingsCollection, TabButtonVisuals>(BindTab);
@@ -62,6 +63,7 @@ public class SettingsMenu : MonoBehaviour
         }
 
     }
+
 
     private void OnDisable()
     {
@@ -109,6 +111,7 @@ public class SettingsMenu : MonoBehaviour
     // This method is called when the slider is dragged. It updates the value of the setting based on the position of the pointer.
     private void HandleSliderDragged(Gesture.OnDrag evt, SliderVisuals target, int index)
     {
+
         FloatSetting setting = CurrentSettings[index] as FloatSetting;
 
         Vector3 localPointerPos = target.SliderBackground.transform.InverseTransformPoint(evt.PointerPositions.Current);
@@ -119,7 +122,7 @@ public class SettingsMenu : MonoBehaviour
 
         float percentFromLeft = distanceFromLeft / sliderWidth;
 
-        setting.value = Mathf.Lerp(setting.Min, setting.Max, percentFromLeft);
+        setting.Value = Mathf.Lerp(setting.Min, setting.Max, percentFromLeft);
 
         target.FillBar.Size.X.Percent = percentFromLeft;
         target.ValueLabel.Text = setting.DisplayValue;
@@ -154,7 +157,20 @@ public class SettingsMenu : MonoBehaviour
         FloatSetting setting = evt.UserData;
         visuals.label.Text = setting.Name;
         visuals.ValueLabel.Text = setting.DisplayValue;
-        visuals.FillBar.Size.X.Percent = (setting.value - setting.Min) / (setting.Max - setting.Min);
+        visuals.FillBar.Size.X.Percent = (setting._value - setting.Min) / (setting.Max - setting.Min);
+
+        for (int i = 0; i < CurrentSettings.Count; i++)
+        {
+            setting = CurrentSettings[i] as FloatSetting;
+            if (setting != null && setting.Type == Setting.SettingType.Audio)
+            {
+                setting.OnValueChanged += (newVal) =>
+                {
+                    AudioManager.Instance.UpdateAllVolumes();
+                };
+            }
+        }
+
     }
 
     private void BindDropDown(Data.OnBind<MultiOptionSetting> evt, DropDownVisuals visuals, int index)
@@ -162,6 +178,20 @@ public class SettingsMenu : MonoBehaviour
         MultiOptionSetting setting = evt.UserData;
         visuals.label.Text = setting.Name;
         visuals.SelectedLabel.Text = setting.CurrentSelection;
+        visuals.Collapse();
+    }
+
+    private void BindResolution(Data.OnBind<ResolutionSetting> evt, DropDownVisuals visuals, int index)
+    {
+        ResolutionSetting setting = evt.UserData;
+
+        if (setting.Options == null || setting.Options.Length == 0)
+        {
+            setting.Initialize();
+        }
+
+        visuals.label.Text = setting.Name;
+        visuals.SelectedLabel.Text = setting.Options[setting.SelectedIndex];
         visuals.Collapse();
     }
 
@@ -173,7 +203,7 @@ public class SettingsMenu : MonoBehaviour
     {
         foreach (var collection in SettingsCollection)
         {
-            foreach(var setting in collection.Settings)
+            foreach (var setting in collection.Settings)
             {
                 setting.ResetToDefault();
             }
@@ -185,7 +215,7 @@ public class SettingsMenu : MonoBehaviour
     {
         foreach (var collection in SettingsCollection)
         {
-            foreach(var setting in collection.Settings)
+            foreach (var setting in collection.Settings)
             {
                 switch (setting)
                 {

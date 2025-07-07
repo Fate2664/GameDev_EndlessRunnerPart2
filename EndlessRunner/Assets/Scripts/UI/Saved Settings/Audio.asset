@@ -17,30 +17,51 @@ MonoBehaviour:
   - rid: 7332598407519797419
   - rid: 7332598407519797420
   - rid: 7332598407519797421
+  - rid: 2005466507359289424
   references:
     version: 2
     RefIds:
+    - rid: 2005466507359289424
+      type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
+      data:
+        Key: Effects
+        Name: Effects
+        Type: 0
+        value: 100
+        Min: 0
+        Max: 100
+        ValueFormat: '{0:0}'
+        DefaultValue: 50
     - rid: 7332598407519797419
       type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
       data:
-        Name: ' Master Volume'
-        value: 57.37447
+        Key: MasterVolume
+        Name: Master Volume
+        Type: 0
+        value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
+        DefaultValue: 50
     - rid: 7332598407519797420
       type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
       data:
+        Key: Menu
         Name: Menu
-        value: 44.398525
+        Type: 0
+        value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
+        DefaultValue: 50
     - rid: 7332598407519797421
       type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
       data:
+        Key: Music
         Name: Music
-        value: 49.896805
+        Type: 0
+        value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
+        DefaultValue: 50

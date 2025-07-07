@@ -22,18 +22,24 @@ MonoBehaviour:
     - rid: 7332598407519797422
       type: {class: MultiOptionSetting, ns: , asm: Assembly-CSharp}
       data:
+        Key: Difficulty
         Name: Difficulty
+        Type: 2
         Options:
         - Easy
         - Medium
         - Hard
         - Nightmare
-        SelectedIndex: 1
+        SelectedIndex: 0
+        DefaultIndex: 0
     - rid: 7332598407519797423
       type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
       data:
+        Key: Brightness
         Name: Brightness
-        value: 44.39853
+        Type: 2
+        value: 50
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
+        DefaultValue: 50

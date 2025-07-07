@@ -1,4 +1,6 @@
 using JetBrains.Annotations;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -8,6 +10,15 @@ public abstract class Setting
     public string Key;
     public string Name;
 
+    public enum SettingType
+    {
+        Audio,
+        Video,
+        Gameplay,
+        Keybinds,
+        Accessibility
+    }
+
     public virtual void ResetToDefault() { }
 }
 
@@ -16,6 +27,7 @@ public class BoolSetting : Setting
 {
     public bool State;
     public bool DefaultValue = false;
+    public SettingType Type;
 
     public void Save() => PlayerPrefs.SetInt(Key, State ? 1 : 0);
     public void Load() => State = PlayerPrefs.GetInt(Key, DefaultValue ? 1 : 0) == 1;
@@ -31,17 +43,23 @@ public class BoolSetting : Setting
 public class FloatSetting : Setting
 {
     [SerializeField]
-    public float value;
+    public SettingType Type;
+    public float _value;
     public float Min;
     public float Max;
     public string ValueFormat = "{0:0.0}";
     public float DefaultValue = 50f;
+    public event Action<float> OnValueChanged;
 
 
     public float Value
     {
-        get => Mathf.Clamp(value, Min, Max);
-        set => this.value = Mathf.Clamp(value, Min, Max);
+        get => Mathf.Clamp(_value, Min, Max);
+        set
+        {
+            this._value = Mathf.Clamp(value, Min, Max);
+            OnValueChanged?.Invoke(value);
+        }
     }
 
     public string DisplayValue => string.Format(ValueFormat, Value);
@@ -50,7 +68,7 @@ public class FloatSetting : Setting
     public void Load() => Value = PlayerPrefs.GetFloat(Key, DefaultValue);
     public override void ResetToDefault()
     {
-        value = DefaultValue;
+        _value = DefaultValue;
         Save();
     }
 }
@@ -59,7 +77,7 @@ public class FloatSetting : Setting
 public class MultiOptionSetting : Setting
 {
     private const string NothingSelected = "None";
-
+    public SettingType Type;
     public string[] Options = new string[0];
     public int SelectedIndex = 0;
     public int DefaultIndex = 0;

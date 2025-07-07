@@ -14,23 +14,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Category: Video
   Settings:
-  - rid: 7332598407519797424
+  - rid: 2005466507359289425
   - rid: 7332598407519797425
   references:
     version: 2
     RefIds:
-    - rid: 7332598407519797424
-      type: {class: MultiOptionSetting, ns: , asm: Assembly-CSharp}
+    - rid: 2005466507359289425
+      type: {class: ResolutionSetting, ns: , asm: Assembly-CSharp}
       data:
-        Name: Graphics Quality
+        Key: Resolution
+        Name: Resolution
+        Type: 1
         Options:
-        - Ultra
-        - High
-        - Medium
-        - Low
-        SelectedIndex: 1
+        - 640 x 480 @239.761Hz
+        - 720 x 480 @239.761Hz
+        - 720 x 576 @239.761Hz
+        - 800 x 600 @239.761Hz
+        - 1024 x 768 @239.761Hz
+        - 1152 x 864 @239.761Hz
+        - 1176 x 664 @239.761Hz
+        - 1280 x 720 @239.761Hz
+        - 1280 x 768 @239.761Hz
+        - 1280 x 800 @239.761Hz
+        - 1280 x 960 @239.761Hz
+        - 1280 x 1024 @239.761Hz
+        - 1360 x 768 @239.761Hz
+        - 1366 x 768 @239.761Hz
+        - 1440 x 900 @239.761Hz
+        - 1440 x 1080 @239.761Hz
+        - 1600 x 900 @239.761Hz
+        - 1600 x 1024 @239.761Hz
+        - 1680 x 1050 @239.761Hz
+        - 1920 x 1080 @239.761Hz
+        SelectedIndex: 5
+        DefaultIndex: 0
     - rid: 7332598407519797425
       type: {class: BoolSetting, ns: , asm: Assembly-CSharp}
       data:
+        Key: ParticlesEnabled
         Name: Enable Particle Effects
-        State: 1
+        State: 0
+        DefaultValue: 1
+        Type: 1
