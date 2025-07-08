@@ -14,7 +14,4 @@ public class SettingsCollection : ScriptableObject
     [TypeSelector]
     public List<Setting> Settings = new List<Setting>();
 
-
-
-    
 }

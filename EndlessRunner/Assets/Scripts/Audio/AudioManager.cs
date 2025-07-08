@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class AudioManager : MonoBehaviour
 {
-    [Header ("Audio Clips")]
+    [Header("Audio Clips")]
     [SerializeField] Sound[] sounds;
 
     public static AudioManager Instance { get; private set; }
@@ -29,7 +29,7 @@ public class AudioManager : MonoBehaviour
 
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
-            s.source.loop = s.loop; 
+            s.source.loop = s.loop;
         }
         PlaySFX("MenuMusic");  // Play the menu music on start
 
@@ -41,7 +41,7 @@ public class AudioManager : MonoBehaviour
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
             return;
-        
+
         //Stop Dupicate
         if (s.source.isPlaying)
         {
@@ -55,8 +55,8 @@ public class AudioManager : MonoBehaviour
 
         float categoryVolume = GetCategoryVolume(s.category);
         s.source.volume = (s.volume * (categoryVolume / 100) * (SettingsManager.Instance.MasterVolume / 100));
-        Debug.Log(s.source.volume.ToString());
         s.source.Play();
+
     }
 
     // Method to stop a specific sound
@@ -74,7 +74,7 @@ public class AudioManager : MonoBehaviour
         switch (category)
         {
             case SoundCategory.Music:
-                return SettingsManager.Instance.MusicVolume; 
+                return SettingsManager.Instance.MusicVolume;
             case SoundCategory.Effects:
                 return SettingsManager.Instance.EffectsVolume;
             case SoundCategory.Menu:

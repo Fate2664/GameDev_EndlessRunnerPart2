@@ -159,18 +159,17 @@ public class SettingsMenu : MonoBehaviour
         visuals.ValueLabel.Text = setting.DisplayValue;
         visuals.FillBar.Size.X.Percent = (setting._value - setting.Min) / (setting.Max - setting.Min);
 
-        for (int i = 0; i < CurrentSettings.Count; i++)
+        if (setting != null && setting.Type == Setting.SettingType.Audio)
         {
-            setting = CurrentSettings[i] as FloatSetting;
-            if (setting != null && setting.Type == Setting.SettingType.Audio)
-            {
-                setting.OnValueChanged += (newVal) =>
-                {
-                    AudioManager.Instance.UpdateAllVolumes();
-                };
-            }
+            setting.OnValueChanged -= OnAudioSettingChange;
+            setting.OnValueChanged += OnAudioSettingChange;
         }
 
+    }
+
+    private void OnAudioSettingChange(float value)
+    {
+        AudioManager.Instance.UpdateAllVolumes();
     }
 
     private void BindDropDown(Data.OnBind<MultiOptionSetting> evt, DropDownVisuals visuals, int index)

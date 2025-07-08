@@ -604,6 +604,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e49019d559740645aad17ba8c09d15b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioCollection: {fileID: 11400000, guid: e68290896d875204da27c3975e0356dd, type: 2}
+  GameplayCollection: {fileID: 11400000, guid: 121ea2b7c26a7694685084d86e9d29c4, type: 2}
+  AccessibilityCollection: {fileID: 11400000, guid: a2403cd36e4429841bbf346a0394d4c3, type: 2}
+  VideoCollection: {fileID: 11400000, guid: f194ff765a263b04a80ae474cf2adbc2, type: 2}
 --- !u!4 &244487302
 Transform:
   m_ObjectHideFlags: 0
