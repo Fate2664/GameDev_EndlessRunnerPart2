@@ -84,7 +84,7 @@ public class DropDownVisuals : ItemVisuals
 
         ExpandedRoot.gameObject.SetActive(true);
         OptionsList.SetDataSource(dataSource.Options);
-        OptionsList.JumpToIndex(dataSource.SelectedIndex);
+        OptionsList.JumpToIndex(dataSource.selectedIndex);
     }
 
     // This method is called when the visuals are initialized.
@@ -108,13 +108,13 @@ public class DropDownVisuals : ItemVisuals
     private void BindItem(Data.OnBind<string> evt, DropDownItemVisuals target, int index)
     {
         target.label.Text = evt.UserData;
-        target.SelectedIndicator.gameObject.SetActive(index== dataSource.SelectedIndex);
+        target.SelectedIndicator.gameObject.SetActive(index== dataSource.selectedIndex);
         target.Background.Color = index % 2 == 0 ? PrimaryRowColor : SecondaryRowColor;
     }
 
     private void HandleItemClicked(Gesture.OnClick evt, DropDownItemVisuals target, int index)
     {
-        dataSource.SelectedIndex = index;
+        dataSource.selectedIndex = index;
         SelectedLabel.Text = dataSource.CurrentSelection;
         evt.Consume();
         Collapse();

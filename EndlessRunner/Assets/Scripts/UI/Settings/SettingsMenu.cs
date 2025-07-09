@@ -22,8 +22,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void Start()
     {
-        LoadAllSettings();
-        //ResetAllSettings();
+        SettingsManager.Instance.LoadAllSettings();
 
         //Visual
         Root.AddGestureHandler<Gesture.OnHover, ToggleVisuals>(ToggleVisuals.HandleHover);
@@ -64,10 +63,9 @@ public class SettingsMenu : MonoBehaviour
 
     }
 
-
     private void OnDisable()
     {
-        SaveAllSettings();
+        SettingsManager.Instance.SaveAllSettings();
     }
 
     //This method is used to select a tab and update the settings list accordingly.
@@ -131,8 +129,8 @@ public class SettingsMenu : MonoBehaviour
     private void HandleToggleClick(Gesture.OnClick evt, ToggleVisuals target, int index)
     {
         BoolSetting setting = CurrentSettings[index] as BoolSetting;
-        setting.State = !setting.State;
-        target.IsChecked = setting.State;
+        setting.state = !setting.state;
+        target.IsChecked = setting.state;
     }
 
     #endregion
@@ -149,7 +147,10 @@ public class SettingsMenu : MonoBehaviour
     {
         BoolSetting setting = evt.UserData;
         visuals.label.Text = setting.Name;
-        visuals.IsChecked = setting.State;
+        visuals.IsChecked = setting.state;
+
+        setting.OnStateChanged -= SettingsManager.Instance.UpdateSetting;
+        setting.OnStateChanged += SettingsManager.Instance.UpdateSetting;
     }
 
     private void BindSlider(Data.OnBind<FloatSetting> evt, SliderVisuals visuals, int index)
@@ -159,17 +160,9 @@ public class SettingsMenu : MonoBehaviour
         visuals.ValueLabel.Text = setting.DisplayValue;
         visuals.FillBar.Size.X.Percent = (setting._value - setting.Min) / (setting.Max - setting.Min);
 
-        if (setting != null && setting.Type == Setting.SettingType.Audio)
-        {
-            setting.OnValueChanged -= OnAudioSettingChange;
-            setting.OnValueChanged += OnAudioSettingChange;
-        }
+        setting.OnValueChanged -= SettingsManager.Instance.UpdateSetting;
+        setting.OnValueChanged += SettingsManager.Instance.UpdateSetting;
 
-    }
-
-    private void OnAudioSettingChange(float value)
-    {
-        AudioManager.Instance.UpdateAllVolumes();
     }
 
     private void BindDropDown(Data.OnBind<MultiOptionSetting> evt, DropDownVisuals visuals, int index)
@@ -177,6 +170,9 @@ public class SettingsMenu : MonoBehaviour
         MultiOptionSetting setting = evt.UserData;
         visuals.label.Text = setting.Name;
         visuals.SelectedLabel.Text = setting.CurrentSelection;
+
+        setting.OnIndexChanged -= SettingsManager.Instance.UpdateSetting;
+        setting.OnIndexChanged += SettingsManager.Instance.UpdateSetting;
         visuals.Collapse();
     }
 
@@ -190,58 +186,10 @@ public class SettingsMenu : MonoBehaviour
         }
 
         visuals.label.Text = setting.Name;
-        visuals.SelectedLabel.Text = setting.Options[setting.SelectedIndex];
+        visuals.SelectedLabel.Text = setting.Options[setting.selectedIndex];
         visuals.Collapse();
     }
 
-    #endregion
-
-
-    #region HandleSettings
-    private void ResetAllSettings()
-    {
-        foreach (var collection in SettingsCollection)
-        {
-            foreach (var setting in collection.Settings)
-            {
-                setting.ResetToDefault();
-            }
-        }
-        PlayerPrefs.Save();
-    }
-
-    private void LoadAllSettings()
-    {
-        foreach (var collection in SettingsCollection)
-        {
-            foreach (var setting in collection.Settings)
-            {
-                switch (setting)
-                {
-                    case BoolSetting boolSetting: boolSetting.Load(); break;
-                    case FloatSetting floatSetting: floatSetting.Load(); break;
-                    case MultiOptionSetting multiOptionSetting: multiOptionSetting.Load(); break;
-                }
-            }
-        }
-    }
-
-    private void SaveAllSettings()
-    {
-        foreach (var collection in SettingsCollection)
-        {
-            foreach (var setting in collection.Settings)
-            {
-                switch (setting)
-                {
-                    case BoolSetting booleanSetting: booleanSetting?.Save(); break;
-                    case FloatSetting floatSetting: floatSetting?.Save(); break;
-                    case MultiOptionSetting multiOptionSetting: multiOptionSetting?.Save(); break;
-                }
-            }
-        }
-        PlayerPrefs.Save();
-    }
     #endregion
 
 }

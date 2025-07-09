@@ -9,7 +9,7 @@ public abstract class Setting
 {
     public string Key;
     public string Name;
-
+   
     public enum SettingType
     {
         Audio,
@@ -25,10 +25,20 @@ public abstract class Setting
 [System.Serializable]
 public class BoolSetting : Setting  
 {
-    public bool State;
+    public bool state;
     public bool DefaultValue = false;
     public SettingType Type;
+    public event Action<Setting> OnStateChanged;
 
+    public bool State
+    {
+        get => state;
+        set
+        {
+            this.state = value;
+            OnStateChanged?.Invoke(this);
+        }
+    }
     public void Save() => PlayerPrefs.SetInt(Key, State ? 1 : 0);
     public void Load() => State = PlayerPrefs.GetInt(Key, DefaultValue ? 1 : 0) == 1;
 
@@ -49,8 +59,7 @@ public class FloatSetting : Setting
     public float Max;
     public string ValueFormat = "{0:0.0}";
     public float DefaultValue = 50f;
-    public event Action<float> OnValueChanged;
-
+    public event Action<Setting> OnValueChanged;
 
     public float Value
     {
@@ -58,7 +67,7 @@ public class FloatSetting : Setting
         set
         {
             this._value = Mathf.Clamp(value, Min, Max);
-            OnValueChanged?.Invoke(value);
+            OnValueChanged?.Invoke(this);
         }
     }
 
@@ -79,8 +88,19 @@ public class MultiOptionSetting : Setting
     private const string NothingSelected = "None";
     public SettingType Type;
     public string[] Options = new string[0];
-    public int SelectedIndex = 0;
+    public int selectedIndex = 0;
     public int DefaultIndex = 0;
+    public event Action<Setting> OnIndexChanged;
+
+    public int SelectedIndex
+    {
+        get => selectedIndex;
+        set
+        {
+            selectedIndex = value;
+            OnIndexChanged?.Invoke(this);
+        }
+    }
 
     public string CurrentSelection => SelectedIndex >= 0 && SelectedIndex < Options.Length ? Options[SelectedIndex] : NothingSelected;
 
@@ -116,6 +136,6 @@ public class ResolutionSetting : MultiOptionSetting
         {
             Initialize();
         }
-        return Resolutions[Mathf.Clamp(SelectedIndex, 0, Resolutions.Length - 1)];
+        return Resolutions[Mathf.Clamp(selectedIndex, 0, Resolutions.Length - 1)];
     }
 }

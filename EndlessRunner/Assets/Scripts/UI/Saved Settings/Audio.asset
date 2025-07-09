@@ -27,7 +27,7 @@ MonoBehaviour:
         Key: Effects
         Name: Effects
         Type: 0
-        value: 100
+        _value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -38,7 +38,7 @@ MonoBehaviour:
         Key: MasterVolume
         Name: Master Volume
         Type: 0
-        value: 100
+        _value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -49,7 +49,7 @@ MonoBehaviour:
         Key: Menu
         Name: Menu
         Type: 0
-        value: 100
+        _value: 100
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -60,7 +60,7 @@ MonoBehaviour:
         Key: Music
         Name: Music
         Type: 0
-        value: 100
+        _value: 0
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
