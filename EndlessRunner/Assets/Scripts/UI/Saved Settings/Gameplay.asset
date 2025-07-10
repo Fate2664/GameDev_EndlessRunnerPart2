@@ -24,21 +24,23 @@ MonoBehaviour:
       data:
         Key: Difficulty
         Name: Difficulty
+        Order: 0
         Type: 2
         Options:
         - Easy
         - Medium
         - Hard
         - Nightmare
-        SelectedIndex: 0
+        selectedIndex: 0
         DefaultIndex: 0
     - rid: 7332598407519797423
       type: {class: FloatSetting, ns: , asm: Assembly-CSharp}
       data:
         Key: Brightness
         Name: Brightness
+        Order: 1
         Type: 2
-        value: 50
+        _value: 50
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'

@@ -26,8 +26,9 @@ MonoBehaviour:
       data:
         Key: Effects
         Name: Effects
+        Order: 3
         Type: 0
-        _value: 100
+        _value: 50
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -37,8 +38,9 @@ MonoBehaviour:
       data:
         Key: MasterVolume
         Name: Master Volume
+        Order: 0
         Type: 0
-        _value: 100
+        _value: 50
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -48,8 +50,9 @@ MonoBehaviour:
       data:
         Key: Menu
         Name: Menu
+        Order: 1
         Type: 0
-        _value: 100
+        _value: 50
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'
@@ -59,8 +62,9 @@ MonoBehaviour:
       data:
         Key: Music
         Name: Music
+        Order: 2
         Type: 0
-        _value: 0
+        _value: 50
         Min: 0
         Max: 100
         ValueFormat: '{0:0}'

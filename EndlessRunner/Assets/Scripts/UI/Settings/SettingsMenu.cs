@@ -84,7 +84,11 @@ public class SettingsMenu : MonoBehaviour
 
         selectedIndex = index;
         visuals.isSelected = true;
-        SettingsList.SetDataSource(CurrentSettings);
+
+        var sorted = new List<Setting>(CurrentSettings);
+        sorted.Sort((a,b) => a.Order.CompareTo(b.Order));
+
+        SettingsList.SetDataSource(sorted);
     }
 
     private void HandleTabClicked(Gesture.OnClick evt, TabButtonVisuals target, int index)

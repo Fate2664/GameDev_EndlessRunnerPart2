@@ -43,7 +43,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-           ResetAllSettings();
+            ResetAllSettings();
         }
     }
 
@@ -118,12 +118,7 @@ public class SettingsManager : MonoBehaviour
     {
         if (scene.name == "SettingsScreen")
         {
-            menu = FindObjectOfType<UIBlock2D>().GetComponent<SettingsMenu>();
-            if (menu != null)
-            {
-                Debug.Log("Menu found");
-            }
-            else Debug.Log("Not Found");
+            menu = FindAnyObjectByType<SettingsMenu>();
         }
     }
 
@@ -140,6 +135,7 @@ public class SettingsManager : MonoBehaviour
             }
         }
         PlayerPrefs.Save();
+        menu.SettingsList.Refresh();
     }
 
     public void LoadAllSettings()
@@ -187,19 +183,16 @@ public class SettingsManager : MonoBehaviour
             {
                 case Setting.SettingType.Audio:
                     AudioManager.Instance.UpdateAllVolumes();
-                    Debug.Log("Audio Setting Changed");
                     break;
 
             }
         }
         else if (setting is MultiOptionSetting multiOptionSetting)
         {
-            Debug.Log("DropDown Setting Changed");
 
         }
         else if (setting is BoolSetting boolSetting)
         {
-            Debug.Log("Bool Setting Changed");
 
         }
 

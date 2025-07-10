@@ -10,6 +10,8 @@ public abstract class Setting
     public string Key;
     public string Name;
    
+    public int Order = 0;
+
     public enum SettingType
     {
         Audio,
@@ -118,16 +120,18 @@ public class MultiOptionSetting : Setting
 public class ResolutionSetting : MultiOptionSetting
 {
     public Resolution[] Resolutions;
-
     public void Initialize()
     {
         Resolutions = Screen.resolutions;
         Options = new string[Resolutions.Length];
-        for (int i = 0; i < Resolutions.Length; i++)
+        int j = 0;
+        for (int i = Resolutions.Length - 1; i >= 0; i--)
         {
             Resolution r = Screen.resolutions[i];
-            Options[i] = $"{r.width} x {r.height} @{r.refreshRateRatio}Hz";
+            Options[j] = $"{r.width} x {r.height} @{r.refreshRateRatio}Hz";
+            j++;
         }
+
     }
 
     public Resolution GetSelectedResolution()
