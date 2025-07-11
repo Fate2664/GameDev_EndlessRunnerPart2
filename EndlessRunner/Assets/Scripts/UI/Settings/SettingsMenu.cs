@@ -15,9 +15,10 @@ public class SettingsMenu : MonoBehaviour
     public List<SettingsCollection> SettingsCollection = null;
     public ListView TabBar = null;
     public ListView SettingsList = null;
+    public UIBlock2D PopupBox = null;
 
     private int selectedIndex = -1;
-
+    private DialoguePopup popupBox;
     private List<Setting> CurrentSettings => SettingsCollection[selectedIndex].Settings;
 
     private void Start()
@@ -61,6 +62,12 @@ public class SettingsMenu : MonoBehaviour
             SelectTab(firstTab.Visuals as TabButtonVisuals, 0);
         }
 
+
+        //Popup Box
+        popupBox = new DialoguePopup(PopupBox, 0, 0, PopupBox.Size.X.Value, PopupBox.Size.Y.Value, 1f);
+
+
+
     }
 
     private void OnDisable()
@@ -68,7 +75,6 @@ public class SettingsMenu : MonoBehaviour
         SettingsManager.Instance.SaveAllSettings();
     }
 
-    //This method is used to select a tab and update the settings list accordingly.
     #region HandleData
     private void SelectTab(TabButtonVisuals visuals, int index)
     {
@@ -86,7 +92,7 @@ public class SettingsMenu : MonoBehaviour
         visuals.isSelected = true;
 
         var sorted = new List<Setting>(CurrentSettings);
-        sorted.Sort((a,b) => a.Order.CompareTo(b.Order));
+        sorted.Sort((a, b) => a.Order.CompareTo(b.Order));
 
         SettingsList.SetDataSource(sorted);
     }
@@ -110,7 +116,6 @@ public class SettingsMenu : MonoBehaviour
         }
     }
 
-    // This method is called when the slider is dragged. It updates the value of the setting based on the position of the pointer.
     private void HandleSliderDragged(Gesture.OnDrag evt, SliderVisuals target, int index)
     {
 
