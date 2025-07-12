@@ -1,10 +1,8 @@
 using Nova;
-using NovaSamples.UIControls;
 using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -15,10 +13,9 @@ public class SettingsMenu : MonoBehaviour
     public List<SettingsCollection> SettingsCollection = null;
     public ListView TabBar = null;
     public ListView SettingsList = null;
-    public UIBlock2D PopupBox = null;
+    public PopupBoxVisuals PopupBox = null;
 
     private int selectedIndex = -1;
-    private DialoguePopup popupBox;
     private List<Setting> CurrentSettings => SettingsCollection[selectedIndex].Settings;
 
     private void Start()
@@ -35,6 +32,7 @@ public class SettingsMenu : MonoBehaviour
         Root.AddGestureHandler<Gesture.OnUnhover, DropDownVisuals>(DropDownVisuals.HandleUnhover);
         Root.AddGestureHandler<Gesture.OnPress, DropDownVisuals>(DropDownVisuals.HandlePress);
         Root.AddGestureHandler<Gesture.OnRelease, DropDownVisuals>(DropDownVisuals.HandleRelease);
+
 
         //State Changing
         SettingsList.AddGestureHandler<Gesture.OnClick, ToggleVisuals>(HandleToggleClick);
@@ -62,12 +60,19 @@ public class SettingsMenu : MonoBehaviour
             SelectTab(firstTab.Visuals as TabButtonVisuals, 0);
         }
 
+    }
 
-        //Popup Box
-        popupBox = new DialoguePopup(PopupBox, 0, 0, PopupBox.Size.X.Value, PopupBox.Size.Y.Value, 1f);
-
-
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            List<PopupButtonData> buttons = new List<PopupButtonData>
+            {
+                new PopupButtonData("Confirm", () => Debug.Log("Confirmed")),
+                new PopupButtonData("Cancel", () => Debug.Log("Cancel"))
+            };
+            PopupBox.Show("Are you sure you want to reset settings?", buttons);
+        }
     }
 
     private void OnDisable()
@@ -140,6 +145,17 @@ public class SettingsMenu : MonoBehaviour
         BoolSetting setting = CurrentSettings[index] as BoolSetting;
         setting.state = !setting.state;
         target.IsChecked = setting.state;
+    }
+
+    private void HandlePopupButtonClicked(Gesture.OnClick evt, PopupButtonVisuals target, int index)
+    {
+        switch(target.ButtonLabel.Text)
+        {
+            case "Confirm":
+                break;
+            case "Cancel":
+                break;
+        }
     }
 
     #endregion

@@ -142,3 +142,5 @@ public class DropDownVisuals : ItemVisuals
         AudioManager.Instance?.PlaySFX("HoverSound");
     }
 }
+
+

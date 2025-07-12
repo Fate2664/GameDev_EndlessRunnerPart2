@@ -39,13 +39,7 @@ public class SettingsManager : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            ResetAllSettings();
-        }
-    }
+  
 
     private void OnEnable()
     {

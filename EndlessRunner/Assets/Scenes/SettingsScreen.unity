@@ -683,7 +683,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listItemPrefabs:
-  - {fileID: 5437144875056061294, guid: 2d7993cc7f7518246b18ed671e249607, type: 3}
+  - {fileID: 1457276131229165597, guid: 2d7993cc7f7518246b18ed671e249607, type: 3}
   outOfViewDistance: 0
   _uiBlock: {fileID: 0}
 --- !u!114 &1113393882
@@ -907,8 +907,7 @@ Transform:
   m_LocalPosition: {x: 0, y: -119.93201, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1986458005368373016}
+  m_Children: []
   m_Father: {fileID: 2040330425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1227299151
@@ -924,7 +923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listItemPrefabs:
-  - {fileID: 7438840464690952614, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
+  - {fileID: 3269862358012575335, guid: eedc2ee52118ad54cb9d412c1d7a2676, type: 3}
   outOfViewDistance: 0
   _uiBlock: {fileID: 0}
 --- !u!114 &1227299152
@@ -1070,7 +1069,7 @@ MonoBehaviour:
     AspectRatio: {x: 0, y: 0, z: 0}
     AspectRatioAxis: 0
   autoLayout:
-    Axis: 0
+    Axis: 1
     Spacing:
       Raw: 0
       Type: 0
@@ -1442,7 +1441,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a2403cd36e4429841bbf346a0394d4c3, type: 2}
   TabBar: {fileID: 1113393881}
   SettingsList: {fileID: 1851105247}
-  PopupBox: {fileID: 2040330423}
+  PopupBox:
+    Background: {fileID: 2040330423}
+    PopupText: {fileID: 2133186571}
+    ButtonRoot: {fileID: 1227299152}
+    ButtonList: {fileID: 1227299151}
+    MaxWidth: 1000
+    MaxHeight: 500
+    PopinDuration: 0.5
 --- !u!114 &1502397441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2624,14 +2630,13 @@ GameObject:
   - component: {fileID: 2040330425}
   - component: {fileID: 2040330424}
   - component: {fileID: 2040330423}
-  - component: {fileID: 2040330427}
   m_Layer: 0
   m_Name: PopupBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2040330423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2908,34 +2913,6 @@ Transform:
   - {fileID: 1227299150}
   m_Father: {fileID: 1502397445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2040330427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2040330422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0a75001f00536d40ad613f41ed2bdc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visuals:
-    rid: 2005466594300133486
-  references:
-    version: 2
-    RefIds:
-    - rid: 2005466594300133486
-      type: {class: PopupBoxVisuals, ns: , asm: Assembly-CSharp}
-      data:
-        PopupText: {fileID: 2133186571}
-        Background: {fileID: 2040330423}
-        ButtonList: {fileID: 1227299151}
-        DefaultColor: {r: 0.101960786, g: 0.25882354, b: 0.3882353, a: 1}
-        SelectedColor: {r: 0.049928807, g: 0.37624186, b: 0.6226415, a: 1}
-        DefaultGradientColor: {r: 0.21176471, g: 0.4627451, b: 0.6509804, a: 1}
-        HoveredGradientColor: {r: 0.0744927, g: 0.36479, b: 0.5849056, a: 1}
-        PressedGradientColor: {r: 0.1194375, g: 0.28369123, b: 0.41509432, a: 1}
 --- !u!1 &2112989784
 GameObject:
   m_ObjectHideFlags: 0
@@ -3677,71 +3654,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2905764967384224458, guid: 33994460efecd9d4794903c0f8d9a630, type: 3}
   m_PrefabInstance: {fileID: 1880523108}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1986458005368373016 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-  m_PrefabInstance: {fileID: 6703878136110799106}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &6703878136110799106
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1227299150}
-    m_Modifications:
-    - target: {fileID: 715090169248665916, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_Name
-      value: PopupButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -260
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -30.067993
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8813444735997402952, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 150365940728685525, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-  m_SourcePrefab: {fileID: 100100000, guid: 1078bca9c13d34b4cbac5ae0d6ad79c3, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
