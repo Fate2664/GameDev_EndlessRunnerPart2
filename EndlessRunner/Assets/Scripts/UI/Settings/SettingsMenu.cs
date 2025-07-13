@@ -147,17 +147,6 @@ public class SettingsMenu : MonoBehaviour
         target.IsChecked = setting.state;
     }
 
-    private void HandlePopupButtonClicked(Gesture.OnClick evt, PopupButtonVisuals target, int index)
-    {
-        switch(target.ButtonLabel.Text)
-        {
-            case "Confirm":
-                break;
-            case "Cancel":
-                break;
-        }
-    }
-
     #endregion
 
     //These methods are used to bind the data to the visuals for each type of setting.

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Nova;
+using System;
 using UnityEngine;
 
 public class DialoguePopup
@@ -44,9 +45,6 @@ public class DialoguePopup
     {
         if (root != null)
         {
-            root.Size.X.Value = startingHeight;
-            root.Size.Y.Value = startingWidth;
-
             DOTween.Kill(root);
 
             Sequence sequence = DOTween.Sequence();
@@ -55,7 +53,6 @@ public class DialoguePopup
             sequence.Join(DOTween.To(() => root.Size.Y.Value, y => root.Size.Y.Value = y, startingHeight, duration));
 
             sequence.SetEase(Ease.InBack);
-
         }
     }
 }

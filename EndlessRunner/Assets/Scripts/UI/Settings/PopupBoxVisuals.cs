@@ -1,15 +1,14 @@
+using DG.Tweening;
 using Nova;
 using NovaSamples.UIControls;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
 
 //BUGS:
-//Popup text not displaying correct text
-//Popup text needs to be delayed for popin and out
-//First Popup the buttons dont load
-//Buttons and text dont go away when pop out
+//When I reopen the popup menu for the second time, the cancel button does not activate for some reason
 
 
 [System.Serializable]
@@ -53,28 +52,37 @@ public class PopupBoxVisuals : ItemVisuals
     private bool EventHandlersRegistered = false;
     private List<PopupButtonData> currentButtons;
 
-    public bool IsVisible => Background.gameObject.activeSelf;
-
     public void Show(string message, List<PopupButtonData> buttons)
     {
         EnsureEventHandlers();
+        
 
         if (Popup == null)
         {
             Popup = new DialoguePopup(Background, 0, 0, MaxWidth, MaxHeight, PopinDuration);
 
-        }  
-        
-        message = PopupText.Text;
-        currentButtons = buttons;
-        ButtonList.SetDataSource(currentButtons);
-        Background.gameObject.SetActive(true);
+        }
 
+        PopupText.Text = message;
+        PopupText.Visible = false;
+
+        currentButtons = buttons;
+        Background.gameObject.SetActive(true);
+        ButtonList.SetDataSource<PopupButtonData>(null);  
+        ButtonList.SetDataSource(currentButtons);
         Popup.PopIn();
+
+        DOTween.Sequence().AppendInterval(0.12f).AppendCallback(() => PopupText.Visible = true);
     }
 
     public void Hide()
     {
+        DOTween.Sequence().AppendInterval(0.3f).AppendCallback(() =>
+        {
+            PopupText.Visible = false;
+            ButtonList.SetDataSource<PopupButtonData>(null);
+        });
+        
         Popup?.PopOut();
     }
 
@@ -94,6 +102,8 @@ public class PopupBoxVisuals : ItemVisuals
 
     private void BindData(Data.OnBind<PopupButtonData> evt, PopupButtonVisuals target, int index)
     {
+        PopupButtonData data = evt.UserData;
+        evt.View.gameObject.SetActive(true);
         target.ButtonLabel.Text = evt.UserData.Label;
     }
 
