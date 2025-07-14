@@ -43,12 +43,9 @@ public class PopupBoxVisuals : ItemVisuals
     public UIBlock ButtonRoot = null;
     public ListView ButtonList = null;
 
-    public float MaxWidth = 1000;
-    public float MaxHeight = 500;
     public float PopinDuration = 0.5f;
 
-
-    private DialoguePopup Popup;
+    private DialoguePopup Popup = null;
     private bool EventHandlersRegistered = false;
     private List<PopupButtonData> currentButtons;
 
@@ -59,17 +56,16 @@ public class PopupBoxVisuals : ItemVisuals
 
         if (Popup == null)
         {
-            Popup = new DialoguePopup(Background, 0, 0, MaxWidth, MaxHeight, PopinDuration);
-
+            Popup = new DialoguePopup(Background, PopinDuration);
         }
 
         PopupText.Text = message;
         PopupText.Visible = false;
 
-        currentButtons = buttons;
         Background.gameObject.SetActive(true);
-        ButtonList.SetDataSource<PopupButtonData>(null);  
+        currentButtons = new List<PopupButtonData>(buttons);
         ButtonList.SetDataSource(currentButtons);
+
         Popup.PopIn();
 
         DOTween.Sequence().AppendInterval(0.12f).AppendCallback(() => PopupText.Visible = true);
@@ -77,13 +73,15 @@ public class PopupBoxVisuals : ItemVisuals
 
     public void Hide()
     {
+        Popup?.PopOut();
+
         DOTween.Sequence().AppendInterval(0.3f).AppendCallback(() =>
         {
             PopupText.Visible = false;
             ButtonList.SetDataSource<PopupButtonData>(null);
         });
         
-        Popup?.PopOut();
+
     }
 
     public void EnsureEventHandlers()
@@ -102,8 +100,6 @@ public class PopupBoxVisuals : ItemVisuals
 
     private void BindData(Data.OnBind<PopupButtonData> evt, PopupButtonVisuals target, int index)
     {
-        PopupButtonData data = evt.UserData;
-        evt.View.gameObject.SetActive(true);
         target.ButtonLabel.Text = evt.UserData.Label;
     }
 

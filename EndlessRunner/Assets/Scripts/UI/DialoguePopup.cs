@@ -6,19 +6,15 @@ using UnityEngine;
 public class DialoguePopup
 {
     private UIBlock2D root;
-    private float startingWidth;
-    private float startingHeight;
-    private float endingWidth;
-    private float endingHeight;
+    private Vector3 startingScale;
+    private Vector3 endingScale;
     private float duration;
 
-    public DialoguePopup(UIBlock2D root, float startingWidth, float startingHeight, float endingWidth, float endingHeight, float duration)
+    public DialoguePopup(UIBlock2D root, float duration)
     {
         this.root = root;
-        this.startingWidth = startingWidth;
-        this.startingHeight = startingHeight;
-        this.endingWidth = endingWidth;
-        this.endingHeight = endingHeight;
+        this.startingScale = Vector3.zero;
+        this.endingScale = Vector3.one;
         this.duration = duration;
     }
 
@@ -26,15 +22,14 @@ public class DialoguePopup
     {
         if (root != null)
         {
-            root.Size.X.Value = startingHeight;
-            root.Size.Y.Value = startingWidth;
 
-            DOTween.Kill(root);
+            root.transform.localScale = startingScale;
+
+            DOTween.Kill(root.transform);
 
             Sequence sequence = DOTween.Sequence();
 
-            sequence.Join(DOTween.To(() => root.Size.X.Value, x => root.Size.X.Value = x, endingWidth, duration));
-            sequence.Join(DOTween.To(() => root.Size.Y.Value, y => root.Size.Y.Value = y, endingHeight, duration));
+            sequence.Join(root.transform.DOScale(endingScale, duration));
 
             sequence.SetEase(Ease.OutBack);
 
@@ -43,14 +38,13 @@ public class DialoguePopup
 
     public void PopOut()
     {
-        if (root != null)
+        if (root != null && root.gameObject.activeSelf == true)
         {
-            DOTween.Kill(root);
+            DOTween.Kill(root.transform);
 
             Sequence sequence = DOTween.Sequence();
 
-            sequence.Join(DOTween.To(() => root.Size.X.Value, x => root.Size.X.Value = x, startingWidth, duration));
-            sequence.Join(DOTween.To(() => root.Size.Y.Value, y => root.Size.Y.Value = y, startingHeight, duration));
+            sequence.Join(root.transform.DOScale(startingScale, duration));
 
             sequence.SetEase(Ease.InBack);
         }

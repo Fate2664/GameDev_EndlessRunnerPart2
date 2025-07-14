@@ -99,7 +99,7 @@ public class MultiOptionSetting : Setting
         get => selectedIndex;
         set
         {
-            selectedIndex = value;
+            this.selectedIndex = value;
             OnIndexChanged?.Invoke(this);
         }
     }

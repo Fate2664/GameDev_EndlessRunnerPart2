@@ -24,7 +24,7 @@ MonoBehaviour:
       data:
         Key: Resolution
         Name: Resolution
-        Order: 0
+        Order: 1
         Type: 1
         Options:
         - 1920 x 1080 @239.761Hz
@@ -54,7 +54,7 @@ MonoBehaviour:
       data:
         Key: ParticlesEnabled
         Name: Enable Particle Effects
-        Order: 1
+        Order: 0
         state: 1
         DefaultValue: 1
         Type: 1
