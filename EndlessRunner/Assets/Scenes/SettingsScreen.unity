@@ -1446,8 +1446,6 @@ MonoBehaviour:
     PopupText: {fileID: 2133186571}
     ButtonRoot: {fileID: 1227299152}
     ButtonList: {fileID: 1227299151}
-    MaxWidth: 1000
-    MaxHeight: 500
     PopinDuration: 0.5
 --- !u!114 &1502397441
 MonoBehaviour:
@@ -2475,8 +2473,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   listItemPrefabs:
   - {fileID: 4421463292431701519, guid: 30d6cc712fe27ca4e81563e0af2c211d, type: 3}
-  - {fileID: 5146389652625059120, guid: 37cbb5e43349c8a46a77b6c14a9464fa, type: 3}
-  - {fileID: 1118683948751960058, guid: 7de56527f01abeb4f80e300f0451fd3a, type: 3}
+  - {fileID: 1225091411638551206, guid: 25cb9a4552dd69e48b1865a6cc0946a3, type: 3}
+  - {fileID: 7192478110229131365, guid: d753a17ee07db36439caf2bf0d572eae, type: 3}
   outOfViewDistance: 0
   _uiBlock: {fileID: 0}
 --- !u!114 &1851105248
@@ -2632,7 +2630,7 @@ MonoBehaviour:
     AutoSpace: 0
     ReverseOrder: 0
     alignment: 0
-    Offset: 0
+    Offset: 100
     Cross:
       Axis: 0
       Spacing:

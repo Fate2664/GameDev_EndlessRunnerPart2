@@ -46,7 +46,10 @@ public class DialoguePopup
 
             sequence.Join(root.transform.DOScale(startingScale, duration));
 
-            sequence.SetEase(Ease.InBack);
+            sequence.SetEase(Ease.InBack).OnComplete(() =>
+            {
+                root.gameObject.SetActive(false);
+            });
         }
     }
 }

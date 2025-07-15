@@ -17,6 +17,7 @@ public class SettingsMenu : MonoBehaviour
 
     private int selectedIndex = -1;
     private List<Setting> CurrentSettings => SettingsCollection[selectedIndex].Settings;
+    private List<Setting> currentSortedSettings;
 
     private void Start()
     {
@@ -95,10 +96,10 @@ public class SettingsMenu : MonoBehaviour
         selectedIndex = index;
         visuals.isSelected = true;
 
-        var sorted = new List<Setting>(CurrentSettings);
-        sorted.Sort((a, b) => a.Order.CompareTo(b.Order));
+        currentSortedSettings = new List<Setting>(CurrentSettings);
+        currentSortedSettings.Sort((a, b) => a.Order.CompareTo(b.Order));
 
-        SettingsList.SetDataSource(sorted);
+        SettingsList.SetDataSource(currentSortedSettings);
     }
 
     private void HandleTabClicked(Gesture.OnClick evt, TabButtonVisuals target, int index)
@@ -108,7 +109,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void HandleDropDownClick(Gesture.OnClick evt, DropDownVisuals target, int index)
     {
-        MultiOptionSetting setting = CurrentSettings[index] as MultiOptionSetting;
+        MultiOptionSetting setting = currentSortedSettings[index] as MultiOptionSetting;
 
         if (target.isExpanded)
         {
@@ -123,7 +124,7 @@ public class SettingsMenu : MonoBehaviour
     private void HandleSliderDragged(Gesture.OnDrag evt, SliderVisuals target, int index)
     {
 
-        FloatSetting setting = CurrentSettings[index] as FloatSetting;
+        FloatSetting setting = currentSortedSettings[index] as FloatSetting;
 
         Vector3 localPointerPos = target.SliderBackground.transform.InverseTransformPoint(evt.PointerPositions.Current);
 
@@ -141,7 +142,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void HandleToggleClick(Gesture.OnClick evt, ToggleVisuals target, int index)
     {
-        BoolSetting setting = CurrentSettings[index] as BoolSetting;
+        BoolSetting setting = currentSortedSettings[index] as BoolSetting;
         setting.state = !setting.state;
         target.IsChecked = setting.state;
     }

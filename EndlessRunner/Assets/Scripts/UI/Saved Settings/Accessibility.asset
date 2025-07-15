@@ -24,7 +24,7 @@ MonoBehaviour:
       data:
         Key: ColorBlindEnabled
         Name: Color Blind Mode
-        Order: 0
+        Order: 1
         state: 0
         DefaultValue: 0
         Type: 4
@@ -33,7 +33,7 @@ MonoBehaviour:
       data:
         Key: ControlPrest
         Name: Control Preset
-        Order: 1
+        Order: 0
         Type: 4
         Options:
         - WASD

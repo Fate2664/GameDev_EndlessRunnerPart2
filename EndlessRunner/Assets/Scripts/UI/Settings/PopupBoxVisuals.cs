@@ -7,9 +7,6 @@ using UnityEditor.Search;
 using UnityEngine;
 
 
-//BUGS:
-//When I reopen the popup menu for the second time, the cancel button does not activate for some reason
-
 
 [System.Serializable]
 public class PopupButtonVisuals : ItemVisuals
