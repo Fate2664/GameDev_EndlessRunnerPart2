@@ -68,7 +68,7 @@ public class SettingsMenu : MonoBehaviour
         {
             List<PopupButtonData> buttons = new List<PopupButtonData>
             {
-                new PopupButtonData("Confirm", () => Debug.Log("Confirmed")),
+                new PopupButtonData("Confirm", () => SettingsManager.Instance.ResetAllSettings()),
                 new PopupButtonData("Cancel", () => Debug.Log("Cancel"))
             };
             PopupBox.Show("Are you sure you want to reset settings?", buttons);
