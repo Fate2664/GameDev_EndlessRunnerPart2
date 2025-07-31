@@ -9,6 +9,7 @@ public class IndicatorManager : MonoBehaviour
     //VARIABLES
     [SerializeField] private UIBlock2D indicator;
     [SerializeField] float scaleDuration = 0.5f;
+    
 
     private List<IInteractable> nearbyInteracts = new List<IInteractable>();
 

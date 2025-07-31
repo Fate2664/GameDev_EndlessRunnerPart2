@@ -26,7 +26,7 @@ public class TestInteractable : MonoBehaviour, IInteractable
     //COLLISION
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player Hitbox")
         {
             indicatorManager.AddInteract(this);
             indicatorManager.ShowIndicator();
@@ -35,7 +35,7 @@ public class TestInteractable : MonoBehaviour, IInteractable
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player Hitbox")
         {
             indicatorManager.RemoveInteract(this);
             indicatorManager.HideIndicator();
