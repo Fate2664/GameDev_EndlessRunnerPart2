@@ -200,10 +200,12 @@ MonoBehaviour:
   _maxSpeed: 77
   _accelerationMultiplier: 7030
   _maxSteeringAngle: 10
+  _steeringSpeed: 0.5
+  _decelerationMultiplier: 2
   _bodyMassCenter: {x: 0, y: 0, z: 0}
   _laneDistance: 20
   _centeringForce: 5
-  _dampingForce: 0.05
+  _dampingForce: 0.2
   _frontLeftMesh: {fileID: 4662635221632510073}
   _frontLeftCollider: {fileID: 6610536707258190747}
   _frontRightMesh: {fileID: 6696555834307767856}
@@ -215,9 +217,6 @@ MonoBehaviour:
   _useEffects: 1
   _RLWParticleSystem: {fileID: 8790070151089670519}
   _RRWParticleSystem: {fileID: 2550169060686204491}
-  _LeftExhaustFlame: {fileID: 0}
-  _RightExhaustFlame: {fileID: 0}
-  shield: {fileID: 0}
   _RLWTireSkid: {fileID: 1343978661656500789}
   _RRWTireSkid: {fileID: 4338698314717192485}
   _useUI: 0
@@ -225,18 +224,12 @@ MonoBehaviour:
   _useSounds: 0
   _carEngineSound: {fileID: 0}
   _tireScreechSound: {fileID: 0}
-  _laneChangeScreechClip: {fileID: 8300000, guid: f632e2ace80a32e47a2c531f64901a50, type: 3}
-  _laneChangeScreechVolume: 0.22
-  _laneChangeScreechMinSidewaysSpeed: 10
-  _laneChangeScreechMaxSidewaysSpeed: 80
-  _laneChangeScreechFadeSpeed: 2.5
   carSpeed: 0
   isDrifting: 0
   isTractionLocked: 0
   prometeoCarController: {fileID: 0}
   spawnManager: {fileID: 0}
   scoreManager: {fileID: 0}
-  pauseScreenObject: {fileID: 0}
 --- !u!114 &1963393831885958008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,8 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathScreen: {fileID: 0}
-  playerImmune: 0
-  isDead: 0
+  PlayerImmune: 0
 --- !u!1 &1529314327722300146
 GameObject:
   m_ObjectHideFlags: 0
