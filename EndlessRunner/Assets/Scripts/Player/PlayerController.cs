@@ -166,7 +166,6 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector]
     public float carSpeed; // Used to store the speed of the car.
-    [HideInInspector]
     public bool isDrifting; // Used to know whether the car is drifting or not.
     [HideInInspector]
     public bool isTractionLocked; // Used to know whether the traction of the car is locked or not.
