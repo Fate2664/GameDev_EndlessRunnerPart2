@@ -15,14 +15,12 @@ public class PrometeoCarController : MonoBehaviour
     public float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
     private float steeringSpeed;
     private float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
-    private float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
     private int currentLane = 0;
     [HideInInspector]
     private bool _canChangeLanes = true;
     public bool canChangeLanes { get { return _canChangeLanes; } }
     private bool canTurnLeft = true;
     private bool canTurnRight = true;
-    private float smoothPitch = 1f;
     private static GameObject playerNose;
     [HideInInspector]
     public bool isSwitchingLane = false;
@@ -87,14 +85,6 @@ public class PrometeoCarController : MonoBehaviour
         SetupTraction(playerController.frontRightCollider);
         SetupTraction(playerController.rearLeftCollider);
         SetupTraction(playerController.rearRightCollider);
-
-
-        // We save the initial pitch of the car engine sound.
-        if (playerController.carEngineSound != null)
-        {
-            initialCarEngineSoundPitch = playerController.carEngineSound.pitch;
-        }
-
 
         if (playerController.useUI)
         {
@@ -249,7 +239,6 @@ public class PrometeoCarController : MonoBehaviour
 
         DOTween.Kill(steeringAxisTween);
 
-        AudioManager.Instance?.PlaySFX("ScreechSound"); 
         //This DOTween turns the car's wheels to the direction of the desired turn
         steeringAxisTween = DOTween.To(() => steeringAxis, x => steeringAxis = x, targetSteeringAxis, 0.1f)
         .SetEase(Ease.OutSine)
@@ -514,20 +503,14 @@ public class PrometeoCarController : MonoBehaviour
         {
             try
             {
-                if (playerController.carEngineSound != null)
-                {
-                    float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(playerController.carRigidbody.linearVelocity.magnitude) / 1000f);
-                    smoothPitch = Mathf.Lerp(smoothPitch, engineSoundPitch, Time.deltaTime * 20f);
-                    playerController.carEngineSound.pitch = smoothPitch;
-                }
-                if ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f))
+                if (playerController.tireScreechSound != null && ((playerController.isDrifting) || (playerController.isTractionLocked && Mathf.Abs(playerController.carSpeed) > 12f)))
                 {
                     if (!playerController.tireScreechSound.isPlaying)
                     {
                         playerController.tireScreechSound.Play();
                     }
                 }
-                else if ((!playerController.isDrifting) && (!playerController.isTractionLocked || Mathf.Abs(playerController.carSpeed) < 12f))
+                else if (playerController.tireScreechSound != null && (!playerController.isDrifting) && (!playerController.isTractionLocked || Mathf.Abs(playerController.carSpeed) < 12f))
                 {
                     playerController.tireScreechSound.Stop();
                 }

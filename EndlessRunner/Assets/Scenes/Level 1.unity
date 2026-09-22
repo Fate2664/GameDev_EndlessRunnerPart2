@@ -94,7 +94,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: 0b357fccbe13c0a4f863b0faa8c0d871, type: 2}
-  m_LightingSettings: {fileID: 4890085278179872738, guid: d44954079f011bc4a97acf02d57d4705, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 0b37afc6ab75fe641ba9502855c9e0cd, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -4698,11 +4698,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 72bed468744cfed41bab3eefc5aa53a5, type: 3}
-  m_Resource: {fileID: 8300000, guid: 72bed468744cfed41bab3eefc5aa53a5, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 771ce407ce807b74885ec23ebd1e6647, type: 3}
+  m_Resource: {fileID: 8300000, guid: 771ce407ce807b74885ec23ebd1e6647, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.15
-  m_Pitch: 1.12
+  m_Volume: 0.174
+  m_Pitch: 1.29
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -8150,6 +8150,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _upshiftRpm
+      value: 4179
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: pauseScreen
       value: 
       objectReference: {fileID: 1680267251}
@@ -8182,6 +8186,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _cruiseShiftRpm
+      value: 4282
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _LeftExhaustFlame
       value: 
       objectReference: {fileID: 6204222732460459651}
@@ -8210,12 +8218,24 @@ PrefabInstance:
       value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _cruiseShiftDuration
+      value: 3.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _cruiseShiftInterval
+      value: 4.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: prometeoCarController
       value: 
       objectReference: {fileID: 1699189293}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: scoreManager.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _laneChangeScreechVolume
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _handbrakeDriftMultiplier
@@ -8228,6 +8248,14 @@ PrefabInstance:
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: 'scoreManager.Array.data[1]'
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _laneChangeScreechFadeSpeed
+      value: 1.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _laneChangeScreechMinSidewaysSpeed
+      value: 3.1
       objectReference: {fileID: 0}
     - target: {fileID: 4338698314717192484, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_LocalPosition.y

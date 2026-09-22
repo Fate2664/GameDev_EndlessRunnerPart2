@@ -106,6 +106,63 @@ public class PlayerController : MonoBehaviour
     public AudioSource carEngineSound { get { return _carEngineSound; } }
     [SerializeField] private AudioSource _tireScreechSound; // This variable stores the sound of the tire screech (when the car is drifting).
     public AudioSource tireScreechSound { get { return _tireScreechSound; } }
+    [Tooltip("One-shot sound played when the car moves sideways into another lane.")]
+    [SerializeField] private AudioClip _laneChangeScreechClip;
+    [Range(0f, 1f)]
+    [SerializeField] private float _laneChangeScreechVolume = 0.22f;
+    [Tooltip("Sideways speed at which the tire screech begins to be audible.")]
+    [Range(0f, 100f)]
+    [SerializeField] private float _laneChangeScreechMinSidewaysSpeed = 10f;
+    [Tooltip("Sideways speed at which the tire screech reaches full volume.")]
+    [Range(1f, 150f)]
+    [SerializeField] private float _laneChangeScreechMaxSidewaysSpeed = 80f;
+    [Range(0.1f, 5f)]
+    [SerializeField] private float _laneChangeScreechFadeSpeed = 2.5f;
+
+    [Space(10)]
+    [Header("ENGINE SIMULATION")]
+    [Tooltip("Number of forward gears used to calculate engine RPM.")]
+    [Range(2, 8)]
+    [SerializeField] private int _forwardGearCount = 5;
+    [Tooltip("Engine speed while the car is stationary.")]
+    [Range(500f, 2000f)]
+    [SerializeField] private float _idleRpm = 850f;
+    [Tooltip("Engine speed reached at the top of each gear.")]
+    [Range(3000f, 10000f)]
+    [SerializeField] private float _redlineRpm = 6500f;
+    [Tooltip("RPM immediately after an automatic upshift.")]
+    [Range(1000f, 5000f)]
+    [SerializeField] private float _upshiftRpm = 2800f;
+    [Tooltip("RPM at which the automatic gearbox changes up.")]
+    [Range(2500f, 9500f)]
+    [SerializeField] private float _shiftRpm = 6100f;
+    [Tooltip("How quickly the sound follows changes in engine RPM.")]
+    [Range(1000f, 20000f)]
+    [SerializeField] private float _rpmResponse = 9000f;
+    [SerializeField] private float _idlePitch = 0.72f;
+    [SerializeField] private float _redlinePitch = 1.42f;
+    [Range(0f, 1f)]
+    [SerializeField] private float _idleVolume = 0.12f;
+    [Range(0f, 1f)]
+    [SerializeField] private float _maxEngineVolume = 0.28f;
+
+    [Space(10)]
+    [Header("CRUISING VARIATION")]
+    [Tooltip("Minimum fraction of top speed before simulated cruise shifts can occur.")]
+    [Range(0.5f, 1f)]
+    [SerializeField] private float _cruiseShiftSpeedFraction = 0.9f;
+    [Tooltip("Time spent cruising before another simulated shift is played.")]
+    [Range(3f, 30f)]
+    [SerializeField] private float _cruiseShiftInterval = 9f;
+    [Tooltip("How long the engine takes to rev back to cruising RPM after a simulated shift.")]
+    [Range(0.5f, 6f)]
+    [SerializeField] private float _cruiseShiftDuration = 2.25f;
+    [Tooltip("RPM immediately after a simulated cruise shift.")]
+    [Range(1000f, 5000f)]
+    [SerializeField] private float _cruiseShiftRpm = 3300f;
+
+    [HideInInspector] public int currentGear = 1;
+    [HideInInspector] public float engineRpm;
 
     [HideInInspector]
     public float carSpeed; // Used to store the speed of the car.
@@ -133,15 +190,30 @@ public class PlayerController : MonoBehaviour
     private float _localVelocityX;
     public float localVelocityX { get { return _localVelocityX; } }
 
+    private bool _wasEngineSoundEnabled;
+    private float _gearShiftCooldown;
+    private float _cruiseShiftTimer;
+    private float _cruiseShiftElapsed;
+    private bool _isCruiseShifting;
+    private AudioSource _laneChangeScreechSource;
+    private Vector3 _previousFramePosition;
+
 
     private int desiredLane = 0; //0 = left lane; 1 = right lane
     private PauseScreen pauseScreen;
     private PlayerDeath playerDeath;
+    private void Awake()
+    {
+        SetupLaneChangeScreech();
+    }
+
     private void Start()
     {
          pauseScreen = pauseScreenObject.GetComponent<PauseScreen>();
         playerDeath = this.GetComponent<PlayerDeath>();
         _carRigidbody = GetComponent<Rigidbody>();
+        _previousFramePosition = transform.position;
+        StartEngineSound();
     }
     private void Update()
     {
@@ -151,6 +223,8 @@ public class PlayerController : MonoBehaviour
         }
 
         MoveCharacter();    //call the MoveCharacter method
+        UpdateEngineSound();
+        UpdateLaneChangeScreech();
         if (!prometeoCarController.isSwitchingLane)
         {
             prometeoCarController.KeepCarInLane();
@@ -206,6 +280,182 @@ public class PlayerController : MonoBehaviour
 
         // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
         prometeoCarController.AnimateWheelMeshes();
+    }
+
+    private void StartEngineSound()
+    {
+        if (!_useSounds || _carEngineSound == null)
+        {
+            return;
+        }
+
+        _carEngineSound.loop = true;
+        engineRpm = Mathf.Clamp(_idleRpm, 1f, _redlineRpm);
+        currentGear = 1;
+        _cruiseShiftTimer = 0f;
+        _cruiseShiftElapsed = 0f;
+        _isCruiseShifting = false;
+        _carEngineSound.pitch = _idlePitch;
+        _carEngineSound.volume = _idleVolume;
+
+        if (!_carEngineSound.isPlaying)
+        {
+            _carEngineSound.Play();
+        }
+
+        _wasEngineSoundEnabled = true;
+    }
+
+    private void SetupLaneChangeScreech()
+    {
+        if (_laneChangeScreechClip == null)
+        {
+            return;
+        }
+
+        _laneChangeScreechSource = gameObject.AddComponent<AudioSource>();
+        _laneChangeScreechSource.clip = _laneChangeScreechClip;
+        _laneChangeScreechSource.playOnAwake = false;
+        _laneChangeScreechSource.loop = true;
+        _laneChangeScreechSource.spatialBlend = 0f;
+        _laneChangeScreechSource.volume = 0f;
+    }
+
+    // Mirrors the tire-smoke condition: screech while changing lanes or while the car is still drifting to correct itself.
+    private void UpdateLaneChangeScreech()
+    {
+        if (_laneChangeScreechSource == null)
+        {
+            return;
+        }
+
+        float frameDuration = Mathf.Max(Time.deltaTime, 0.0001f);
+        Vector3 frameVelocity = (transform.position - _previousFramePosition) / frameDuration;
+        _previousFramePosition = transform.position;
+
+        float measuredSidewaysSpeed = Mathf.Abs(transform.InverseTransformDirection(frameVelocity).x);
+        float physicsSidewaysSpeed = Mathf.Abs(_localVelocityX);
+        float sidewaysSpeed = Mathf.Max(measuredSidewaysSpeed, physicsSidewaysSpeed);
+        bool isChangingLane = prometeoCarController != null && prometeoCarController.isSwitchingLane;
+        bool isMakingTireSmoke = isDrifting;
+        float screechAmount = _useSounds && (isChangingLane || isMakingTireSmoke)
+            ? Mathf.InverseLerp(_laneChangeScreechMinSidewaysSpeed, _laneChangeScreechMaxSidewaysSpeed, sidewaysSpeed)
+            : 0f;
+        float targetVolume = _laneChangeScreechVolume * screechAmount;
+
+        if (targetVolume > 0f && !_laneChangeScreechSource.isPlaying)
+        {
+            _laneChangeScreechSource.Play();
+        }
+
+        _laneChangeScreechSource.volume = Mathf.MoveTowards(
+            _laneChangeScreechSource.volume,
+            targetVolume,
+            _laneChangeScreechFadeSpeed * Time.deltaTime);
+
+        if (targetVolume <= 0f && _laneChangeScreechSource.volume <= 0f && _laneChangeScreechSource.isPlaying)
+        {
+            _laneChangeScreechSource.Stop();
+        }
+    }
+
+    // Simulates a simple automatic gearbox. RPM rises through each gear and falls on an upshift.
+    private void UpdateEngineSound()
+    {
+        if (!_useSounds || _carEngineSound == null)
+        {
+            if (_wasEngineSoundEnabled && _carEngineSound != null)
+            {
+                _carEngineSound.Stop();
+            }
+
+            _wasEngineSoundEnabled = false;
+            return;
+        }
+
+        if (!_wasEngineSoundEnabled)
+        {
+            StartEngineSound();
+        }
+
+        if (!_carEngineSound.isPlaying)
+        {
+            _carEngineSound.Play();
+        }
+
+        float speedKph = Mathf.Abs(transform.InverseTransformDirection(_carRigidbody.linearVelocity).z) * 3.6f;
+        float usableMaxSpeed = Mathf.Max(1f, _maxSpeed);
+        float gearStartSpeed = (currentGear - 1) * usableMaxSpeed / _forwardGearCount;
+        float gearEndSpeed = currentGear * usableMaxSpeed / _forwardGearCount;
+        float gearProgress = Mathf.InverseLerp(gearStartSpeed, gearEndSpeed, speedKph);
+        float targetRpm = Mathf.Lerp(_upshiftRpm, _redlineRpm, gearProgress);
+        if (currentGear == 1)
+        {
+            targetRpm = Mathf.Lerp(_idleRpm, _redlineRpm, gearProgress);
+        }
+
+        targetRpm = Mathf.Clamp(targetRpm, _idleRpm, _redlineRpm);
+        engineRpm = Mathf.MoveTowards(engineRpm, targetRpm, _rpmResponse * Time.deltaTime);
+
+        // The car accelerates automatically and can pass several speed bands in a single frame.
+        // Shift one gear at a time after each audible rev, rather than jumping directly to top gear.
+        _gearShiftCooldown = Mathf.Max(0f, _gearShiftCooldown - Time.deltaTime);
+        float shiftPoint = Mathf.Clamp(_shiftRpm, _idleRpm, _redlineRpm);
+        if (currentGear < _forwardGearCount && speedKph >= gearEndSpeed && engineRpm >= shiftPoint && _gearShiftCooldown <= 0f)
+        {
+            currentGear++;
+            engineRpm = Mathf.Clamp(_upshiftRpm, _idleRpm, _redlineRpm);
+            _gearShiftCooldown = 0.12f;
+        }
+        else if (currentGear > 1 && speedKph < gearStartSpeed - 2f)
+        {
+            currentGear--;
+        }
+
+        UpdateCruiseShift(speedKph, usableMaxSpeed, ref targetRpm);
+
+        float rpmFraction = Mathf.InverseLerp(_idleRpm, _redlineRpm, engineRpm);
+        float targetPitch = Mathf.Lerp(_idlePitch, _redlinePitch, rpmFraction);
+        float targetVolume = Mathf.Lerp(_idleVolume, _maxEngineVolume, rpmFraction);
+        _carEngineSound.pitch = Mathf.Lerp(_carEngineSound.pitch, targetPitch, Time.deltaTime * 12f);
+        _carEngineSound.volume = Mathf.Lerp(_carEngineSound.volume, targetVolume, Time.deltaTime * 8f);
+    }
+
+    // Adds variation to the otherwise constant engine note once the endless runner reaches cruising speed.
+    private void UpdateCruiseShift(float speedKph, float maxSpeedKph, ref float targetRpm)
+    {
+        bool canCruiseShift = currentGear == _forwardGearCount && speedKph >= maxSpeedKph * _cruiseShiftSpeedFraction;
+        if (!canCruiseShift)
+        {
+            _cruiseShiftTimer = 0f;
+            _cruiseShiftElapsed = 0f;
+            _isCruiseShifting = false;
+            return;
+        }
+
+        if (!_isCruiseShifting)
+        {
+            _cruiseShiftTimer += Time.deltaTime;
+            if (_cruiseShiftTimer < _cruiseShiftInterval)
+            {
+                return;
+            }
+
+            _isCruiseShifting = true;
+            _cruiseShiftElapsed = 0f;
+            engineRpm = Mathf.Clamp(_cruiseShiftRpm, _idleRpm, _redlineRpm);
+        }
+
+        _cruiseShiftElapsed += Time.deltaTime;
+        float shiftProgress = Mathf.Clamp01(_cruiseShiftElapsed / _cruiseShiftDuration);
+        targetRpm = Mathf.Lerp(_cruiseShiftRpm, _redlineRpm, shiftProgress);
+        engineRpm = Mathf.MoveTowards(engineRpm, targetRpm, _rpmResponse * Time.deltaTime);
+
+        if (shiftProgress >= 1f)
+        {
+            _isCruiseShifting = false;
+            _cruiseShiftTimer = 0f;
+        }
     }
 
     //This method will execute when the player comes in contact with a trigger
