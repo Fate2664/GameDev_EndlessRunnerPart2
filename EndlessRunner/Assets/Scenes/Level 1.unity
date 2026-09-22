@@ -7938,6 +7938,14 @@ PrefabInstance:
       propertyPath: prometeoCarController
       value: 
       objectReference: {fileID: 1699189293}
+    - target: {fileID: 4058955926039232865, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: m_Volume
+      value: 0.256
+      objectReference: {fileID: 0}
+    - target: {fileID: 4058955926039232865, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5121099329509790535, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: 'ValueText.Array.data[0]'
       value: 

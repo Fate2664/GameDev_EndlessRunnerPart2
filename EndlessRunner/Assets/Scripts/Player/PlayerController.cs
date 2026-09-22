@@ -202,24 +202,76 @@ public class PlayerController : MonoBehaviour
     private int desiredLane = 0; //0 = left lane; 1 = right lane
     private PauseScreen pauseScreen;
     private PlayerDeath playerDeath;
+
     private void Awake()
     {
+        // The car controller can be on another object (as it is in the gameplay
+        // scene) or on this prefab (as it is in the trailer). Cache the physics
+        // component before either controller attempts its setup.
+        _carRigidbody = GetComponent<Rigidbody>();
+        playerDeath = GetComponent<PlayerDeath>();
         SetupLaneChangeScreech();
+        ResolveCarController();
     }
 
     private void Start()
     {
-         pauseScreen = pauseScreenObject.GetComponent<PauseScreen>();
-        playerDeath = this.GetComponent<PlayerDeath>();
-        _carRigidbody = GetComponent<Rigidbody>();
+        if (pauseScreenObject != null)
+        {
+            pauseScreen = pauseScreenObject.GetComponent<PauseScreen>();
+        }
+
+        // Keep the cutscene scene independent from gameplay-only references.
+        // TrailerScene does not need a pause screen or spawn manager to drive.
+        if (playerDeath == null)
+        {
+            playerDeath = GetComponent<PlayerDeath>();
+        }
+
+        if (_carRigidbody == null)
+        {
+            _carRigidbody = GetComponent<Rigidbody>();
+        }
+
+        ResolveCarController();
         _previousFramePosition = transform.position;
         StartEngineSound();
     }
+
+    private bool ResolveCarController()
+    {
+        if (prometeoCarController == null)
+        {
+            prometeoCarController = GetComponent<PrometeoCarController>();
+        }
+
+        if (prometeoCarController == null)
+        {
+            Debug.LogError($"{name} needs a {nameof(PrometeoCarController)} to drive.", this);
+            return false;
+        }
+
+        // Public controller methods can be driven by this component even when
+        // the controller itself is disabled on a cutscene prefab.
+        prometeoCarController.Initialize(this);
+        return true;
+    }
+
+    private bool IsPlayerDead()
+    {
+        return playerDeath != null && playerDeath.isDead;
+    }
+
     private void Update()
     {
-        if (playerDeath.isDead)
+        if (IsPlayerDead() || _carRigidbody == null)
         {
             return; // If the player is dead, do not allow movement.
+        }
+
+        if (prometeoCarController == null && !ResolveCarController())
+        {
+            return;
         }
 
         MoveCharacter();    //call the MoveCharacter method
@@ -236,7 +288,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveCharacter()
     {
-        if (playerDeath.isDead)
+        if (IsPlayerDead() || _carRigidbody == null || prometeoCarController == null)
         {
             return; // If the player is dead, do not allow movement.
         }
@@ -464,7 +516,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("RoadSpawn"))
         {
-            spawnManager.SpawnTriggerEntered();
+            spawnManager?.SpawnTriggerEntered();
 
         }
         else if (collision.CompareTag("StaticObstacleTrigger") || (collision.CompareTag("MovingObstacleTrigger")))
@@ -483,9 +535,9 @@ public class PlayerController : MonoBehaviour
 
     private void PauseGame()
     {
-        if (Input.GetKey(KeyCode.Escape) && !playerDeath.isDead)
+        if (pauseScreen != null && Input.GetKey(KeyCode.Escape) && !IsPlayerDead())
         {
-           pauseScreen.ActivatePauseScreen();
+            pauseScreen.ActivatePauseScreen();
         }
     }
 

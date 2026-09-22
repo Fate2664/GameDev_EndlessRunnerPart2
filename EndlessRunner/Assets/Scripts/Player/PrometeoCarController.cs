@@ -40,13 +40,37 @@ public class PrometeoCarController : MonoBehaviour
     float RLWextremumSlip;
     WheelFrictionCurve RRwheelFriction;
     float RRWextremumSlip;
+    private bool isInitialized;
 
-    void Start()
+    private void Start()
     {
-        //In this part, we set the 'carRigidbody' value with the Rigidbody attached to this
-        //gameObject. Also, we define the center of mass of the car with the Vector3 given
-        //in the inspector.
-        playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        GameObject player = GameObject.FindWithTag("Player");
+        Initialize(player != null ? player.GetComponent<PlayerController>() : null);
+    }
+
+    // This can be called by PlayerController so a disabled, prefab-local controller
+    // can still provide the automatic driving logic used by TrailerScene.
+    public void Initialize(PlayerController controller)
+    {
+        if (controller == null)
+        {
+            Debug.LogWarning($"{name} could not find a {nameof(PlayerController)} to control.", this);
+            return;
+        }
+
+        if (isInitialized && playerController == controller)
+        {
+            return;
+        }
+
+        playerController = controller;
+        if (playerController.carRigidbody == null)
+        {
+            Debug.LogWarning($"{name} cannot initialise before the player's Rigidbody is available.", this);
+            return;
+        }
+
+        // Set the car's center of mass and capture the base wheel setup.
         playerController.carRigidbody.centerOfMass = playerController.bodyMassCenter;
         playerNose = GameObject.FindWithTag("Player Nose");
         //Initial setup to calculate the drift value of the car. This part could look a bit
@@ -134,9 +158,7 @@ public class PrometeoCarController : MonoBehaviour
             }
         }
 
-
-
-
+        isInitialized = true;
     }
 
 
@@ -179,6 +201,11 @@ public class PrometeoCarController : MonoBehaviour
     //This method calculates the how and where the car should turn depending on the desired lane
     public void LaneChange(int desiredLane)
     {
+        if (!isInitialized)
+        {
+            return;
+        }
+
         //only allow lane changes when it is possible
         if (!canChangeLanes || isSwitchingLane)
             return;
@@ -263,6 +290,11 @@ public class PrometeoCarController : MonoBehaviour
     //This method is a correction method to make sure the car stays inside their current lane
     public void KeepCarInLane()
     {
+        if (!isInitialized || playerNose == null)
+        {
+            return;
+        }
+
         float targetX = 0f;
         switch (currentLane)
         {
@@ -327,6 +359,11 @@ public class PrometeoCarController : MonoBehaviour
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.
     public void AnimateWheelMeshes()
     {
+        if (!isInitialized)
+        {
+            return;
+        }
+
         try
         {
             Quaternion FLWRotation;
@@ -366,6 +403,11 @@ public class PrometeoCarController : MonoBehaviour
     // This method apply positive torque to the wheels in order to go forward.
     public void GoForward()
     {
+        if (!isInitialized)
+        {
+            return;
+        }
+
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
         //50.5f, it means that the car is losing traction, then the car will start emitting particle systems.
         if (Mathf.Abs(playerController.localVelocityX) > 50.5f)
@@ -400,6 +442,11 @@ public class PrometeoCarController : MonoBehaviour
 
     public void ApplyTorque(float torque)
     {
+        if (!isInitialized)
+        {
+            return;
+        }
+
         playerController.frontLeftCollider.brakeTorque = 0;
         playerController.frontRightCollider.brakeTorque = 0;
         playerController.rearLeftCollider.brakeTorque = 0;
