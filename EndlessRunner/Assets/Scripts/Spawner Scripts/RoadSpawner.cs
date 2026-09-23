@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +9,11 @@ public class RoadSpawner : MonoBehaviour
     [Header("Normal Roads")]
     [Space(10)]
     [SerializeField] private List<GameObject> normalRoads;
+
+    [Tooltip("Optional: collect RoadSpawn trigger parents beneath this root at startup.")]
+    [SerializeField] private Transform initialRoadRoot;
+    [Tooltip("Only roads on this world X are collected, excluding decorative side streets.")]
+    [SerializeField] private float roadCenterX;
 
     [Header("Construction Roads")]
     [Header("Left:")]
@@ -30,15 +34,34 @@ public class RoadSpawner : MonoBehaviour
 
     private List<GameObject> currentRoads;
     private ObstacleSpawner obstacleSpawner;
+    private SpawnManager spawnManager;
+    private bool CanGenerate => currentRoads != null && currentRoads.Count > 0 &&
+        (spawnManager == null || spawnManager.GenerationEnabled);
     [HideInInspector]
     public float endConstrZ = 0;
     [HideInInspector]
     public float startConstrZ = 0;
 
 
+    private void Awake()
+    {
+        spawnManager = GetComponent<SpawnManager>();
+    }
+
     void Start()
     {
         currentRoads = new List<GameObject>();
+
+        if (initialRoadRoot != null)
+        {
+            normalRoads = initialRoadRoot.GetComponentsInChildren<Collider>()
+                .Where(collider => collider.CompareTag("RoadSpawn") && collider.transform.parent != null)
+                .Select(collider => collider.transform.parent.gameObject)
+                .Where(road => Mathf.Abs(road.transform.position.x - roadCenterX) < 1f)
+                .Distinct().ToList();
+        }
+
+        normalRoads = (normalRoads ?? new List<GameObject>()).Where(road => road != null).Distinct().ToList();
 
         //Order the road lists
         if (normalRoads != null && normalRoads.Count > 0)
@@ -59,6 +82,9 @@ public class RoadSpawner : MonoBehaviour
             currentRoads.Add(normalRoads[i]);
         }
 
+        if (currentRoads.Count == 0)
+            Debug.LogError("Assign normal roads or an initial road root to RoadSpawner.", this);
+
     }
 
     //This method is just used to get the correct obstacle spawner script
@@ -70,6 +96,8 @@ public class RoadSpawner : MonoBehaviour
     //This method moves the normal roads from the current road list to the front
     public void MoveNormalRoad()
     {
+        if (!CanGenerate)
+            return;
         GameObject movedRoad = currentRoads[0];        //assign the first road which is behind the player by now to a variable
 
         //Check if the current road prefab has the contruction road marker or the block road marker
@@ -105,6 +133,8 @@ public class RoadSpawner : MonoBehaviour
     //This method manages the spawning of the construction roads
     public void SpawnNextConstructionRoad()
     {
+        if (!CanGenerate || obstacleSpawner == null)
+            return;
         GameObject movedRoad = currentRoads[0];
         float newZoffset = currentRoads[currentRoads.Count - 1].transform.position.z - Zoffset;
 
@@ -171,6 +201,8 @@ public class RoadSpawner : MonoBehaviour
     //This method manages the spawning of the road block before the boss
     public void SpawnBlockRoad(bool spawnBlockCheck)
     {
+        if (!CanGenerate)
+            return;
         if (spawnBlockCheck)
         {
             GameObject movedRoad = currentRoads[0];
@@ -193,6 +225,8 @@ public class RoadSpawner : MonoBehaviour
     //This method manages the spawning of the spike roads
     public void SpawnSpikeRoad()
     {
+        if (!CanGenerate || obstacleSpawner == null)
+            return;
         if (leftSpikeRoads.Count > 0 && rightSpikeRoads.Count > 0)
         {
             int randomSide = Random.Range(0, 2);

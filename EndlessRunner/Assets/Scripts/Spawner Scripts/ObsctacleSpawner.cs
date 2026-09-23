@@ -50,6 +50,7 @@ public class ObstacleSpawner : MonoBehaviour
     private float counterConstrRoad = 0f;
     private float[] initialTrafficOffsets = { 400, 600, 800, 1000, 1200 };
     private Transform playerTransform;
+    private SpawnManager spawnManager;
     [HideInInspector]
     public LaneManager laneManager;
     private readonly float[] lanePositions = { -40f, 0f, 40f };
@@ -73,6 +74,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void Start()
     {
+        spawnManager = GetComponent<SpawnManager>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         laneManager = new LaneManager(lanePositions);
 
@@ -422,6 +424,8 @@ public class ObstacleSpawner : MonoBehaviour
     //This method controls when the spawning of the contruction should happen
     private void ObsConstrRoadSpawn()
     {
+        if (spawnManager != null && !spawnManager.GenerationEnabled)
+            return;
         counterConstrRoad += Time.deltaTime;
 
         if (counterConstrRoad >= constructionRoadSpawnRate && constrRoadState == ConstrRoadState.None && canSpawnConstrRoad)
@@ -437,6 +441,8 @@ public class ObstacleSpawner : MonoBehaviour
     //This method helps to spawn the spike road during the boss phase
     private void ObsSpikeRoadSpawn()
     {
+        if (spawnManager != null && !spawnManager.GenerationEnabled)
+            return;
         if (bossSpawner != null && bossSpawner.bossDefeated)
             return;
 

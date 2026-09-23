@@ -198,7 +198,12 @@ public class PlayerController : MonoBehaviour
     private Vector3 _previousFramePosition;
 
 
-    private int desiredLane = 0; //0 = left lane; 1 = right lane
+    private int desiredLane = 0; // 0 = left, 1 = centre, 2 = right
+    private bool cutsceneOwnsSteering;
+    private float cutsceneSpeedLimit = float.PositiveInfinity;
+    public bool IsInCutscene { get; private set; }
+    public int DesiredLane => desiredLane;
+    public bool IsChangingLane => prometeoCarController != null && prometeoCarController.isSwitchingLane;
     private PauseScreen pauseScreen;
     private PlayerDeath playerDeath;
 
@@ -301,36 +306,72 @@ public class PlayerController : MonoBehaviour
 
         prometeoCarController.CancelInvoke("DecelerateCar");
         prometeoCarController.deceleratingCar = false;
-        prometeoCarController.GoForward();
+        if (cutsceneOwnsSteering && -carRigidbody.linearVelocity.z >= cutsceneSpeedLimit)
+            prometeoCarController.ApplyTorque(0f);
+        else
+            prometeoCarController.GoForward();
 
         //This is to change the desired lane variable when the player wants to change lanes
-        if (Input.GetKey(KeyCode.A) && !prometeoCarController.isSwitchingLane && prometeoCarController.canChangeLanes)
+        if (!cutsceneOwnsSteering && Input.GetKey(KeyCode.A))
         {
-
-            desiredLane--;      //change the desired lane
-            if (desiredLane < 0)
-            {
-                desiredLane = 0;
-            }
-
-            prometeoCarController.LaneChange(desiredLane);
-
+            TrySetLane(desiredLane - 1);
         }
-        if (Input.GetKey(KeyCode.D) && !prometeoCarController.isSwitchingLane && prometeoCarController.canChangeLanes)
+        if (!cutsceneOwnsSteering && Input.GetKey(KeyCode.D))
         {
-
-            desiredLane++;      //change the desired lane
-            if (desiredLane > 2)
-            {
-                desiredLane = 2;
-            }
-
-            prometeoCarController.LaneChange(desiredLane);
-
+            TrySetLane(desiredLane + 1);
         }
 
         // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
         prometeoCarController.AnimateWheelMeshes();
+    }
+
+    public void SetCutsceneDriving(bool active, bool controlSteering = true)
+    {
+        IsInCutscene = active;
+        cutsceneOwnsSteering = active && controlSteering;
+        if (!cutsceneOwnsSteering)
+            cutsceneSpeedLimit = float.PositiveInfinity;
+    }
+
+    // The intro route runs down negative world Z. Limit only forward motion;
+    // leave suspension, gravity and the existing sideways manoeuvre untouched.
+    public void SetCutsceneSpeedLimit(float worldUnitsPerSecond)
+    {
+        if (cutsceneOwnsSteering)
+            cutsceneSpeedLimit = Mathf.Max(0f, worldUnitsPerSecond);
+    }
+
+    private void FixedUpdate()
+    {
+        if (!cutsceneOwnsSteering || _carRigidbody == null || float.IsPositiveInfinity(cutsceneSpeedLimit))
+            return;
+
+        Vector3 velocity = _carRigidbody.linearVelocity;
+        if (-velocity.z >= cutsceneSpeedLimit)
+        {
+            velocity.z = -cutsceneSpeedLimit;
+            _carRigidbody.linearVelocity = velocity;
+            prometeoCarController?.ApplyTorque(0f);
+        }
+    }
+
+    public bool TrySetLane(int lane)
+    {
+        if (IsPlayerDead() || prometeoCarController == null)
+            return false;
+
+        lane = Mathf.Clamp(lane, 0, 2);
+        if (lane == desiredLane)
+            return true;
+        if (prometeoCarController.isSwitchingLane || !prometeoCarController.canChangeLanes)
+            return false;
+
+        prometeoCarController.LaneChange(lane);
+        if (!prometeoCarController.isSwitchingLane)
+            return false;
+
+        desiredLane = lane;
+        return true;
     }
 
     private void StartEngineSound()
@@ -515,7 +556,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("RoadSpawn"))
         {
-            spawnManager?.SpawnTriggerEntered();
+            spawnManager?.SpawnTriggerEntered(collision);
 
         }
         else if (collision.CompareTag("StaticObstacleTrigger") || (collision.CompareTag("MovingObstacleTrigger")))
@@ -534,7 +575,7 @@ public class PlayerController : MonoBehaviour
 
     private void PauseGame()
     {
-        if (pauseScreen != null && Input.GetKey(KeyCode.Escape) && !IsPlayerDead())
+        if (!IsInCutscene && pauseScreen != null && Input.GetKey(KeyCode.Escape) && !IsPlayerDead())
         {
             pauseScreen.ActivatePauseScreen();
         }

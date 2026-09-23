@@ -18,6 +18,25 @@ public class MovingObstacle : MonoBehaviour
     private float direction = 0f;
     private float currentSpeed = 0f;
 
+    // These obstacles move via Transform.Translate, so Rigidbody velocity is
+    // not a reliable motion source for the intro's collision prediction.
+    public Vector3 WorldVelocity
+    {
+        get
+        {
+            if (!isActiveAndEnabled) return Vector3.zero;
+            float triggerDirection = CompareTag("MovingObstacleTrigger") ? -1f : 1f;
+            switch (_obstacleIndex)
+            {
+                case 0: return transform.forward * movementSpeed[0] * triggerDirection;
+                case 1: return transform.forward * -movementSpeed[1] * direction;
+                case 2: return -transform.forward * currentSpeed;
+                case 3: return transform.forward * currentSpeed;
+                default: return Vector3.zero;
+            }
+        }
+    }
+
     private void Start()
     {
         //traffic uses both index 2 and 3 so they need to be the same speed

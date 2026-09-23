@@ -13,6 +13,11 @@ public class PlayerDeath : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
+        // Scripted passes must not kill the player or destroy the staged traffic.
+        PlayerController player = GetComponent<PlayerController>();
+        if (player != null && player.IsInCutscene)
+            return;
+
         if ((collision.gameObject.CompareTag("Obstacle") && !playerImmune) || (collision.gameObject.CompareTag("NoSpawnTrigger")) && !playerImmune)        //if the collision that the player had is with an obstacle
         {
             if (this != null)

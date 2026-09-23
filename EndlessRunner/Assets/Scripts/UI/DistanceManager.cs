@@ -89,6 +89,12 @@ public class DistanceManager : MonoBehaviour
             }
         }
 
+        // Keep HUD distance running, but do not consume boss events during the
+        // authored opening while the road system is still waiting for its marker.
+        if (bossSpawner == null ||
+            (SpawnManager.Instance != null && !SpawnManager.Instance.GenerationEnabled))
+            return;
+
         if (!bossSpawnEventFired && _virtualDistanceCovered > bossSpawner.DistanceToSpawn)
         {
             BossDistanceReached.Invoke();  //Invoke the event when the boss distance is reached

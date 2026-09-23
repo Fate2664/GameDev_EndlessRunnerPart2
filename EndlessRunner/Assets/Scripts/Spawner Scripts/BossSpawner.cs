@@ -43,6 +43,8 @@ public class BossSpawner : MonoBehaviour
     // This method is called when the boss distance is reached
     private void StartBossPhase()
     {
+        if (spawnManager != null && !spawnManager.GenerationEnabled)
+            return;
         //if (!obstacleSpawner.spawningConstrRoad)
         {
             obstacleSpawner.stopTraffic = true;

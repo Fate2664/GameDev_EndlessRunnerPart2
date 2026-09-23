@@ -15,6 +15,19 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private DistanceManager distanceManager;
 
+    [Header("Authored Opening")]
+    [SerializeField] private bool waitForMarkedRoad;
+    [Tooltip("Optional: also wait until this camera move finishes before changing scenery.")]
+    [SerializeField] private TrailerIntroController trailerIntro;
+
+    private bool markedRoadCrossed;
+    private bool pendingOpeningSpawn;
+    private Collider lastRoadTrigger;
+    private Vector3 lastRoadTriggerPosition;
+
+    public bool GenerationEnabled => !waitForMarkedRoad ||
+        (markedRoadCrossed && (trailerIntro == null || trailerIntro.CameraMoveCompleted));
+
 
     RoadSpawner roadSpawner;
     LandSpawner landSpawner;
@@ -54,22 +67,57 @@ public class SpawnManager : MonoBehaviour
 
 
 
-    public void SpawnTriggerEntered()
+    public void SpawnTriggerEntered(Collider roadTrigger = null)
     {
+        if (roadTrigger != null)
+        {
+            RoadGenerationMarker marker = roadTrigger.GetComponentInParent<RoadGenerationMarker>();
+            if (marker != null && marker.startEndlessGeneration)
+                markedRoadCrossed = true;
+
+            // Several colliders on the car can enter the same trigger. Process it
+            // once per placement; moving the recycled road makes it eligible again.
+            Vector3 position = roadTrigger.transform.position;
+            if (roadTrigger == lastRoadTrigger && position == lastRoadTriggerPosition)
+                return;
+            lastRoadTrigger = roadTrigger;
+            lastRoadTriggerPosition = position;
+        }
+
+        if (!GenerationEnabled)
+        {
+            // If the marked piece was crossed during the camera move, release
+            // one spawn cycle when it ends. Do not replay all skipped roads.
+            pendingOpeningSpawn = markedRoadCrossed;
+            return;
+        }
+
+        pendingOpeningSpawn = false;
+
         Invoke(nameof(SpawnRoad), 0.8f);    // call the road spawner
         //call for the land to be spawned and destroyed
         SpawnLand();
         Invoke(nameof(DestroyLands), 1f);
     }
 
+    private void Update()
+    {
+        if (pendingOpeningSpawn && GenerationEnabled)
+            SpawnTriggerEntered();
+    }
+
     private void DestroyLands()
     {
+        if (!GenerationEnabled)
+            return;
         landSpawner.DestroyLand();
     }
 
     // This method decides whether or not to move a normal road prefab or spawn a construction road prefab
     private void SpawnRoad()
     {
+        if (!GenerationEnabled)
+            return;
         if (obstacleSpawner.spawningConstrRoad)
         {
             roadSpawner.SpawnNextConstructionRoad();
@@ -84,6 +132,8 @@ public class SpawnManager : MonoBehaviour
     // this method decides which type of land to spawn
     private void SpawnLand()
     {
+        if (!GenerationEnabled)
+            return;
         if (inTransition)
         {
             if (counter < landSpawner.TransitionLandCount)
