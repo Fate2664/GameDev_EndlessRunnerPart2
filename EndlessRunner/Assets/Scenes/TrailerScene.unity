@@ -4169,7 +4169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &339423331
 Transform:
   m_ObjectHideFlags: 0
@@ -7813,7 +7813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5dca1204e7e935d408728950a2ad997e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5dca1204e7e935d408728950a2ad997e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10316,7 +10316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 11b412f2ff905c341be6af606611e4a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4
+      value: 1.02
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 11b412f2ff905c341be6af606611e4a3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12342,7 +12342,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &927475802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21829,7 +21829,7 @@ PrefabInstance:
       objectReference: {fileID: 2018323815}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _maxSpeed
-      value: 188
+      value: 104
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: m_Enabled
@@ -21837,7 +21837,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _idlePitch
-      value: 0.93
+      value: 0.72
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: isDrifting
@@ -21857,7 +21857,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _redlinePitch
-      value: 1.75
+      value: 1.41
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _cruiseShiftRpm
@@ -21869,7 +21869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _maxSteeringAngle
-      value: 41
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: pauseScreenObject
@@ -21877,7 +21877,7 @@ PrefabInstance:
       objectReference: {fileID: 1285010266}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _cruiseShiftInterval
-      value: 4
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: prometeoCarController
@@ -21886,10 +21886,14 @@ PrefabInstance:
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _laneChangeScreechClip
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 070790e99b39d1143b3541a5f44ba431, type: 3}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: _accelerationMultiplier
-      value: 8889
+      value: 7576
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _laneChangeScreechVolume
+      value: 0.384
       objectReference: {fileID: 0}
     - target: {fileID: 4058955926039232865, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: MaxDistance
@@ -23119,8 +23123,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671258072}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.023490487, y: 0.9209068, z: -0.0468601, w: 0.3862422}
-  m_LocalPosition: {x: 24.736, y: 6.853, z: 809.146}
+  m_LocalRotation: {x: 0, y: 0.8671902, z: -0.4979772, w: 0}
+  m_LocalPosition: {x: 40, y: 484.21, z: 1057.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -28750,7 +28754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2079447478
 Transform:
   m_ObjectHideFlags: 0
@@ -29905,7 +29909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3000000001
 Transform:
   m_ObjectHideFlags: 0
@@ -29971,7 +29975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3000000011
 Transform:
   m_ObjectHideFlags: 0
@@ -29981,7 +29985,7 @@ Transform:
   m_GameObject: {fileID: 3000000010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.8671902, z: -0.4979772, w: 0}
-  m_LocalPosition: {x: 0, y: 484.21, z: 904.4}
+  m_LocalPosition: {x: 40, y: 484.21, z: 1057.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30079,7 +30083,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3000000021
 Transform:
   m_ObjectHideFlags: 0
@@ -30089,7 +30093,7 @@ Transform:
   m_GameObject: {fileID: 3000000020}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.9975954, z: -0.06930628, w: 0}
-  m_LocalPosition: {x: 40, y: 21.31, z: 538.4}
+  m_LocalPosition: {x: 40, y: 21.31, z: 832.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30247,7 +30251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3000000071
 Transform:
   m_ObjectHideFlags: 0

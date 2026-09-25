@@ -7938,13 +7938,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1208644397}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _maxEngineVolume
+      value: 0.449
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: pauseScreenObject
       value: 
       objectReference: {fileID: 1680267251}
     - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _cruiseShiftInterval
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: prometeoCarController
       value: 
       objectReference: {fileID: 1699189293}
+    - target: {fileID: 3605388428595178517, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
+      propertyPath: _laneChangeScreechVolume
+      value: 0.359
+      objectReference: {fileID: 0}
     - target: {fileID: 5121099329509790535, guid: cedf4f5292973fd4fafb289c8bfccb67, type: 3}
       propertyPath: 'ValueText.Array.data[0]'
       value: 
