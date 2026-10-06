@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using NovaSamples.SettingsMenu;
-using UnityEditor.SettingsManagement;
 using Unity.VisualScripting;
 
 [CreateAssetMenu(menuName = "Settings/Collection")]
